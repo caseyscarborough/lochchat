@@ -7,9 +7,9 @@
     "Todd Birchfield <toddbirchfield@clayton.edu>"
   ],
   "description": "A chatroom used by students at Clayton State University.",
-  "moduleType": [
-    "node"
-  ],
+  "dependencies": {
+    "flat-ui": "2.2.1"
+  },
   "license": "MIT",
   "private": true,
   "ignore": [
