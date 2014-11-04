@@ -1,0 +1,22 @@
+# Gitignore file for Grails application with IntelliJ
+
+# Ignore IDE specific files
+/.idea/
+/*.iml
+/.classpath
+/.project
+
+# Ignore builds
+target/
+*.war
+
+# Ignore logs
+*.log
+/test/reports
+
+# Taglib descriptors
+/web-app/WEB-INF/tld/c.tld
+/web-app/WEB-INF/tld/fmt.tld
+
+# Ignore DataSource File
+grails-app/conf/DataSource.groovy
