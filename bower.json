@@ -1,0 +1,22 @@
+{
+  "name": "lochchat",
+  "version": "0.0.1",
+  "authors": [
+    "Casey Scarborough <caseyscarborough@gmail.com>",
+    "Eli Fernandes <eliseusfernandes@clayton.edu>",
+    "Todd Birchfield <toddbirchfield@clayton.edu>"
+  ],
+  "description": "A chatroom used by students at Clayton State University.",
+  "moduleType": [
+    "node"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
