@@ -6,6 +6,8 @@
 // to create separate JavaScript files as needed.
 //
 //= require jquery
+//= require bootstrap/dist/js/bootstrap
+//= require flat-ui/dist/js/flat-ui
 //= require_tree .
 //= require_self
 
