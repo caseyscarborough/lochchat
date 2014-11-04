@@ -20,3 +20,4 @@ target/
 
 # Ignore DataSource File
 grails-app/conf/DataSource.groovy
+test
