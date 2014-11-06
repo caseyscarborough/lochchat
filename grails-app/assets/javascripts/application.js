@@ -8,6 +8,8 @@
 //= require jquery
 //= require bootstrap/dist/js/bootstrap
 //= require flat-ui/dist/js/flat-ui
+//= require app/config
+//= require app/chat
 //= require_self
 
 if (typeof jQuery !== 'undefined') {
