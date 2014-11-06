@@ -9,5 +9,7 @@
 *
 *= require bootstrap/dist/css/bootstrap
 *= require flat-ui/dist/css/flat-ui
+*= require main
+*= require bootstrap-overrides
 *= require_self
 */
