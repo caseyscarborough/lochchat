@@ -11,7 +11,7 @@
 		<g:layoutHead/>
 	</head>
 	<body>
-    <g:render template="shared/navigation" />
+    <g:render template="../shared/navigation" />
 		<g:layoutBody/>
 	</body>
 </html>
