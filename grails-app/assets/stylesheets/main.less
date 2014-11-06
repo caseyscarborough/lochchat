@@ -9,15 +9,22 @@ body {
   background-color: @clouds;
 }
 
+div h3 {
+  margin-top: 5px;
+}
+
 .new-chat {
 
-  h3 {
-    margin-top: 5px;
-  }
-
+  color: white;
   background-color: @wet-asphalt;
-  color: @clouds;
-  padding: 20px;
-  border-radius: 5px;
+  padding: 40px;
   box-shadow: 0 0 5px @gray;
+
+  .popover-title, .popover-content {
+    color: @wet-asphalt;
+  }
+}
+
+.form-control[disabled] {
+  color: @wet-asphalt;
 }

@@ -12,7 +12,7 @@ var Chat = (function($) {
             data: data,
             url: "/" + config.application.name + "/chat/create",
             success: function(response) {
-                window.location.href = url;
+                window.location.href = response.data.url;
             },
             error: function(data) {
                 alert(data.responseJSON.message);
