@@ -8,7 +8,6 @@
 //= require jquery
 //= require bootstrap/dist/js/bootstrap
 //= require flat-ui/dist/js/flat-ui
-//= require_tree .
 //= require_self
 
 if (typeof jQuery !== 'undefined') {
