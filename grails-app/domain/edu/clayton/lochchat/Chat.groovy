@@ -8,6 +8,8 @@ class Chat {
   String[] anonymousUsers
 
   static constraints = {
-    url nullable: false
+    endTime nullable: true
+    anonymousUsers nullable: true
+    url unique: true
   }
 }
