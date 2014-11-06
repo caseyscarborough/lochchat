@@ -2,7 +2,7 @@ package edu.clayton.lochchat
 
 class Chat {
 
-  String url
+  String uniqueId
   Date startTime
   Date endTime
   String[] anonymousUsers
@@ -10,6 +10,6 @@ class Chat {
   static constraints = {
     endTime nullable: true
     anonymousUsers nullable: true
-    url unique: true
+    uniqueId unique: true
   }
 }
