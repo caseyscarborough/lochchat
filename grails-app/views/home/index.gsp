@@ -17,6 +17,7 @@
     <div class="col-md-8 col-md-offset-2 new-chat">
       <h3>Welcome to LochChat!</h3>
       <p>Use the form below to enter a new chatroom:</p>
+      <div id="error-message" class="alert alert-danger hidden"></div>
       <div class="form-group">
         <label for="chatroom-url">Chatroom URL</label>
         <input id="chatroom-url" class="form-control" placeholder="Chatroom URL" value="${chatroomUrl}" disabled>

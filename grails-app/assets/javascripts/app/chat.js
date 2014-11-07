@@ -2,7 +2,7 @@ var Chat = (function($) {
 
     var self = {};
 
-    var _createChatroom = function(errorCallback) {
+    var _createChatroom = function() {
         var url = $("#chatroom-url").val();
         var emails = $("#chatroom-emails").val();
         var data = { url: url, emails: emails };
@@ -15,8 +15,10 @@ var Chat = (function($) {
                 window.location.href = response.data.url;
             },
             error: function(data) {
-                alert(data.responseJSON.message);
-                errorCallback();
+                var error = $("#error-message");
+                error.html('<small>' + data.responseJSON.message + '</small>');
+                error.removeClass("hidden");
+                $("#create-chatroom-button").button('reset');
             }
         });
     };
@@ -24,10 +26,7 @@ var Chat = (function($) {
     self.init = function() {
         $("#create-chatroom-button").on('click', function() {
             $(this).button('loading');
-
-            _createChatroom(function() {
-                $(this).button('reset');
-            });
+            _createChatroom();
         });
     };
 

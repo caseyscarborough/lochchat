@@ -7,11 +7,13 @@ class ChatController {
 
   static allowedMethods = [create: 'POST']
 
+  def messageService
+
   def create() {
     def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date())
     def result
     if (!chat.save(flush: true)) {
-      result = [status: HttpStatus.BAD_REQUEST.reasonPhrase, message: "The chat could not be created."]
+      result = [status: HttpStatus.BAD_REQUEST.reasonPhrase, message: messageService.getErrorMessage(chat)]
       response.status = 500
       render result as JSON
       return
