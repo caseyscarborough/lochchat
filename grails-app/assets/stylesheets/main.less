@@ -15,15 +15,70 @@ div h3 {
 
 .new-chat {
   color: white;
-  background-color: @wet-asphalt;
-  padding: 40px;
-  box-shadow: 0 0 5px @gray;
+  margin-top: -30px;
 
   .popover-title, .popover-content {
     color: @wet-asphalt;
   }
+
+  .form-group label {
+    font-weight: bold;
+    font-size: 16px;
+  }
+
+  padding: 30px;
+  border-radius: 10px;
+  background: rgba(52, 73, 94, 0.9);
+  box-shadow: 1px 1px 10px #333;
 }
 
 .form-control[disabled] {
   color: @wet-asphalt;
+}
+
+#jumbotron {
+  background: none;
+
+  p, label, h3 {
+    color: white;
+    text-shadow: 1px 1px 5px #000;
+  }
+
+  .popover, .popover-title {
+    color: black;
+    text-shadow: none;
+  }
+
+  .popover-link {
+  }
+
+  .form-control, .bootstrap-tagsinput {
+    box-shadow: 1px 1px 3px #000;
+  }
+}
+
+#jumbotron-background-image {
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: -9999;
+  top: 45px;
+
+  display: block;
+  -webkit-filter: blur(6px);
+  -moz-filter: blur(6px);
+  -o-filter: blur(6px);
+  -ms-filter: blur(6px);
+  filter: blur(6px);
+  background-image: url('../images/jumbotron.jpg');
+  background-position: center top;
+  background-size: 2000px auto;
+  height: 600px;
+}
+
+#copy-button {
+  cursor: pointer;
+  background: @turquoise;
+  border-color: @turquoise;
+  min-width: 100px;
 }

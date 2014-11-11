@@ -10,6 +10,7 @@
 //= require flat-ui/dist/js/flat-ui
 //= require app/config
 //= require app/chat
+//= require zeroclipboard/dist/ZeroClipboard
 //= require_self
 
 if (typeof jQuery !== 'undefined') {
@@ -19,5 +20,7 @@ if (typeof jQuery !== 'undefined') {
 		}).ajaxStop(function() {
 			$(this).fadeOut();
 		});
+
+        ZeroClipboard.config({ swfPath: "/" + config.application.name + "/assets/zeroclipboard/dist/ZeroClipboard.swf" });
 	})(jQuery);
 }
