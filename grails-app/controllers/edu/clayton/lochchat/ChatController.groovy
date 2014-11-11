@@ -3,6 +3,9 @@ package edu.clayton.lochchat
 import grails.converters.JSON
 import org.springframework.http.HttpStatus
 
+import org.springframework.messaging.handler.annotation.MessageMapping
+import org.springframework.messaging.handler.annotation.SendTo
+
 class ChatController {
 
   static allowedMethods = [create: 'POST']
@@ -28,6 +31,12 @@ class ChatController {
 
   def room(String uniqueId) {
     def chatroom = Chat.findByUniqueId(uniqueId)
-    render "You are in chatroom number ${chatroom.uniqueId}"
+    [chatroom: chatroom]
+  }
+
+  @MessageMapping("/hello")
+  @SendTo("/topic/hello")
+  protected String hello(String text) {
+    return text
   }
 }
