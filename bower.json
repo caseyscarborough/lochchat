@@ -10,7 +10,8 @@
   "dependencies": {
     "flat-ui": "2.2.1",
     "bootstrap": "3.3.0",
-    "zeroclipboard": "2.1.6"
+    "zeroclipboard": "2.1.6",
+    "fontawesome": "4.2.0"
   },
   "license": "MIT",
   "private": true,
