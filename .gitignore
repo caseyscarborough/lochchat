@@ -19,5 +19,4 @@ target/
 /web-app/WEB-INF/tld/fmt.tld
 
 # Ignore DataSource File
-grails-app/conf/DataSource.groovy
 test
