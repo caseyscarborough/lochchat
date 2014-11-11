@@ -9,7 +9,8 @@
   "description": "A chatroom used by students at Clayton State University.",
   "dependencies": {
     "flat-ui": "2.2.1",
-    "bootstrap": "3.3.0"
+    "bootstrap": "3.3.0",
+    "zeroclipboard": "2.1.6"
   },
   "license": "MIT",
   "private": true,
