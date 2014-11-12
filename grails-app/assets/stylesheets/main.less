@@ -9,13 +9,20 @@ body {
   background-color: @clouds;
 }
 
+a, a:visited {
+  color: @carrot;
+}
+
 div h3 {
   margin-top: 5px;
 }
 
 .new-chat {
+  h3 {
+    height: 45px;
+  }
   color: white;
-  margin-top: -30px;
+  margin-top: -40px;
 
   .popover-title, .popover-content {
     color: @wet-asphalt;
@@ -78,7 +85,15 @@ div h3 {
 
 #copy-button {
   cursor: pointer;
-  background: @turquoise;
-  border-color: @turquoise;
+  background: @carrot;
+  border-color: @carrot;
   min-width: 100px;
+}
+
+.logo {
+  max-height: 100%;
+  max-width: 100%;
+  display: inline;
+  float: left;
+  margin-right: 10px;
 }
