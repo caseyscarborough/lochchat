@@ -17,6 +17,20 @@
     }
 
     $(function() {
+      var socket = new SockJS("${createLink(uri: '/stomp')}");
+      var client = Stomp.over(socket);
+
+      var chatLog = $("#chat-log");
+      var chatText = $("#chat-text");
+      var chatRoom = $("#chatroom");
+
+      client.connect({}, function() {
+        client.subscribe("/topic/chatMessage", function(message) {
+          chatLog.append("<div class='chat-text'>" + urlify(JSON.parse(message.body)) + '</div>');
+          chatLog.animate({ scrollTop: chatLog.prop("scrollHeight") - chatLog.height() }, 200);
+        });
+      });
+
       var username = $("#username");
       var modal = $("#usernameModal");
       var enterRoom = $("#enter-room-button");
@@ -38,21 +52,7 @@
         }
 
         modal.modal('hide');
-      });
-
-
-      var socket = new SockJS("${createLink(uri: '/stomp')}");
-      var client = Stomp.over(socket);
-
-      var chatLog = $("#chat-log");
-      var chatText = $("#chat-text");
-      var chatRoom = $("#chatroom");
-
-      client.connect({}, function() {
-        client.subscribe("/topic/chatMessage", function(message) {
-          chatLog.append("<div class='chat-text'>" + urlify(JSON.parse(message.body)) + '</div>');
-          chatLog.animate({ scrollTop: chatLog.prop("scrollHeight") - chatLog.height() }, 200);
-        });
+        client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " has entered the chatroom."));
       });
 
       chatText.keypress(function(event) {
