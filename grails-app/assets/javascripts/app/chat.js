@@ -40,7 +40,6 @@ var Chat = (function($) {
                 timer = setTimeout(function() { copyButton.html('Copy&nbsp;&nbsp;<i class="fa fa-check"></i>'); }, 500);
             });
         });
-
     };
 
     return self;

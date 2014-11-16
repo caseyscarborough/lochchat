@@ -23,6 +23,11 @@
         }
       });
 
+      $("#chat-log").height($("#chatroom").height() - 90);
+      $(window).resize(function() {
+        $("#chat-log").height($("#chatroom").height() - 90);
+      });
+
     });
   </script>
 </head>
