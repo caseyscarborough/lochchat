@@ -18,5 +18,6 @@ target/
 /web-app/WEB-INF/tld/c.tld
 /web-app/WEB-INF/tld/fmt.tld
 
-# Ignore DataSource File
 test
+
+grails-app/conf/EmailConfig.groovy
