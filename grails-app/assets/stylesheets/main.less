@@ -113,6 +113,7 @@ div h3 {
   top: 53px;
   right: 0;
   overflow-y: scroll;
+  word-wrap: break-word;
   border: 1px solid #999;
   border-top: none;
   background-color: white;
@@ -149,4 +150,11 @@ div h3 {
 .modal-header {
   background-color: @wet-asphalt;
   color: white;
+}
+
+.chat-text {
+  &:first-child {
+    border-top: 1px solid #ddd;
+  }
+  border-bottom: 1px solid #ddd;
 }
