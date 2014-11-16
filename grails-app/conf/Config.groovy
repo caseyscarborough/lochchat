@@ -14,7 +14,7 @@
 def appName = 'lochchat'
 
 grails.config.locations = []
-grails.config.locations << "file:grails-app/conf/EmailConfig.groovy"
+grails.config.locations << "file:/opt/tomcat7/config/lochchat/EmailConfig.groovy"
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
@@ -114,6 +114,11 @@ log4j.main = {
     }
   }
 
+  root {
+    info  'stdout'
+    warn 'stdout', 'file'
+  }
+
   error 'org.codehaus.groovy.grails.web.servlet',        // controllers
     'org.codehaus.groovy.grails.web.pages',          // GSP
     'org.codehaus.groovy.grails.web.sitemesh',       // layouts
@@ -131,7 +136,7 @@ log4j.main = {
       info 'grails.app'
     }
     production {
-      warn 'grails.app'
+      info 'grails.app'
     }
   }
 }
