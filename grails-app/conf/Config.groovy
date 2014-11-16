@@ -11,6 +11,8 @@
 //    grails.config.locations << "file:" + System.properties["${appName}.config.location"]
 // }
 
+def appName = 'lochchat'
+
 grails.config.locations = []
 grails.config.locations << "file:grails-app/conf/EmailConfig.groovy"
 
@@ -101,7 +103,15 @@ environments {
 // log4j configuration
 log4j.main = {
   appenders {
-    console name: 'stdout', layout: pattern(conversionPattern: '%c{2} %m%n')
+    environments {
+      development {
+        file name: 'file', file: 'logs/application.log'
+        console name: 'stdout', layout: pattern(conversionPattern: '%c{2} %m%n')
+      }
+      production {
+        file name: 'file', file: "/var/log/tomcat7/${appName}.log"
+      }
+    }
   }
 
   error 'org.codehaus.groovy.grails.web.servlet',        // controllers
@@ -115,5 +125,13 @@ log4j.main = {
     'org.springframework',
     'org.hibernate',
     'net.sf.ehcache.hibernate'
-  debug 'grails.app'
+
+  environments {
+    development {
+      info 'grails.app'
+    }
+    production {
+      warn 'grails.app'
+    }
+  }
 }
