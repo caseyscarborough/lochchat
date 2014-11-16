@@ -97,3 +97,48 @@ div h3 {
   float: left;
   margin-right: 10px;
 }
+
+#chatroom {
+  overflow-y: scroll;
+  height: 100%;
+  margin-top: -83px;
+  padding-top: 83px;
+}
+
+#chat-log {
+  width: 250px;
+  height: calc(100%);
+  font-size: 13px;
+  position: fixed;
+  top: 53px;
+  right: 0;
+  overflow-y: scroll;
+  border: 1px solid #999;
+  border-top: none;
+  background-color: white;
+}
+
+#chat-log-text {
+  height: 100%;
+  padding: 10px;
+}
+
+#chat-text {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  height: 100px;
+  width: 250px;
+  font-size: 14px;
+  border: 1px solid #999;
+  border-top: 3px solid #999;
+  border-bottom: none;
+
+  &:focus {
+    outline: none;
+
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+  }
+}
