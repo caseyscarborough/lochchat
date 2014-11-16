@@ -1,12 +1,17 @@
 package edu.clayton.lochchat
 
 import grails.converters.JSON
+import org.codehaus.groovy.grails.plugins.codecs.HTMLCodec
+import org.codehaus.groovy.grails.plugins.codecs.HTMLCodecFactory
+import org.codehaus.groovy.grails.support.encoding.CodecLookup
 import org.springframework.http.HttpStatus
 
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 
 class ChatController {
+
+  CodecLookup codecLookup
 
   static allowedMethods = [create: 'POST']
 
@@ -34,9 +39,9 @@ class ChatController {
     [chatroom: chatroom]
   }
 
-  @MessageMapping("/hello")
-  @SendTo("/topic/hello")
-  protected String hello(String text) {
-    return text
+  @MessageMapping("/chatMessage")
+  @SendTo("/topic/chatMessage")
+  protected String message(String text) {
+    return codecLookup.lookupEncoder('HTML').encode(text)
   }
 }

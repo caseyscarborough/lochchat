@@ -38,15 +38,18 @@
       var chatRoom = $("#chatroom");
 
       client.connect({}, function() {
-        client.subscribe("/topic/hello", function(message) {
-          chatLog.append(JSON.parse(message.body) + '<br>');
+        client.subscribe("/topic/chatMessage", function(message) {
+          chatLog.append("<div class='chat-text'>" + JSON.parse(message.body) + '</div>');
         });
       });
 
-      chatText.keyup(function(event) {
+      chatText.keypress(function(event) {
         if (event.keyCode == 13) {
-          client.send("/app/hello", {}, JSON.stringify(username.val() + ": " + chatText.val()));
-          chatText.val("");
+          event.preventDefault();
+          if ($.trim(chatText.val()) !== "") {
+            client.send("/app/chatMessage", {}, JSON.stringify(username.val() + ": " + chatText.val()));
+            chatText.val("");
+          }
         }
       });
 
