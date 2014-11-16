@@ -6,26 +6,53 @@
   <asset:javascript src="spring-websocket" />
   <script>
     $(function() {
-      var socket = new SockJS("${createLink(uri: '/stomp')}");
-      var client = Stomp.over(socket);
+      var username = $("#username");
+      var modal = $("#usernameModal");
+      var enterRoom = $("#enter-room-button");
+      modal.modal();
 
-      client.connect({}, function() {
-        client.subscribe("/topic/hello", function(message) {
-          $("#chat-log-text").append(JSON.parse(message.body) + '<br>');
-        });
-      });
-
-      $("#chat-text").keyup(function(event) {
-        if (event.keyCode == 13) {
-          var text = $("#chat-text");
-          client.send("/app/hello", {}, JSON.stringify($("#name").val() + ": " + text.val()));
-          text.val("");
+      username.keyup(function() {
+        if ($.trim(username.val()) !== "") {
+          enterRoom.removeAttr("disabled");
+        } else {
+          enterRoom.attr("disabled", "disabled");
         }
       });
 
-      $("#chat-log").height($("#chatroom").height() - 90);
+      enterRoom.click(function() {
+        if ($.trim(username.val()) === "") {
+          username.val("");
+          username.focus();
+          return false;
+        }
+
+        modal.modal('hide');
+      });
+
+
+      var socket = new SockJS("${createLink(uri: '/stomp')}");
+      var client = Stomp.over(socket);
+
+      var chatLog = $("#chat-log");
+      var chatText = $("#chat-text");
+      var chatRoom = $("#chatroom");
+
+      client.connect({}, function() {
+        client.subscribe("/topic/hello", function(message) {
+          chatLog.append(JSON.parse(message.body) + '<br>');
+        });
+      });
+
+      chatText.keyup(function(event) {
+        if (event.keyCode == 13) {
+          client.send("/app/hello", {}, JSON.stringify(username.val() + ": " + chatText.val()));
+          chatText.val("");
+        }
+      });
+
+      chatLog.height(chatRoom.height() - 90);
       $(window).resize(function() {
-        $("#chat-log").height($("#chatroom").height() - 90);
+        chatLog.height(chatRoom.height() - 90);
       });
 
     });
@@ -34,11 +61,11 @@
 
 <body>
 <div id="chatroom">
-  <input id="name" placeholder="Enter your name in this box">
   <div id="chat-log">
     <div id="chat-log-text"></div>
   </div>
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
 </div>
+<g:render template="usernameModal" />
 </body>
 </html>
