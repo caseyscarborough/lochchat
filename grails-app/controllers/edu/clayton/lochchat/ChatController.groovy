@@ -27,8 +27,16 @@ class ChatController {
       return
     }
 
-    // TODO: Implement email
-    params.emails?.split(",")?.each { email -> log.info("Emailing $email...") }
+    // TODO: Validate email
+    params.emails?.split(",")?.each { email ->
+      log.info("Emailing $email...")
+      sendMail {
+        async true
+        to email
+        subject "LochChat Invite"
+        body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
+      }
+    }
 
     result = [status: HttpStatus.OK, data: [chat: chat, url: createLink(controller: 'chat', action: 'room', params: [uniqueId: chat.uniqueId])]]
     render result as JSON

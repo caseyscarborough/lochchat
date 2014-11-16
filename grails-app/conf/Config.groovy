@@ -12,7 +12,7 @@
 // }
 
 grails.config.locations = []
-grails.config.locations << "file:EmailConfig.groovy"
+grails.config.locations << "file:grails-app/conf/EmailConfig.groovy"
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
