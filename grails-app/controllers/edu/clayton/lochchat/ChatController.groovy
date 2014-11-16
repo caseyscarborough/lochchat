@@ -5,7 +5,7 @@ import org.codehaus.groovy.grails.plugins.codecs.HTMLCodec
 import org.codehaus.groovy.grails.plugins.codecs.HTMLCodecFactory
 import org.codehaus.groovy.grails.support.encoding.CodecLookup
 import org.springframework.http.HttpStatus
-
+import org.springframework.mail.MailSendException
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 
@@ -27,15 +27,19 @@ class ChatController {
       return
     }
 
-    // TODO: Validate email
     params.emails?.split(",")?.each { email ->
       log.info("Emailing $email...")
-      sendMail {
-        async true
-        to email
-        subject "LochChat Invite"
-        body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
+      try {
+        sendMail {
+          async true
+          to email
+          subject "LochChat Invite"
+          body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
+        }
+      } catch(MailSendException e) {
+        log.error("Could not deliver email to recipient.", e)
       }
+
     }
 
     result = [status: HttpStatus.OK, data: [chat: chat, url: createLink(controller: 'chat', action: 'room', params: [uniqueId: chat.uniqueId])]]
