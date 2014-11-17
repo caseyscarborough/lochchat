@@ -88,6 +88,14 @@
         }
       });
 
+      $("#exit-chatroom").click(function() {
+        if (confirm("Are you sure you'd like to exit the chatroom?")) {
+          client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " has left the chatroom.|${chatroom.uniqueId}"));
+          client.disconnect();
+          window.location.href = "/" + config.application.name;
+        }
+      });
+
       chatLog.height(chatRoom.height() - 70);
       $(window).resize(function() {
         chatLog.height(chatRoom.height() - 70);
@@ -142,6 +150,10 @@
     <div class="chat-option">
       <g:link controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/Set 2/PNG/2.png" /></g:link>
       <label>Export Chat Log</label>
+    </div>
+    <div class="chat-option">
+      <asset:image id="exit-chatroom" src="flat-icons/Icons/Set 2/PNG/3.png" />
+      <label>Exit Chatroom</label>
     </div>
   </div>
 </div>
