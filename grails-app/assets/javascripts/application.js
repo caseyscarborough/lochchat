@@ -21,13 +21,15 @@ if (typeof jQuery !== 'undefined') {
 		}).ajaxStop(function() {
 			$(this).fadeOut();
 		});
+	})(jQuery);
+
+    $(function() {
+        ZeroClipboard.config({ swfPath: "/" + config.application.name + "/assets/zeroclipboard/dist/ZeroClipboard.swf" });
 
         $('.bootstrap-tagsinput input').focus(function() {
             $(this).parent().css("border-color", "#e67e22");
         }).blur(function() {
             $(this).parent().css("border-color", "#ebedef");
         });
-
-        ZeroClipboard.config({ swfPath: "/" + config.application.name + "/assets/zeroclipboard/dist/ZeroClipboard.swf" });
-	})(jQuery);
+    });
 }

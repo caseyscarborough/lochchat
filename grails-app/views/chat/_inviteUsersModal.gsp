@@ -1,4 +1,4 @@
-<div class="modal fade" id="inviteUsersModal" tabindex="-1" data-backdrop="false" role="dialog" aria-labelledby="inviteUsersModalLabel" aria-hidden="true">
+<div class="modal fade" id="inviteUsersModal" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="inviteUsersModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
