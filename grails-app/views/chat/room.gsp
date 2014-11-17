@@ -155,27 +155,27 @@
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
   <div id="chat-options">
     <div class="chat-option">
-      <asset:image id="chat-copy-url" data-clipboard-text="${chatroom.url}" src="flat-icons/Icons/Set 2/PNG/4.png" />
+      <asset:image id="chat-copy-url" data-clipboard-text="${chatroom.url}" src="flat-icons/Icons/set-2/PNG/4.png" />
       <label>Copy URL</label>
     </div>
     <div class="chat-option">
-      <asset:image id="toggle-chat" src="flat-icons/Icons/Set 2/PNG/11.png" />
+      <asset:image id="toggle-chat" src="flat-icons/Icons/set-2/PNG/11.png" />
       <label>Toggle Chat</label>
     </div>
     <div class="chat-option">
-      <asset:image id="enable-video" src="flat-icons/Icons/Set 2/PNG/10.png" />
+      <asset:image id="enable-video" src="flat-icons/Icons/set-2/PNG/10.png" />
       <label>Enable Video</label>
     </div>
     <div class="chat-option">
-      <asset:image id="invite-users" src="flat-icons/Icons/Set 2/PNG/2.png" />
+      <asset:image id="invite-users" src="flat-icons/Icons/set-2/PNG/2.png" />
       <label>Invite Users</label>
     </div>
     <div class="chat-option">
-      <g:link controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/Set 3/PNG/3.png" /></g:link>
+      <g:link controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/set-3/PNG/3.png" /></g:link>
       <label>Export Chat Log</label>
     </div>
     <div class="chat-option">
-      <asset:image id="exit-chatroom" src="flat-icons/Icons/Set 2/PNG/3.png" />
+      <asset:image id="exit-chatroom" src="flat-icons/Icons/set-2/PNG/3.png" />
       <label>Exit Chatroom</label>
     </div>
   </div>
