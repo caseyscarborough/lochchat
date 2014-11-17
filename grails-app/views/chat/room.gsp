@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-  <title>Home</title>
+  <title>Chatroom</title>
   <meta name="layout" content="main">
   <asset:javascript src="spring-websocket" />
   <script src="//cdn.webrtc-experiment.com/RTCMultiConnection.js"></script>
