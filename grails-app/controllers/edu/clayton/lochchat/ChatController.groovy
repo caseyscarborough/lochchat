@@ -98,7 +98,7 @@ class ChatController {
         async true
         to email
         subject "LochChat Invite"
-        body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
+        body "You've been invited to join a chat at the following url: ${chat.url}"
       }
     } catch (MailSendException e) {
       log.error("Could not deliver email to recipient.", e)
