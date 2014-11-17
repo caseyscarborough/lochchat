@@ -16,9 +16,12 @@ class ChatController {
   def messageService
 
   def create() {
-    def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: new Log().save(flush: true))
+    def logInstance = new Log(chatLog: "")
+    log.info(logInstance.save(flush: true))
+    def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: logInstance)
     def result
     if (!chat.save(flush: true)) {
+      logInstance.delete(flush: true)
       result = [status: HttpStatus.BAD_REQUEST.reasonPhrase, message: messageService.getErrorMessage(chat)]
       response.status = 500
       render result as JSON
@@ -63,6 +66,18 @@ class ChatController {
   @MessageMapping("/chatMessage")
   @SendTo("/topic/chatMessage")
   protected String message(String text) {
-    return codecLookup.lookupEncoder('HTML').encode(text)
+    def array = text.split(/\|/) as List
+    Chat.withTransaction {
+      def chat = Chat.findByUniqueId(array.pop())
+      text = codecLookup.lookupEncoder('HTML').encode(array.join(""))
+
+      if (!chat.log.contents) {
+        chat.log.contents = "$text\n"
+      } else {
+        chat.log.contents += "$text\n"
+      }
+      chat.log.save(flush: true)
+    }
+    text
   }
 }

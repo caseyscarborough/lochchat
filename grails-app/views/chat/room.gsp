@@ -72,7 +72,7 @@
         }
 
         modal.modal('hide');
-        client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " has entered the chatroom."));
+        client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " has entered the chatroom.|${chatroom.uniqueId}" ));
         _connectVideoAndAudio();
       });
 
@@ -80,7 +80,7 @@
         if (event.keyCode == 13) {
           event.preventDefault();
           if ($.trim(chatText.val()) !== "") {
-            client.send("/app/chatMessage", {}, JSON.stringify(username.val() + ": " + chatText.val()));
+            client.send("/app/chatMessage", {}, JSON.stringify(username.val() + ": " + chatText.val() + "|${chatroom.uniqueId}"));
             chatText.val("");
           }
         }
@@ -99,11 +99,8 @@
   <div>
     <button id="enable-video-button" class="btn btn-primary">Enable Video</button>
   </div>
-  <div id="chat-video">
-
-  </div>
-  <div id="chat-log">
-  </div>
+  <div id="chat-video"></div>
+  <div id="chat-log"><lochchat:logHtml logInstance="${chatroom.log}" /></div>
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
 </div>
 <g:render template="usernameModal" />
