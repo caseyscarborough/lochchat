@@ -129,11 +129,11 @@
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
   <div id="chat-options">
     <div class="chat-option">
-      <asset:image id="chat-copy-url" data-clipboard-text="${chatroom.url}" src="flat-ui/img/icons/svg/clipboard.svg" />
+      <asset:image id="chat-copy-url" data-clipboard-text="${chatroom.url}" src="flat-icons/Icons/Set 2/PNG/4.png" />
       <br>Copy URL
     </div>
     <div class="chat-option">
-      <asset:image id="toggle-chat" src="flat-ui/img/icons/svg/chat.svg" />
+      <asset:image id="toggle-chat" src="flat-icons/Icons/Set 2/PNG/11.png" />
       <br>Toggle Chat
     </div>
   </div>
