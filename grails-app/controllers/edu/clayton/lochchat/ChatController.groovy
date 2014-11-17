@@ -7,8 +7,6 @@ import org.springframework.mail.MailSendException
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
 
-import javax.websocket.OnClose
-
 class ChatController {
 
   CodecLookup codecLookup
@@ -36,7 +34,7 @@ class ChatController {
           subject "LochChat Invite"
           body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
         }
-      } catch(MailSendException e) {
+      } catch (MailSendException e) {
         log.error("Could not deliver email to recipient.", e)
       }
 
