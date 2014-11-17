@@ -27,6 +27,8 @@
 
       connection.onstream = function(e) {
         $("#chat-video").append(e.mediaElement);
+        var videos = $("#chat-video video");
+        videos.width(($("#chatroom").width() - $("#chat-log").width()) / videos.length - 20);
       };
 
       connection.connect();
