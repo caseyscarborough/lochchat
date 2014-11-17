@@ -88,9 +88,9 @@
         }
       });
 
-      chatLog.height(chatRoom.height() - 90);
+      chatLog.height(chatRoom.height() - 70);
       $(window).resize(function() {
-        chatLog.height(chatRoom.height() - 90);
+        chatLog.height(chatRoom.height() - 70);
       });
 
       chatLog.html(_urlify(chatLog.html()));
@@ -106,6 +106,7 @@
   <div id="chat-video"></div>
   <div id="chat-log"><lochchat:logHtml logInstance="${chatroom.log}" /></div>
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
+  <div id="chat-options"></div>
 </div>
 <g:render template="usernameModal" />
 </body>

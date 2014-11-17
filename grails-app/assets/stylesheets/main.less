@@ -129,8 +129,8 @@ div h3 {
   height: 100px;
   width: 300px;
   font-size: 14px;
-  border: 1px solid #999;
-  border-top: 3px solid #999;
+  border: 1px solid @wet-asphalt;
+  border-top: 5px solid @wet-asphalt;
   border-bottom: none;
 
   &:focus {
@@ -177,4 +177,14 @@ div h3 {
   -ms-transition: border-color .5s;
   -o-transition: border-color .5s;
   transition: border-color .5s;
+}
+
+#chat-options {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 100px;
+  width: 100%;
+  background-color: @wet-asphalt;
+  z-index: -1;
 }
