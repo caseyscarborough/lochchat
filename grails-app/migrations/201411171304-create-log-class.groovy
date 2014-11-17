@@ -10,7 +10,7 @@ databaseChangeLog = {
 				constraints(nullable: "false")
 			}
 
-			column(name: "chat_log", type: "longtext")
+			column(name: "contents", type: "longtext")
 
 			column(name: "last_updated", type: "datetime") {
 				constraints(nullable: "false")
@@ -20,9 +20,7 @@ databaseChangeLog = {
 
 	changeSet(author: "Casey", id: "create-log-class-2") {
 		addColumn(tableName: "chat") {
-			column(name: "log_id", type: "bigint") {
-				constraints(nullable: "false")
-			}
+			column(name: "log_id", type: "bigint")
 		}
 	}
 

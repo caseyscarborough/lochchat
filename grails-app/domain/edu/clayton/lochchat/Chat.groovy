@@ -9,6 +9,7 @@ class Chat {
   Log log
 
   static constraints = {
+    log nullable: true
     endTime nullable: true
     anonymousUsers nullable: true
     uniqueId unique: true

@@ -2,14 +2,14 @@ package edu.clayton.lochchat
 
 class Log {
 
-  String chatLog
+  String contents
   Date lastUpdated
 
   static constraints = {
-    chatLog nullable: true, blank: true
+    contents nullable: true, blank: true
   }
 
   static mapping = {
-    chatLog type: 'text'
+    contents type: 'text'
   }
 }
