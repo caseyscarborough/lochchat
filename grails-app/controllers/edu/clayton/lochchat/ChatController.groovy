@@ -66,7 +66,7 @@ class ChatController {
   @MessageMapping("/chatMessage")
   @SendTo("/topic/chatMessage")
   protected String message(String text) {
-    def array = text.split(/\|/) as List
+    def array = text?.split(/\|/) as List
     Chat.withTransaction {
       def chat = Chat.findByUniqueId(array.pop())
       text = codecLookup.lookupEncoder('HTML').encode(array.join(""))
