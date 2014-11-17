@@ -25,19 +25,25 @@ class ChatController {
       return
     }
 
-    params.emails?.split(",")?.each { email ->
-      log.info("Emailing $email...")
-      try {
-        sendMail {
-          async true
-          to email
-          subject "LochChat Invite"
-          body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
-        }
-      } catch (MailSendException e) {
-        log.error("Could not deliver email to recipient.", e)
-      }
+    log.info("Params: $params")
 
+    if (params.emails) {
+      log.info("Email addresses were provided.")
+
+      params.emails?.trim()?.split(",")?.each { email ->
+        log.info("Emailing $email...")
+        try {
+          sendMail {
+            async true
+            to email
+            subject "LochChat Invite"
+            body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
+          }
+        } catch (MailSendException e) {
+          log.error("Could not deliver email to recipient.", e)
+        }
+
+      }
     }
 
     result = [status: HttpStatus.OK, data: [chat: chat, url: createLink(controller: 'chat', action: 'room', params: [uniqueId: chat.uniqueId])]]
