@@ -94,6 +94,17 @@
       });
 
       chatLog.html(_urlify(chatLog.html()));
+
+      $(".tooltip-link").tooltip();
+
+      var copyButton = $("#chat-copy-url");
+      var zc = new ZeroClipboard(copyButton);
+
+      zc.on("ready", function(readyEvent) {
+        zc.on("aftercopy", function(event) {
+          alert("URL copied to clipboard!");
+        });
+      });
     });
   </script>
 </head>
@@ -106,7 +117,12 @@
   <div id="chat-video"></div>
   <div id="chat-log"><lochchat:logHtml logInstance="${chatroom.log}" /></div>
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
-  <div id="chat-options"></div>
+  <div id="chat-options">
+    <div class="chat-option">
+      <asset:image id="chat-copy-url" data-clipboard-text="${chatroom.url}" src="flat-ui/img/icons/svg/clipboard.svg" />
+      <br>Copy URL
+    </div>
+  </div>
 </div>
 <g:render template="usernameModal" />
 </body>

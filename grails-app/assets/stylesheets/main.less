@@ -132,6 +132,7 @@ div h3 {
   border: 1px solid @wet-asphalt;
   border-top: 5px solid @wet-asphalt;
   border-bottom: none;
+  z-index: 2;
 
   &:focus {
     outline: none;
@@ -186,5 +187,21 @@ div h3 {
   height: 100px;
   width: 100%;
   background-color: @wet-asphalt;
-  z-index: -1;
+  z-index: 1;
+  padding: 20px;
+
+  .chat-option {
+    max-height: 100%;
+    cursor: pointer;
+    float: left;
+    width: 100px;
+    color: white;
+    font-size: 12px;
+    text-align: center;
+
+    img {
+      margin: 0 auto;
+      max-height: 100%;
+    }
+  }
 }
