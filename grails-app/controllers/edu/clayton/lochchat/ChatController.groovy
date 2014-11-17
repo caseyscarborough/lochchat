@@ -46,6 +46,11 @@ class ChatController {
 
   def room(String uniqueId) {
     def chatroom = Chat.findByUniqueId(uniqueId)
+
+    if (!chatroom) {
+      redirect(controller: "home", action: "index")
+      return
+    }
     [chatroom: chatroom]
   }
 
