@@ -16,7 +16,7 @@ class ChatController {
   def messageService
 
   def create() {
-    def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date())
+    def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: new Log().save(flush: true))
     def result
     if (!chat.save(flush: true)) {
       result = [status: HttpStatus.BAD_REQUEST.reasonPhrase, message: messageService.getErrorMessage(chat)]

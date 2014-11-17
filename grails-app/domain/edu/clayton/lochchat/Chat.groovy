@@ -6,6 +6,7 @@ class Chat {
   Date startTime
   Date endTime
   String[] anonymousUsers
+  Log log
 
   static constraints = {
     endTime nullable: true
