@@ -11,8 +11,9 @@ class ChatController {
 
   CodecLookup codecLookup
 
-  static allowedMethods = [create: 'POST']
+  static allowedMethods = [create: 'POST', invite: 'POST']
 
+  def mailService
   def messageService
 
   def create() {
@@ -35,17 +36,7 @@ class ChatController {
 
       params.emails?.trim()?.split(",")?.each { email ->
         log.info("Emailing $email...")
-        try {
-          sendMail {
-            async true
-            to email
-            subject "LochChat Invite"
-            body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
-          }
-        } catch (MailSendException e) {
-          log.error("Could not deliver email to recipient.", e)
-        }
-
+        emailUser(email, chat)
       }
     }
 
@@ -71,6 +62,17 @@ class ChatController {
     response.outputStream.flush()
   }
 
+  def invite() {
+    def chat = Chat.findByUniqueId(params.uniqueId)
+    if (params.emails) {
+      params.emails.split(",").each { String email ->
+        emailUser(email, chat)
+      }
+    }
+    def result = [status: HttpStatus.OK]
+    render result as JSON
+  }
+
   @MessageMapping("/chatMessage")
   @SendTo("/topic/chatMessage")
   protected String message(String text) {
@@ -87,5 +89,19 @@ class ChatController {
       chat.log.save(flush: true)
     }
     text
+  }
+
+  protected void emailUser(String email, Chat chat) {
+    log.info("Emailing $email...")
+    try {
+      mailService.sendMail {
+        async true
+        to email
+        subject "LochChat Invite"
+        body "You've been invited to join a chat at the following url: ${createLink(controller: "chat", action: "room", absolute: true)}/${chat.uniqueId}"
+      }
+    } catch (MailSendException e) {
+      log.error("Could not deliver email to recipient.", e)
+    }
   }
 }

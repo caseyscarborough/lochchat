@@ -103,8 +103,6 @@
 
       chatLog.html(_urlify(chatLog.html()));
 
-      $(".tooltip-link").tooltip();
-
       var copyButton = $("#chat-copy-url");
       var zc = new ZeroClipboard(copyButton);
 
@@ -122,6 +120,32 @@
         }
         chatLog.animate({ right: -300 }, 200);
         chatText.animate({ right: -300 }, 200);
+      });
+
+      $("#invite-users").click(function() {
+        $("#inviteUsersModal").modal();
+      });
+
+      $("#invite-users-button").click(function() {
+        $(this).button('loading');
+        $.ajax({
+          type: "POST",
+          data: {
+            uniqueId: "${chatroom.uniqueId}",
+            emails: $("#chatroom-emails").val()
+          },
+          url: "/" + config.application.name + "/chat/invite",
+          success: function() {
+            client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " invited the following users to the chatroom: " + $("#chatroom-emails").val() + "|${chatroom.uniqueId}"));
+            $("#chatroom-emails").val("");
+            $("#inviteUsersModal").modal('hide');
+            $(this).button('reset');
+          },
+          error: function(data) {
+            alert(data.responseJSON.message);
+            $(this).button('reset');
+          }
+        });
       });
     });
   </script>
@@ -148,7 +172,11 @@
       <label>Enable Video</label>
     </div>
     <div class="chat-option">
-      <g:link controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/Set 2/PNG/2.png" /></g:link>
+      <asset:image id="invite-users" src="flat-icons/Icons/Set 2/PNG/2.png" />
+      <label>Invite Users</label>
+    </div>
+    <div class="chat-option">
+      <g:link controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/Set 3/PNG/3.png" /></g:link>
       <label>Export Chat Log</label>
     </div>
     <div class="chat-option">
@@ -158,5 +186,6 @@
   </div>
 </div>
 <g:render template="usernameModal" />
+<g:render template="inviteUsersModal" />
 </body>
 </html>

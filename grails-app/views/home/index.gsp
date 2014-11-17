@@ -7,11 +7,6 @@
     $(document).ready(function() {
       Chat.init();
       $('.popover-link').popover({ trigger: 'hover' });
-      $('.bootstrap-tagsinput input').focus(function() {
-        $(this).parent().css("border-color", "#e67e22");
-      }).blur(function() {
-        $(this).parent().css("border-color", "#ebedef");
-      });
     })
   </script>
 </head>
