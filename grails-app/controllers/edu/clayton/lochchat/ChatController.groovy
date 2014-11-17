@@ -63,6 +63,14 @@ class ChatController {
     [chatroom: chatroom]
   }
 
+  def export() {
+    def chat = Chat.findByUniqueId(params.uniqueId)
+    response.contentType = 'application/octet-stream'
+    response.setHeader('Content-disposition', "attachment; filename=${params.uniqueId}-${new Date().toTimestamp()}.txt")
+    response.outputStream << chat.log.contents.getBytes()
+    response.outputStream.flush()
+  }
+
   @MessageMapping("/chatMessage")
   @SendTo("/topic/chatMessage")
   protected String message(String text) {

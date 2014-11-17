@@ -139,6 +139,10 @@
       <asset:image id="enable-video" src="flat-icons/Icons/Set 2/PNG/10.png" />
       <label>Enable Video</label>
     </div>
+    <div class="chat-option">
+      <g:link controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/Set 2/PNG/2.png" /></g:link>
+      <label>Export Chat Log</label>
+    </div>
   </div>
 </div>
 <g:render template="usernameModal" />
