@@ -11,7 +11,8 @@
 //= require app/config
 //= require app/chat
 //= require zeroclipboard/dist/ZeroClipboard
-//= require_self
+//= require jQuery-linkify/dist/jquery.linkify.min
+//= require_s
 
 if (typeof jQuery !== 'undefined') {
 	(function($) {
