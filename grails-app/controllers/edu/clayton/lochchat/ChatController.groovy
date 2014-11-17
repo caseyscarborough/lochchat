@@ -1,13 +1,13 @@
 package edu.clayton.lochchat
 
 import grails.converters.JSON
-import org.codehaus.groovy.grails.plugins.codecs.HTMLCodec
-import org.codehaus.groovy.grails.plugins.codecs.HTMLCodecFactory
 import org.codehaus.groovy.grails.support.encoding.CodecLookup
 import org.springframework.http.HttpStatus
 import org.springframework.mail.MailSendException
 import org.springframework.messaging.handler.annotation.MessageMapping
 import org.springframework.messaging.handler.annotation.SendTo
+
+import javax.websocket.OnClose
 
 class ChatController {
 
