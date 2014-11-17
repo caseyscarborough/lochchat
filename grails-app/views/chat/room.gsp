@@ -92,6 +92,8 @@
       $(window).resize(function() {
         chatLog.height(chatRoom.height() - 90);
       });
+
+      chatLog.html(_urlify(chatLog.html()));
     });
   </script>
 </head>

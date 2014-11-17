@@ -72,9 +72,9 @@ class ChatController {
       text = codecLookup.lookupEncoder('HTML').encode(array.join(""))
 
       if (!chat.log.contents) {
-        chat.log.contents = "$text\n"
+        chat.log.contents = "$text\r\n"
       } else {
-        chat.log.contents += "$text\n"
+        chat.log.contents += "$text\r\n"
       }
       chat.log.save(flush: true)
     }
