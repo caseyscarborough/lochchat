@@ -33,7 +33,7 @@
 
       connection.connect();
 
-      document.querySelector('#enable-video-button').onclick = function() {
+      document.querySelector('#enable-video').onclick = function() {
         connection.open();
       };
     };
@@ -122,7 +122,6 @@
 <body>
 <div id="chatroom">
   <div>
-    <button id="enable-video-button" class="btn btn-primary">Enable Video</button>
   </div>
   <div id="chat-video"></div>
   <div id="chat-log"><lochchat:logHtml logInstance="${chatroom.log}" /></div>
@@ -130,11 +129,15 @@
   <div id="chat-options">
     <div class="chat-option">
       <asset:image id="chat-copy-url" data-clipboard-text="${chatroom.url}" src="flat-icons/Icons/Set 2/PNG/4.png" />
-      <br>Copy URL
+      <label>Copy URL</label>
     </div>
     <div class="chat-option">
       <asset:image id="toggle-chat" src="flat-icons/Icons/Set 2/PNG/11.png" />
-      <br>Toggle Chat
+      <label>Toggle Chat</label>
+    </div>
+    <div class="chat-option">
+      <asset:image id="enable-video" src="flat-icons/Icons/Set 2/PNG/10.png" />
+      <label>Enable Video</label>
     </div>
   </div>
 </div>
