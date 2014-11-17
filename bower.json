@@ -11,7 +11,8 @@
     "flat-ui": "2.2.1",
     "bootstrap": "3.3.0",
     "zeroclipboard": "2.1.6",
-    "fontawesome": "4.2.0"
+    "fontawesome": "4.2.0",
+    "jQuery-linkify": "1.1.7"
   },
   "license": "MIT",
   "private": true,
