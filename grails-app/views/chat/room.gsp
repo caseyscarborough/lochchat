@@ -105,6 +105,16 @@
           alert("URL copied to clipboard!");
         });
       });
+
+      $("#toggle-chat").click(function() {
+        if (chatLog.css("right") === "-300px") {
+          chatLog.animate({ right: 0 }, 200);
+          chatText.animate({ right: 0 }, 200);
+          return;
+        }
+        chatLog.animate({ right: -300 }, 200);
+        chatText.animate({ right: -300 }, 200);
+      });
     });
   </script>
 </head>
@@ -121,6 +131,10 @@
     <div class="chat-option">
       <asset:image id="chat-copy-url" data-clipboard-text="${chatroom.url}" src="flat-ui/img/icons/svg/clipboard.svg" />
       <br>Copy URL
+    </div>
+    <div class="chat-option">
+      <asset:image id="toggle-chat" src="flat-ui/img/icons/svg/chat.svg" />
+      <br>Toggle Chat
     </div>
   </div>
 </div>
