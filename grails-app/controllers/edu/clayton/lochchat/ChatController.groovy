@@ -54,7 +54,7 @@ class ChatController {
     [chatroom: chatroom]
   }
 
-  def export() {
+  def exportLog() {
     def chat = Chat.findByUniqueId(params.uniqueId)
     def decoder = codecLookup.lookupDecoder('HTML')
     response.contentType = 'application/octet-stream'
