@@ -17,7 +17,7 @@ class ChatController {
   def messageService
 
   def create() {
-    def logInstance = new Log(chatLog: "")
+    def logInstance = new Log(messages: [])
     log.info(logInstance.save(flush: true))
     def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: logInstance)
     def result
@@ -56,9 +56,13 @@ class ChatController {
 
   def export() {
     def chat = Chat.findByUniqueId(params.uniqueId)
+    def decoder = codecLookup.lookupDecoder('HTML')
     response.contentType = 'application/octet-stream'
     response.setHeader('Content-disposition', "attachment; filename=${params.uniqueId}-${new Date().toTimestamp()}.txt")
-    response.outputStream << chat.log.contents.getBytes()
+    response.outputStream << "Chat log for room $chat.uniqueId, starting on $chat.log.formattedDateCreated.\n\n"
+    chat.log.messages.sort { it.dateCreated }. each { Message message ->
+      response.outputStream << message.dateCreated.format("h:mma '-' ") + decoder.decode(message.contents) + "\n"
+    }
     response.outputStream.flush()
   }
 
@@ -81,12 +85,7 @@ class ChatController {
       def chat = Chat.findByUniqueId(array.pop())
       text = codecLookup.lookupEncoder('HTML').encode(array.join(""))
 
-      if (!chat.log.contents) {
-        chat.log.contents = "$text\r\n"
-      } else {
-        chat.log.contents += "$text\r\n"
-      }
-      chat.log.save(flush: true)
+      new Message(contents: text, log: chat.log).save(flush: true)
     }
     text
   }

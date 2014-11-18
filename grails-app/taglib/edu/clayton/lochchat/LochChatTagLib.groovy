@@ -6,8 +6,8 @@ class LochChatTagLib {
 
     def logHtml = { attrs ->
         Log logInstance = attrs.logInstance
-        logInstance?.contents?.split("\r\n")?.each { line ->
-            out << '<div class="chat-text old">' + line + '</div>'
+        logInstance?.messages?.sort { it.dateCreated }?.each { message ->
+            out << '<div class="chat-text old">' + message + '</div>'
         }
     }
 }

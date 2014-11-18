@@ -12,4 +12,8 @@ class Log {
 
   static mapping = {
   }
+
+  String getFormattedDateCreated() {
+    dateCreated.format("MM/dd/yyyy 'at' h:mma")
+  }
 }
