@@ -37,8 +37,10 @@ var Room = (function($) {
         return "<div class='chat-text " + clazz + "'>" + message + '</div>';
     };
 
-    var _setupIncomingChats = function() {
-        _socket = new WebSocket("ws://localhost:8080/lochchat/chatMessage");
+    var _setupIncomingChats = function(websocketUrl) {
+        websocketUrl = websocketUrl.replace(/http:\/\/(.*):443/, "wss://$1");
+        websocketUrl = websocketUrl.replace(/http/, "ws");
+        _socket = new WebSocket(websocketUrl);
 
         _socket.onopen = function(message) {
             _chatLog.append(_wrapMessage("Connected to server..."));
@@ -52,9 +54,8 @@ var Room = (function($) {
         };
 
         _socket.onclose = function(message) {
-            processClose(message);
             _socket.send("Client disconnected......\n");
-            _chatLog.append(_wrapMessage("Server Disconnected..."));
+            _chatLog.append(_wrapMessage("Server disconnected..."));
         };
 
         _socket.onerror = function(message) {
@@ -132,7 +133,7 @@ var Room = (function($) {
         });
     };
 
-    self.init = function(uniqueId) {
+    self.init = function(uniqueId, websocketUrl) {
         _uniqueId = uniqueId;
         _chatLog = $("#chat-log");
         _chatText = $("#chat-text");
@@ -140,7 +141,7 @@ var Room = (function($) {
         _chatWorkspace = $("#chat-workspace-" + _uniqueId);
         _chatVideo = $("#chat-video");
 
-        _setupIncomingChats();
+        _setupIncomingChats(websocketUrl);
         _setupCopyUrl();
         _setupUserInvitations();
         _setupToggleChat();
