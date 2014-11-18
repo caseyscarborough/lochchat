@@ -1,4 +1,4 @@
-var Chat = (function($) {
+var Home = (function($) {
     'use strict';
 
     var self = {};

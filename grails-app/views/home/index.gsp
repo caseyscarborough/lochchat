@@ -5,7 +5,7 @@
   <meta name="layout" content="main">
   <script>
     $(document).ready(function() {
-      Chat.init();
+      Home.init();
       $('.popover-link').popover({ trigger: 'hover' });
     })
   </script>
