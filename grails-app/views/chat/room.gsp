@@ -7,7 +7,7 @@
   <script src="//cdn.webrtc-experiment.com/RTCMultiConnection.js"></script>
   <script src="//mobwrite3.appspot.com/static/compressed_form.js"></script>
   <script>
-    mobwrite.syncGateway = 'http://mobwrite3.appspot.com/scripts/q.py';
+    mobwrite.syncGateway = 'https://mobwrite3.appspot.com/scripts/q.py';
   </script>
   <script>
     var _connectVideoAndAudio = function() {
@@ -19,6 +19,7 @@
       };
 
       connection.onstream = function(e) {
+        $("#chat-video").show();
         $("#chat-video").append(e.mediaElement);
       };
 
