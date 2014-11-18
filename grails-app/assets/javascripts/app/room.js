@@ -10,9 +10,8 @@ var Room = (function($) {
         _chatText = null,
         _username = null;
 
-    // _socket and _client for chatroom
-    var _socket = null,
-        _client = null;
+    // WebSocket connection for chatroom
+    var _socket = null;
 
     var _connectVideoAndAudio = function() {
         var connection = new RTCMultiConnection();
@@ -98,7 +97,7 @@ var Room = (function($) {
                 },
                 url: "/" + config.application.name + "/chat/invite",
                 success: function() {
-                    _client.send("/app/chatMessage", {}, JSON.stringify(_username + " invited the following users to the chatroom: " + emails.val() + "|" + _uniqueId));
+                    _socket.send(_username + " invited the following users to the chatroom: " + emails.val() + "|" + _uniqueId);
                     emails.val("");
                     $("#inviteUsersModal").modal('hide');
                     $(this).button('reset');
@@ -128,8 +127,6 @@ var Room = (function($) {
     var _setupExitChatroom = function() {
         $("#exit-chatroom").click(function() {
             if (confirm("Are you sure you'd like to exit the chatroom?")) {
-                _client.send("/app/chatMessage", {}, JSON.stringify(_username + " has left the chatroom.|" + _uniqueId));
-                _client.disconnect();
                 window.location.href = "/" + config.application.name;
             }
         });
