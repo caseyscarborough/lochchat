@@ -63,8 +63,8 @@ public class LochChatServletChatListener implements ServletContextListener {
 
       Message.withTransaction {
         def chat = Chat.findByUniqueId(chatId)
+        new Message(user: message, contents: message + " has joined the chatroom.", log: chat?.log).save(flush: true)
         message += " has joined the chatroom."
-        new Message(user: message, contents: message, log: chat?.log).save(flush: true)
       }
 
       output.put("message", "$message")
