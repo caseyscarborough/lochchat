@@ -7,7 +7,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#"><asset:image src="loch.png" class="logo" /> LochChat</a>
+      <a class="navbar-brand" href="${createLink(controller: 'home', action: 'index')}"><asset:image src="loch.png" class="logo" /> LochChat</a>
     </div>
     <div class="collapse navbar-collapse" id="navigation-bar">
     </div>
