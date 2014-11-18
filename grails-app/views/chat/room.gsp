@@ -1,10 +1,14 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<html>
+<html xmlns="http://www.w3.org/1999/html">
 <head>
   <title>Chatroom</title>
   <meta name="layout" content="main">
   <asset:javascript src="spring-websocket" />
   <script src="//cdn.webrtc-experiment.com/RTCMultiConnection.js"></script>
+  <script src="//mobwrite3.appspot.com/static/compressed_form.js"></script>
+  <script>
+    mobwrite.syncGateway = 'http://mobwrite3.appspot.com/scripts/q.py';
+  </script>
   <script>
     var _connectVideoAndAudio = function() {
       var connection = new RTCMultiConnection();
@@ -34,6 +38,7 @@
       var chatLog = $("#chat-log");
       var chatText = $("#chat-text");
       var chatRoom = $("#chatroom");
+      var chatWorkspace = $("#chat-workspace-${chatroom.uniqueId}");
 
       client.connect({}, function() {
         client.subscribe("/topic/chatMessage", function(message) {
@@ -48,6 +53,10 @@
       var modal = $("#usernameModal");
       var enterRoom = $("#enter-room-button");
       modal.modal();
+
+      if ($.trim(username.val()) !== "") {
+        enterRoom.removeAttr("disabled");
+      }
 
       username.keyup(function() {
         if ($.trim(username.val()) !== "") {
@@ -88,8 +97,12 @@
       });
 
       chatLog.height(chatRoom.height() - 70);
+      chatWorkspace.height(chatRoom.height() - 140);
+      chatWorkspace.width(chatRoom.width() - 340);
       $(window).resize(function() {
         chatLog.height(chatRoom.height() - 70);
+        chatWorkspace.height(chatRoom.height() - 140);
+        chatWorkspace.width(chatRoom.width() - 340);
       });
 
       chatLog.html(chatLog.html());
@@ -142,6 +155,8 @@
           }
         });
       });
+
+      mobwrite.share('chat-workspace-${chatroom.uniqueId}');
     });
   </script>
 </head>
@@ -151,6 +166,7 @@
   <div>
   </div>
   <div id="chat-video"></div>
+  <textarea class="chat-workspace" id="chat-workspace-${chatroom.uniqueId}" placeholder="Collaborate here..."></textarea>
   <div id="chat-log"><lochchat:logHtml logInstance="${chatroom.log}" /></div>
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
   <div id="chat-options">
