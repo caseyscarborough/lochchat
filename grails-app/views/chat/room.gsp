@@ -193,7 +193,7 @@
       <label>Invite Users</label>
     </div>
     <div class="chat-option">
-      <g:link controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/set-3/PNG/3.png" /></g:link>
+      <g:link target="_blank" controller="chat" action="export" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/set-3/PNG/3.png" /></g:link>
       <label>Export Chat Log</label>
     </div>
     <div class="chat-option">
