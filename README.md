@@ -34,3 +34,15 @@ You can then start the application up:
 ```bash
 grails run-app
 ```
+
+## Credits
+
+The following open source libraries were used in the development of LochChat:
+
+* [jQuery](http://jquery.com/)
+* [Bootstrap CSS Framework](http://getbootstrap.com/)
+* [Flat UI Bootstrap Theme](http://designmodo.github.io/Flat-UI/)
+* [ZeroClipboard](http://zeroclipboard.org/)
+* [Linkify jQuery plugin](http://soapbox.github.io/jQuery-linkify/)
+* [RTCMultiConnection](http://www.rtcmulticonnection.org/)
+* [Google Mobwrite](http://code.google.com/p/google-mobwrite/)
