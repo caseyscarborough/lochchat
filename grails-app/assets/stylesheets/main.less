@@ -6,7 +6,7 @@ html, body {
 }
 
 body {
-  background-color: @clouds;
+  background-color: @inverse;
 }
 
 a, a:visited {
@@ -221,4 +221,51 @@ div h3 {
 .chat-workspace {
   font-family: Consolas, Monaco, "Courier New", monospace;
   font-size: 14px;
+}
+
+#homepage-info {
+  margin: 80px auto;
+  padding-bottom: 30px;
+}
+
+.homepage-info {
+  position: relative;
+  text-align: center;
+  padding: 20px;
+  margin-left: 6.25%;
+  margin-bottom: 20px;
+  background: rgba(52, 73, 94, 0.9);
+  color: white;
+  min-height: 300px;
+  border-radius: 5px;
+  font-size: 14px;
+
+  h3 {
+    font-size: 24px;
+  }
+
+  .homepage-icon {
+    margin: 0 auto 20px;
+    display: block;
+  }
+
+  .homepage-description {
+    margin: 0 auto;
+  }
+}
+
+footer {
+  margin-top: 40px;
+  background-color: @clouds;
+  width: 100%;
+  padding: 20px;
+
+  h2 {
+    margin: 0;
+  }
+
+  .github-image {
+    float: left;
+    margin-right: 10px;
+  }
 }
