@@ -2,9 +2,11 @@ package edu.clayton.lochchat
 
 import grails.converters.JSON
 import org.apache.commons.lang.StringEscapeUtils
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes as GA
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.springframework.context.ApplicationContext
 
 import javax.servlet.ServletContext
 import javax.servlet.ServletContextEvent
@@ -13,34 +15,49 @@ import javax.servlet.annotation.WebListener
 import javax.websocket.*
 import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
+import java.sql.Driver
+import java.sql.DriverManager
+import java.sql.SQLException
 
 @WebListener
 @ServerEndpoint("/chatMessage")
 public class LochChatServletChatListener implements ServletContextListener {
 
   private final Logger log = LoggerFactory.getLogger(getClass().name)
-
   static final Set<Session> chatroomUsers = ([] as Set).asSynchronized()
 
   @Override
-  public void contextInitialized(ServletContextEvent event) {
-    ServletContext servletContext = event.servletContext
-    final ServerContainer serverContainer = servletContext.getAttribute("javax.websocket.server.ServerContainer")
+  public void contextInitialized(ServletContextEvent sce) {
+    ServletContext servletContext = sce.servletContext
+    ServerContainer serverContainer = (ServerContainer) servletContext.getAttribute("javax.websocket.server.ServerContainer")
     try {
       serverContainer.addEndpoint(LochChatServletChatListener)
-      def ctx = servletContext.getAttribute(GA.APPLICATION_CONTEXT)
-      def grailsApplication = ctx.grailsApplication
-      def config = grailsApplication.config
-      int defaultMaxSessionIdleTimeout = config.myservlet.timeout ?: 0
+      ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GA.APPLICATION_CONTEXT)
+      GrailsApplication grailsApplication = ctx.grailsApplication
+      ConfigObject config = grailsApplication.config
+      Integer defaultMaxSessionIdleTimeout = config.myservlet.timeout ?: 0
       serverContainer.defaultMaxSessionIdleTimeout = defaultMaxSessionIdleTimeout
-    }
-    catch (IOException e) {
+    } catch (IOException e) {
+      log.error(e.message, e)
+    } catch (NullPointerException e) {
       log.error(e.message, e)
     }
   }
 
   @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent) {}
+  public void contextDestroyed(ServletContextEvent servletContextEvent) {
+    Enumeration<Driver> drivers = DriverManager.getDrivers();
+    while (drivers.hasMoreElements()) {
+      Driver driver = drivers.nextElement();
+      try {
+        DriverManager.deregisterDriver(driver);
+        log.info(String.format("deregistering jdbc driver: %s", driver));
+      } catch (SQLException e) {
+        log.error(String.format("Error deregistering driver %s", driver), e);
+      }
+
+    }
+  }
 
   @OnOpen
   public void handleOpen(Session userSession) {
