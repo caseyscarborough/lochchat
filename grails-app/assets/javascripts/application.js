@@ -9,10 +9,12 @@
 //= require bootstrap/dist/js/bootstrap
 //= require flat-ui/dist/js/flat-ui
 //= require app/config
-//= require app/chat
 //= require zeroclipboard/dist/ZeroClipboard
 //= require jQuery-linkify/dist/jquery.linkify.min
-//= require_s
+//= require spring-websocket
+//= require app/chat
+//= require app/room
+//= require_self
 
 if (typeof jQuery !== 'undefined') {
 	(function($) {
