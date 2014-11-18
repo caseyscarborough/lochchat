@@ -84,30 +84,19 @@ class ChatController {
     render result as JSON
   }
 
-  @MessageMapping("/chatMessage")
-  @SendTo("/topic/chatMessage")
-  protected String message(String text) {
-    def array = text?.split(/\|/) as List
-    Chat.withTransaction {
-      def chat = Chat.findByUniqueId(array.pop())
-      text = codecLookup.lookupEncoder('HTML').encode(array.join(""))
-
-      new Message(contents: text, log: chat.log).save(flush: true)
-    }
-    text
-  }
-
   protected void emailUser(String email, Chat chat) {
     log.info("Emailing $email...")
     try {
       mailService.sendMail {
-        async true
         to email
         subject "LochChat Invite"
         body "You've been invited to join a chat at the following url: ${chat.url}"
       }
     } catch (MailSendException e) {
       log.error("Could not deliver email to recipient.", e)
+      new Message(contents: "Cound not deliver email to recipient: $email. Are you sure this email address exists?", log: chat.log).save(flush: true)
+      chat.log.save(flush: true)
+      chat.save(flush: true)
     }
   }
 }

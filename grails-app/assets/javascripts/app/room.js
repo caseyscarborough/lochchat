@@ -34,17 +34,42 @@ var Room = (function($) {
         };
     };
 
-    var _setupIncomingChats = function() {
-        _socket = new SockJS("/" + config.application.name + "/stomp");
-        _client = Stomp.over(_socket);
+    var _wrapMessage = function(message, clazz) {
+        return "<div class='chat-text " + clazz + "'>" + message + '</div>';
+    };
 
-        _client.connect({}, function() {
-            _client.subscribe("/topic/chatMessage", function(message) {
-                var new_chatLog = $("<div class='chat-text'>" + JSON.parse(message.body) + '</div>');
-                new_chatLog.linkify();
-                _chatLog.append(new_chatLog);
-                _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() }, 200);
-            });
+    var _setupIncomingChats = function() {
+        _socket = new WebSocket("ws://localhost:8080/lochchat/chatMessage");
+
+        _socket.onopen = function(message) {
+            _chatLog.append(_wrapMessage("Connected to server..."));
+        };
+
+        _socket.onmessage = function(message) {
+            var new_chatLog = $(_wrapMessage(JSON.parse(message.data).message));
+            new_chatLog.linkify();
+            _chatLog.append(new_chatLog);
+            _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() }, 200);
+        };
+
+        _socket.onclose = function(message) {
+            processClose(message);
+            _socket.send("Client disconnected......\n");
+            _chatLog.append(_wrapMessage("Server Disconnected..."));
+        };
+
+        _socket.onerror = function(message) {
+            _chatLog.append(_wrapMessage("An error occurred."));
+        };
+
+        _chatText.keypress(function(event) {
+            if (event.keyCode == 13) {
+                event.preventDefault();
+                if ($.trim(_chatText.val()) !== "") {
+                    _socket.send(_chatText.val() + "|" + _uniqueId);
+                    _chatText.val("");
+                }
+            }
         });
     };
 
@@ -151,18 +176,8 @@ var Room = (function($) {
 
             modal.modal('hide');
             _username = username.val();
-            _client.send("/app/chatMessage", {}, JSON.stringify(_username + " has entered the chatroom.|" + _uniqueId ));
+            _socket.send(_username + "|" + _uniqueId );
             _connectVideoAndAudio();
-        });
-
-        _chatText.keypress(function(event) {
-            if (event.keyCode == 13) {
-                event.preventDefault();
-                if ($.trim(_chatText.val()) !== "") {
-                    _client.send("/app/chatMessage", {}, JSON.stringify(_username + ": " + _chatText.val() + "|" + _uniqueId));
-                    _chatText.val("");
-                }
-            }
         });
 
         _chatLog.height(_chatRoom.height() - 70);

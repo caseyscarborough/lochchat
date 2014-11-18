@@ -133,10 +133,12 @@ log4j.main = {
 
   environments {
     development {
-      info 'grails.app'
+      debug 'grails.app'
+      debug 'edu.clayton.lochchat'
     }
     production {
-      info 'grails.app'
+      warn 'grails.app'
+      warn 'edu.clayton.lochchat'
     }
   }
 }

@@ -7,7 +7,7 @@ class UrlMappings {
       }
     }
 
-    "/$uniqueId"(controller: "chat", action: "room")
+    "/r/$uniqueId"(controller: "chat", action: "room")
     "/"(controller: "home", action: "index")
     "500"(view: '/error')
   }
