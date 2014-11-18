@@ -131,10 +131,12 @@
         if (chatLog.css("right") === "-300px") {
           chatLog.animate({ right: 0 }, 200);
           chatText.animate({ right: 0 }, 200);
+          chatWorkspace.animate({ width: chatWorkspace.width() - 252}, 200);
           return;
         }
         chatLog.animate({ right: -300 }, 200);
         chatText.animate({ right: -300 }, 200);
+        chatWorkspace.animate({ width: chatWorkspace.width() + 300}, 200);
       });
 
       $("#invite-users").click(function() {
