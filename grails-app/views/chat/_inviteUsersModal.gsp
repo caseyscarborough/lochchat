@@ -11,6 +11,7 @@
         </div>
       </div>
       <div class="modal-footer">
+        <button class="btn btn-danger" data-dismiss="modal">Cancel</button>
         <button id="invite-users-button" type="button" class="btn btn-primary" data-loading-text="Inviting Users...">Invite Users</button>
       </div>
     </div>
