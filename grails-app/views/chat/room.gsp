@@ -20,8 +20,6 @@
 
       connection.onstream = function(e) {
         $("#chat-video").append(e.mediaElement);
-        var videos = $("#chat-video video");
-        videos.width(($("#chatroom").width() - $("#chat-log").width()) / videos.length - 20);
       };
 
       connection.connect();
@@ -39,6 +37,7 @@
       var chatText = $("#chat-text");
       var chatRoom = $("#chatroom");
       var chatWorkspace = $("#chat-workspace-${chatroom.uniqueId}");
+      var chatVideo = $("#chat-video");
 
       client.connect({}, function() {
         client.subscribe("/topic/chatMessage", function(message) {
@@ -97,13 +96,20 @@
       });
 
       chatLog.height(chatRoom.height() - 70);
-      chatWorkspace.height(chatRoom.height() - 140);
-      chatWorkspace.width(chatRoom.width() - 340);
+      chatWorkspace.css({ height: chatRoom.height() - 110, width: chatRoom.width() - 300 });
+
       $(window).resize(function() {
         chatLog.height(chatRoom.height() - 70);
-        chatWorkspace.height(chatRoom.height() - 140);
-        chatWorkspace.width(chatRoom.width() - 340);
+        if (chatVideo.is(":visible")) {
+          chatWorkspace.css({ height: chatRoom.height() - 110, width: chatRoom.width() - 500, "margin-left": 200 });
+        } else {
+          chatWorkspace.css({ height: chatRoom.height() - 110, width: chatRoom.width() - 300 });
+        }
       });
+
+      if (chatWorkspace.is(":visible")) {
+        chatVideo.css({ position: "fixed", left: 0, width: 200 });
+      }
 
       chatLog.html(chatLog.html());
 
