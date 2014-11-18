@@ -28,23 +28,19 @@ public class LochChatServletChatListener implements ServletContextListener {
     final ServerContainer serverContainer = servletContext.getAttribute("javax.websocket.server.ServerContainer")
     try {
       serverContainer.addEndpoint(LochChatServletChatListener)
-
       def ctx = servletContext.getAttribute(GA.APPLICATION_CONTEXT)
-
       def grailsApplication = ctx.grailsApplication
-
       def config = grailsApplication.config
       int defaultMaxSessionIdleTimeout = config.myservlet.timeout ?: 0
       serverContainer.defaultMaxSessionIdleTimeout = defaultMaxSessionIdleTimeout
     }
     catch (IOException e) {
-      log.error e.message, e
+      log.error(e.message, e)
     }
   }
 
   @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent) {
-  }
+  public void contextDestroyed(ServletContextEvent servletContextEvent) {}
 
   @OnOpen
   public void handleOpen(Session userSession) {
@@ -60,6 +56,8 @@ public class LochChatServletChatListener implements ServletContextListener {
     def chatId = array.pop()
     message = StringEscapeUtils.escapeHtml(array.join(""))
     if (!username) {
+      log.debug("User has connected to the chatroom.")
+
       userSession.userProperties.put("username", message)
       userSession.userProperties.put("chatId", chatId)
 
@@ -95,6 +93,19 @@ public class LochChatServletChatListener implements ServletContextListener {
 
   @OnClose
   public void handleClose(Session userSession) {
+    def chatId = userSession.userProperties.get("chatId")
+    if (chatId) {
+      def output = [message: "${userSession.userProperties.get("username")} has left the chatroom."]
+      Iterator<Session> iterator = chatroomUsers.iterator()
+
+      while (iterator.hasNext()) {
+        def user = iterator.next()
+        log.info(user.userProperties.toMapString())
+        if (user.userProperties.get("chatId") == chatId) {
+          user.basicRemote.sendText((output as JSON).toString())
+        }
+      }
+    }
     chatroomUsers.remove(userSession)
   }
 
