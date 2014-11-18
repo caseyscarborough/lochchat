@@ -1,4 +1,5 @@
 var Chat = (function($) {
+    'use strict';
 
     var self = {};
 

@@ -1,8 +1,18 @@
 var Room = (function($) {
+    'use strict';
 
-    var self = {};
+    var self = {},
+        _uniqueId = null,
+        _chatVideo = null,
+        _chatWorkspace = null,
+        _chatLog = null,
+        _chatRoom = null,
+        _chatText = null,
+        _username = null;
 
-    _uniqueId = null;
+    // _socket and _client for chatroom
+    var _socket = null,
+        _client = null;
 
     var _connectVideoAndAudio = function() {
         var connection = new RTCMultiConnection();
@@ -13,8 +23,8 @@ var Room = (function($) {
         };
 
         connection.onstream = function(e) {
-            $("#chat-video").show();
-            $("#chat-video").append(e.mediaElement);
+            _chatVideo.show();
+            _chatVideo.append(e.mediaElement);
         };
 
         connection.connect();
@@ -24,30 +34,100 @@ var Room = (function($) {
         };
     };
 
-    self.init = function(uniqueId) {
-        _uniqueId = uniqueId;
+    var _setupIncomingChats = function() {
+        _socket = new SockJS("/" + config.application.name + "/stomp");
+        _client = Stomp.over(_socket);
 
-        var socket = new SockJS("/" + config.application.name + "/stomp");
-        var client = Stomp.over(socket);
-
-        var chatLog = $("#chat-log");
-        var chatText = $("#chat-text");
-        var chatRoom = $("#chatroom");
-        var chatWorkspace = $("#chat-workspace-" + _uniqueId);
-        var chatVideo = $("#chat-video");
-
-        client.connect({}, function() {
-            client.subscribe("/topic/chatMessage", function(message) {
-                var newChatLog = $("<div class='chat-text'>" + JSON.parse(message.body) + '</div>');
-                newChatLog.linkify();
-                chatLog.append(newChatLog);
-                chatLog.animate({ scrollTop: chatLog.prop("scrollHeight") - chatLog.height() }, 200);
+        _client.connect({}, function() {
+            _client.subscribe("/topic/chatMessage", function(message) {
+                var new_chatLog = $("<div class='chat-text'>" + JSON.parse(message.body) + '</div>');
+                new_chatLog.linkify();
+                _chatLog.append(new_chatLog);
+                _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() }, 200);
             });
         });
+    };
+
+    var _setupCopyUrl = function() {
+        var copyButton = $("#chat-copy-url");
+        var zc = new ZeroClipboard(copyButton);
+
+        zc.on("ready", function() {
+            zc.on("aftercopy", function() { alert("URL copied to clipboard!"); });
+        });
+    };
+
+    var _setupUserInvitations = function() {
+        var emails = $("#chatroom-emails");
+        $("#invite-users").click(function() {
+            $("#inviteUsersModal").modal();
+        });
+
+        $("#invite-users-button").click(function() {
+            $(this).button('loading');
+            $.ajax({
+                type: "POST",
+                data: {
+                    uniqueId: _uniqueId,
+                    emails: emails.val()
+                },
+                url: "/" + config.application.name + "/chat/invite",
+                success: function() {
+                    _client.send("/app/chatMessage", {}, JSON.stringify(_username + " invited the following users to the chatroom: " + emails.val() + "|" + _uniqueId));
+                    emails.val("");
+                    $("#inviteUsersModal").modal('hide');
+                    $(this).button('reset');
+                },
+                error: function(data) {
+                    alert(data.responseJSON.message);
+                    $(this).button('reset');
+                }
+            });
+        });
+    };
+
+    var _setupToggleChat = function() {
+        $("#toggle-chat").click(function() {
+            if (_chatLog.css("right") === "-300px") {
+                _chatLog.animate({ right: 0 }, 200);
+                _chatText.animate({ right: 0 }, 200);
+                _chatWorkspace.animate({ width: _chatWorkspace.width() - 252}, 200);
+                return;
+            }
+            _chatLog.animate({ right: -300 }, 200);
+            _chatText.animate({ right: -300 }, 200);
+            _chatWorkspace.animate({ width: _chatWorkspace.width() + 300}, 200);
+        });
+    };
+
+    var _setupExitChatroom = function() {
+        $("#exit-chatroom").click(function() {
+            if (confirm("Are you sure you'd like to exit the chatroom?")) {
+                _client.send("/app/chatMessage", {}, JSON.stringify(_username + " has left the chatroom.|" + _uniqueId));
+                _client.disconnect();
+                window.location.href = "/" + config.application.name;
+            }
+        });
+    };
+
+    self.init = function(uniqueId) {
+        _uniqueId = uniqueId;
+        _chatLog = $("#chat-log");
+        _chatText = $("#chat-text");
+        _chatRoom = $("#chatroom");
+        _chatWorkspace = $("#chat-workspace-" + _uniqueId);
+        _chatVideo = $("#chat-video");
+
+        _setupIncomingChats();
+        _setupCopyUrl();
+        _setupUserInvitations();
+        _setupToggleChat();
+        _setupExitChatroom();
 
         var username = $("#username");
         var modal = $("#usernameModal");
         var enterRoom = $("#enter-room-button");
+
         modal.modal();
 
         if ($.trim(username.val()) !== "") {
@@ -70,102 +150,39 @@ var Room = (function($) {
             }
 
             modal.modal('hide');
-            client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " has entered the chatroom.|" + _uniqueId ));
+            _username = username.val();
+            _client.send("/app/chatMessage", {}, JSON.stringify(_username + " has entered the chatroom.|" + _uniqueId ));
             _connectVideoAndAudio();
         });
 
-        chatText.keypress(function(event) {
+        _chatText.keypress(function(event) {
             if (event.keyCode == 13) {
                 event.preventDefault();
-                if ($.trim(chatText.val()) !== "") {
-                    client.send("/app/chatMessage", {}, JSON.stringify(username.val() + ": " + chatText.val() + "|" + _uniqueId));
-                    chatText.val("");
+                if ($.trim(_chatText.val()) !== "") {
+                    _client.send("/app/chatMessage", {}, JSON.stringify(_username + ": " + _chatText.val() + "|" + _uniqueId));
+                    _chatText.val("");
                 }
             }
         });
 
-        $("#exit-chatroom").click(function() {
-            if (confirm("Are you sure you'd like to exit the chatroom?")) {
-                client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " has left the chatroom.|" + _uniqueId));
-                client.disconnect();
-                window.location.href = "/" + config.application.name;
-            }
-        });
-
-        chatLog.height(chatRoom.height() - 70);
-        chatWorkspace.css({ height: chatRoom.height() - 110, width: chatRoom.width() - 300 });
+        _chatLog.height(_chatRoom.height() - 70);
+        _chatWorkspace.css({ height: _chatRoom.height() - 110, width: _chatRoom.width() - 300 });
 
         $(window).resize(function() {
-            chatLog.height(chatRoom.height() - 70);
-            if (chatVideo.is(":visible")) {
-                chatWorkspace.css({ height: chatRoom.height() - 110, width: chatRoom.width() - 500, "margin-left": 200 });
+            _chatLog.height(_chatRoom.height() - 70);
+            if (_chatVideo.is(":visible")) {
+                _chatWorkspace.css({ height: _chatRoom.height() - 110, width: _chatRoom.width() - 500, "margin-left": 200 });
             } else {
-                chatWorkspace.css({ height: chatRoom.height() - 110, width: chatRoom.width() - 300 });
+                _chatWorkspace.css({ height: _chatRoom.height() - 110, width: _chatRoom.width() - 300 });
             }
         });
 
-        if (chatWorkspace.is(":visible")) {
-            chatVideo.css({ position: "fixed", left: 0, width: 200 });
+        if (_chatWorkspace.is(":visible")) {
+            _chatVideo.css({ position: "fixed", left: 0, width: 200 });
         }
 
-        chatLog.html(chatLog.html());
-
-        $(window).on('load', function() {
-            chatLog.linkify();
-        });
-
-        var copyButton = $("#chat-copy-url");
-        var zc = new ZeroClipboard(copyButton);
-
-        zc.on("ready", function(readyEvent) {
-            zc.on("aftercopy", function(event) {
-                alert("URL copied to clipboard!");
-            });
-        });
-
-        $("#toggle-chat").click(function() {
-            if (chatLog.css("right") === "-300px") {
-                chatLog.animate({ right: 0 }, 200);
-                chatText.animate({ right: 0 }, 200);
-                chatWorkspace.animate({ width: chatWorkspace.width() - 252}, 200);
-                return;
-            }
-            chatLog.animate({ right: -300 }, 200);
-            chatText.animate({ right: -300 }, 200);
-            chatWorkspace.animate({ width: chatWorkspace.width() + 300}, 200);
-        });
-
-        $("#invite-users").click(function() {
-            $("#inviteUsersModal").modal();
-        });
-
-        $("#invite-users-button").click(function() {
-            $(this).button('loading');
-            $.ajax({
-                type: "POST",
-                data: {
-                    uniqueId: _uniqueId,
-                    emails: $("#chatroom-emails").val()
-                },
-                url: "/" + config.application.name + "/chat/invite",
-                success: function() {
-                    client.send("/app/chatMessage", {}, JSON.stringify(username.val() + " invited the following users to the chatroom: " + $("#chatroom-emails").val() + "|" + _uniqueId));
-                    $("#chatroom-emails").val("");
-                    $("#inviteUsersModal").modal('hide');
-                    $(this).button('reset');
-                },
-                error: function(data) {
-                    alert(data.responseJSON.message);
-                    $(this).button('reset');
-                }
-            });
-        });
-
-        $("#export-workspace").click(function() {
-            $("#workspace-form").submit();
-        });
-
-        mobwrite.share('chat-workspace-' + _uniqueId);
+        $(window).on('load', function() { _chatLog.linkify(); });
+        $("#export-workspace").click(function() { $("#workspace-form").submit(); });
     };
 
     return self;

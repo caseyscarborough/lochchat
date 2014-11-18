@@ -5,8 +5,13 @@
   <meta name="layout" content="main">
   <script src="//cdn.webrtc-experiment.com/RTCMultiConnection.js"></script>
   <script src="//mobwrite3.appspot.com/static/compressed_form.js"></script>
-  <script>mobwrite.syncGateway = 'https://mobwrite3.appspot.com/scripts/q.py';</script>
-  <script>$(function(){ Room.init("${chatroom.uniqueId}"); });</script>
+  <script>
+    $(function(){
+      Room.init("${chatroom.uniqueId}");
+      mobwrite.syncGateway = 'https://mobwrite3.appspot.com/scripts/q.py';
+      mobwrite.share('chat-workspace-${chatroom.uniqueId}');
+    });
+  </script>
 </head>
 
 <body>
