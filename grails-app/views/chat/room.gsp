@@ -163,6 +163,10 @@
         });
       });
 
+      $("#export-workspace").click(function() {
+        $("#workspace-form").submit();
+      });
+
       mobwrite.share('chat-workspace-${chatroom.uniqueId}');
     });
   </script>
@@ -173,7 +177,10 @@
   <div>
   </div>
   <div id="chat-video"></div>
-  <textarea class="chat-workspace" id="chat-workspace-${chatroom.uniqueId}" placeholder="Collaborate here..."></textarea>
+  <form id="workspace-form" action="${createLink(controller: 'chat', action: 'exportWorkspace')}" method="POST" target="_blank">
+    <input type="hidden" name="chatroom" value="${chatroom.uniqueId}">
+    <textarea class="chat-workspace" name="workspace" id="chat-workspace-${chatroom.uniqueId}" placeholder="Collaborate here..."></textarea>
+  </form>
   <div id="chat-log"><lochchat:logHtml logInstance="${chatroom.log}" /></div>
   <textarea id="chat-text" placeholder="Type to chat..."></textarea>
   <div id="chat-options">
@@ -196,6 +203,10 @@
     <div class="chat-option">
       <g:link target="_blank" controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]"><asset:image id="export-log" src="flat-icons/Icons/set-3/PNG/3.png" /></g:link>
       <label>Export Chat Log</label>
+    </div>
+    <div class="chat-option">
+      <asset:image id="export-workspace" src="flat-ui/dist/img/icons/svg/pencils.svg" />
+      <label>Export Workspace</label>
     </div>
     <div class="chat-option">
       <asset:image id="exit-chatroom" src="flat-icons/Icons/set-2/PNG/3.png" />

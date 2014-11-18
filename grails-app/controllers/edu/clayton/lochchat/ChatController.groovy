@@ -66,6 +66,13 @@ class ChatController {
     response.outputStream.flush()
   }
 
+  def exportWorkspace() {
+    response.contentType = 'application/octet-stream'
+    response.setHeader('Content-disposition', "attachment; filename=${params.chatroom}-workspace-${new Date().toTimestamp()}.txt")
+    response.outputStream << params.workspace
+    response.outputStream.flush()
+  }
+
   def invite() {
     def chat = Chat.findByUniqueId(params.uniqueId)
     if (params.emails) {
