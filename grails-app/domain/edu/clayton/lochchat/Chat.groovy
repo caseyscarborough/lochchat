@@ -19,7 +19,11 @@ class Chat {
   }
 
   def getUrl() {
-    def baseUrl = grailsLinkGenerator.link(controller: "chat", action: "room", absolute: true).replaceAll(/http:\/\/(.*):443\//, /https:\/\/$1\//)
-    "$baseUrl/$uniqueId"
+    if (!uniqueId) {
+      uniqueId = UUID.randomUUID().encodeAsSHA1().substring(0, 16)
+    }
+
+    def baseUrl = grailsLinkGenerator.link(controller: "home", action: "index", absolute: true).replaceAll(/http:\/\/(.*):443\//, /https:\/\/$1\//)
+    "$baseUrl$uniqueId"
   }
 }
