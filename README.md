@@ -42,6 +42,7 @@ The following open source libraries were used in the development of LochChat:
 * [jQuery](http://jquery.com/)
 * [Bootstrap CSS Framework](http://getbootstrap.com/)
 * [Flat UI Bootstrap Theme](http://designmodo.github.io/Flat-UI/)
+* [FontAwesome](http://fontawesome.io/)
 * [ZeroClipboard](http://zeroclipboard.org/)
 * [Linkify jQuery plugin](http://soapbox.github.io/jQuery-linkify/)
 * [RTCMultiConnection](http://www.rtcmulticonnection.org/)
