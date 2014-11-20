@@ -93,9 +93,13 @@ public class LochChatAnnotation implements ServletContextListener {
 
     while (iterator.hasNext()) {
       def user = iterator.next()
-      log.info(user.userProperties.toMapString())
-      if (user.userProperties.get("chatId") == chatId) {
-        user.basicRemote.sendText((output as JSON).toString())
+      try {
+        log.info(user.userProperties.toMapString())
+        if (user.userProperties.get("chatId") == chatId) {
+          user.basicRemote.sendText((output as JSON).toString())
+        }
+      } catch (IllegalStateException e) {
+        log.error("An error occurred, but was caught.", e)
       }
     }
   }
