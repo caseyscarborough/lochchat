@@ -4,8 +4,6 @@ import grails.converters.JSON
 import org.codehaus.groovy.grails.support.encoding.CodecLookup
 import org.springframework.http.HttpStatus
 import org.springframework.mail.MailSendException
-import org.springframework.messaging.handler.annotation.MessageMapping
-import org.springframework.messaging.handler.annotation.SendTo
 
 class ChatController {
 

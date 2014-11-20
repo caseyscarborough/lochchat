@@ -1,6 +1,7 @@
 package edu.clayton.lochchat
 
 import grails.converters.JSON
+import grails.util.Environment
 import org.apache.commons.lang.StringEscapeUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes as GA
@@ -21,7 +22,7 @@ import java.sql.SQLException
 
 @WebListener
 @ServerEndpoint("/chatMessage")
-public class LochChatServletChatListener implements ServletContextListener {
+public class LochChatAnnotation implements ServletContextListener {
 
   private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Set<Session> chatroomUsers = ([] as Set).asSynchronized()
@@ -31,7 +32,9 @@ public class LochChatServletChatListener implements ServletContextListener {
     ServletContext servletContext = sce.servletContext
     ServerContainer serverContainer = (ServerContainer) servletContext.getAttribute("javax.websocket.server.ServerContainer")
     try {
-      serverContainer.addEndpoint(LochChatServletChatListener)
+      if (Environment.current == Environment.DEVELOPMENT) {
+        serverContainer.addEndpoint(LochChatAnnotation)
+      }
       ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GA.APPLICATION_CONTEXT)
       GrailsApplication grailsApplication = ctx.grailsApplication
       ConfigObject config = grailsApplication.config
@@ -46,17 +49,6 @@ public class LochChatServletChatListener implements ServletContextListener {
 
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    Enumeration<Driver> drivers = DriverManager.getDrivers();
-    while (drivers.hasMoreElements()) {
-      Driver driver = drivers.nextElement();
-      try {
-        DriverManager.deregisterDriver(driver);
-        log.info(String.format("deregistering jdbc driver: %s", driver));
-      } catch (SQLException e) {
-        log.error(String.format("Error deregistering driver %s", driver), e);
-      }
-
-    }
   }
 
   @OnOpen
@@ -110,9 +102,15 @@ public class LochChatServletChatListener implements ServletContextListener {
 
   @OnClose
   public void handleClose(Session userSession) {
-    def chatId = userSession.userProperties.get("chatId")
+    def chatId = (String) userSession.userProperties.get("chatId")
     if (chatId) {
-      def output = [message: "${userSession.userProperties.get("username")} has left the chatroom."]
+      def message = "${userSession.userProperties.get("username")} has left the chatroom."
+      Message.withTransaction {
+        def chat = Chat.findByUniqueId(chatId)
+        new Message(user: userSession.userProperties.get("username"), contents: message, log: chat?.log).save(flush: true)
+      }
+      def output = [message: message]
+      chatroomUsers.remove(userSession)
       Iterator<Session> iterator = chatroomUsers.iterator()
 
       while (iterator.hasNext()) {
@@ -123,7 +121,6 @@ public class LochChatServletChatListener implements ServletContextListener {
         }
       }
     }
-    chatroomUsers.remove(userSession)
   }
 
   @OnError

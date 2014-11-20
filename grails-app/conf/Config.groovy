@@ -137,8 +137,8 @@ log4j.main = {
       debug 'edu.clayton.lochchat'
     }
     production {
-      warn 'grails.app'
-      warn 'edu.clayton.lochchat'
+      debug 'grails.app'
+      debug 'edu.clayton.lochchat'
     }
   }
 }
