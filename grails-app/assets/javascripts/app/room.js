@@ -157,11 +157,15 @@ var Room = (function($) {
             enterRoom.removeAttr("disabled");
         }
 
-        username.keyup(function() {
+        username.keyup(function(event) {
             if ($.trim(username.val()) !== "") {
                 enterRoom.removeAttr("disabled");
             } else {
                 enterRoom.attr("disabled", "disabled");
+            }
+
+            if (event.keyCode == 13) {
+                enterRoom.trigger('click');
             }
         });
 
