@@ -55,7 +55,7 @@ var Room = (function($) {
 
         _socket.onclose = function(message) {
             _socket.send("Client disconnected......\n");
-            _chatLog.append(_wrapMessage("Server disconnected..."));
+            _chatLog.append(_wrapMessage("Server is unavailable. Try rejoining the chatroom, or trying again at a later time."));
         };
 
         _socket.onerror = function(message) {
