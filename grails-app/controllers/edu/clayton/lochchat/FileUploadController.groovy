@@ -4,7 +4,7 @@ class FileUploadController {
 
     def download(String chatId, String fileId) {
       def chat = Chat.findByUniqueId(chatId)
-      def fileUpload = FileUpload.findByIdAndChat(fileId, chat)
+      def fileUpload = FileUpload.findByUniqueIdAndChat(fileId, chat)
       if (fileUpload) {
         def file = new File(fileUpload.path)
         if (file.exists()) {

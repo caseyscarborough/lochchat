@@ -5,6 +5,7 @@ class FileUpload {
   String filename
   String location
   Chat chat
+  String uniqueId
 
   Date dateCreated
 
@@ -19,6 +20,6 @@ class FileUpload {
   }
 
   def getDownloadUrl() {
-    grailsLinkGenerator.link(controller: 'fileUpload', action: 'download', params: [chatId: chat.uniqueId, fileId: id], absolute: true)
+    grailsLinkGenerator.link(controller: 'fileUpload', action: 'download', params: [chatId: chat.uniqueId, fileId: uniqueId], absolute: true)
   }
 }

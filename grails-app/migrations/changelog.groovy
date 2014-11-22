@@ -9,4 +9,6 @@ databaseChangeLog = {
 	include file: '201411211415-create-fileupload-class.groovy'
 
 	include file: '201411211421-associate-chat-with-fileupload.groovy'
+
+	include file: '201411211448-add-unique-id-to-fileupload.groovy'
 }
