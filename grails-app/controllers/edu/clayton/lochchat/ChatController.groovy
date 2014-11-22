@@ -59,7 +59,11 @@ class ChatController {
     response.setHeader('Content-disposition', "attachment; filename=${params.uniqueId}-${new Date().toTimestamp().time}.txt")
     response.outputStream << "Chat log for room $chat.uniqueId, starting on $chat.log.formattedDateCreated.\n\n"
     chat.log.messages.sort { it.dateCreated }. each { Message message ->
-      response.outputStream << message.dateCreated.format("h:mma '-' ") + message?.user + ": " + decoder.decode(message.contents) + "\n"
+      def output = message.dateCreated.format("h:mma '-' ")
+      if (message.user) {
+        output += message?.user + ": "
+      }
+      response.outputStream << output + decoder.decode(message.contents) + "\n"
     }
     response.outputStream.flush()
   }

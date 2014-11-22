@@ -61,15 +61,15 @@ public class LochChatAnnotation implements ServletContextListener {
     message = StringEscapeUtils.escapeHtml(message)
     log.debug("Received message from user: $message")
 
-    String username = userSession.userProperties.get("username") as String
-    String chatId = userSession.userProperties.get("chatId") as String
+    String username = userSession.userProperties.get("username")
+    String chatId = userSession.userProperties.get("chatId")
     if (!username) {
       log.debug("User has connected to the chatroom.")
 
       userSession.userProperties.put("username", message)
       Message.withTransaction {
         def chat = Chat.findByUniqueId(chatId)
-        new Message(user: message, contents: message + " has joined the chatroom.", log: chat?.log).save(flush: true)
+        new Message(contents: message + " has joined the chatroom.", log: chat?.log).save(flush: true)
         message += " has joined the chatroom."
       }
 
@@ -103,15 +103,17 @@ public class LochChatAnnotation implements ServletContextListener {
 
   @OnClose
   public void handleClose(Session userSession) {
-    def chatId = (String) userSession.userProperties.get("chatId")
-    if (chatId) {
-      def message = "${userSession.userProperties.get("username")} has left the chatroom."
+    String chatId = userSession.userProperties.get("chatId")
+    String username = userSession.userProperties.get("username")
+    chatroomUsers.remove(userSession)
+
+    if (chatId && username) {
+      def message = "${username} has left the chatroom."
       Message.withTransaction {
         def chat = Chat.findByUniqueId(chatId)
-        new Message(user: userSession.userProperties.get("username"), contents: message, log: chat?.log).save(flush: true)
+        new Message(contents: message, log: chat?.log).save(flush: true)
       }
       def output = [message: message]
-      chatroomUsers.remove(userSession)
       Iterator<Session> iterator = chatroomUsers.iterator()
 
       while (iterator.hasNext()) {
