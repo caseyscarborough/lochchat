@@ -120,7 +120,12 @@ public class LochChatAnnotation implements ServletContextListener {
           def chat = Chat.findByUniqueId(chatId)
           new Message(contents: message, log: chat.log).save(flush: true)
         }
-        sendMessage([message: message], chatId)
+        def javascriptCallback = """
+          swal('Successfully uploaded file!');
+          \$('#upload-file').html('Upload File');
+          \$('#upload-file').removeAttr('disabled');
+          \$('#file').val('');"""
+        sendMessage([message: message, callback: javascriptCallback], chatId)
       } catch (IOException e) {
         log.error("An error occurred closing the file.", e)
       }

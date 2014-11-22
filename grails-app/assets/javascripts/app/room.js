@@ -51,11 +51,16 @@ var Room = (function($) {
 
         _socket.onmessage = function(message) {
             try {
-                var data = JSON.parse(message.data).message;
-                var new_chatLog = $(_wrapMessage(data));
+                var data = JSON.parse(message.data);
+                console.log(data);
+                var new_chatLog = $(_wrapMessage(data.message));
                 new_chatLog.linkify();
                 _chatLog.append(new_chatLog);
                 _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() }, 200);
+
+                if (data.callback) {
+                    eval(data.callback);
+                }
             } catch (SyntaxError) {}
         };
 
@@ -172,6 +177,7 @@ var Room = (function($) {
             reader.onload = function(e) {
                 console.log(e);
                 data = e.target.result;
+                $("#upload-file").html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', 'disabled');
                 _socket.send(data);
                 _socket.send("endFile:" + filename);
             };
