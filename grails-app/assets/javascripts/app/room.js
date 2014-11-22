@@ -78,7 +78,9 @@ var Room = (function($) {
         var zc = new ZeroClipboard(copyButton);
 
         zc.on("ready", function() {
-            zc.on("aftercopy", function() { alert("URL copied to clipboard!"); });
+            zc.on("aftercopy", function() {
+                swal("URL Copied!", "The chatroom URL has been copied to the clipboard.", "success");
+            });
         });
     };
 
