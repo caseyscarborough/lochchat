@@ -26,6 +26,7 @@ public class LochChatAnnotation implements ServletContextListener {
   private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Set<Session> chatroomUsers = ([] as Set).asSynchronized()
   static FileOutputStream outputStream = null
+  static GrailsApplication grailsApplication = null
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
@@ -36,7 +37,7 @@ public class LochChatAnnotation implements ServletContextListener {
         serverContainer.addEndpoint(LochChatAnnotation)
       }
       ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GA.APPLICATION_CONTEXT)
-      GrailsApplication grailsApplication = ctx.grailsApplication
+      grailsApplication = ctx.grailsApplication
       ConfigObject config = grailsApplication.config
       Integer defaultMaxSessionIdleTimeout = config.myservlet.timeout ?: 0
       serverContainer.defaultMaxSessionIdleTimeout = defaultMaxSessionIdleTimeout
@@ -103,11 +104,11 @@ public class LochChatAnnotation implements ServletContextListener {
       try {
         def uniqueId = filename.encodeAsMD5()
         def newFilename = filename.substring(0, filename.lastIndexOf('.')) + "-$uniqueId" + filename.substring(filename.lastIndexOf('.'))
-        outputStream = new FileOutputStream("/tmp/lochchat/$newFilename")
+        outputStream = new FileOutputStream("${grailsApplication.config.lochchat.uploadDir}/$newFilename")
 
         FileUpload.withTransaction {
           def chat = Chat.findByUniqueId(userSession.userProperties.get("chatId"))
-          new FileUpload(filename: newFilename, location: "/tmp/lochchat", chat: chat, uniqueId: uniqueId, originalFilename: filename).save(flush: true)
+          new FileUpload(filename: newFilename, location: grailsApplication.config.lochchat.uploadDir, chat: chat, uniqueId: uniqueId, originalFilename: filename).save(flush: true)
         }
       } catch (FileNotFoundException e) {
         log.error("An error occurred creating the file: $filename", e)

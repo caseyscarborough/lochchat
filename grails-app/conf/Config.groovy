@@ -142,3 +142,7 @@ log4j.main = {
     }
   }
 }
+
+lochchat {
+  uploadDir = '/tmp/lochchat'
+}
