@@ -1,5 +1,8 @@
 package edu.clayton.lochchat
 
+import grails.plugin.springsecurity.annotation.Secured
+
+@Secured(['permitAll'])
 class FileUploadController {
 
     def download(String chatId, String fileId) {

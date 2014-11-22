@@ -1,10 +1,12 @@
 package edu.clayton.lochchat
 
 import grails.converters.JSON
+import grails.plugin.springsecurity.annotation.Secured
 import org.codehaus.groovy.grails.support.encoding.CodecLookup
 import org.springframework.http.HttpStatus
 import org.springframework.mail.MailSendException
 
+@Secured(['permitAll'])
 class ChatController {
 
   CodecLookup codecLookup
