@@ -11,6 +11,7 @@
 //= require app/config
 //= require zeroclipboard/dist/ZeroClipboard
 //= require jQuery-linkify/dist/jquery.linkify.min
+//= require bootstrap-sweetalert/lib/sweet-alert
 //= require app/home
 //= require app/room
 //= require_self

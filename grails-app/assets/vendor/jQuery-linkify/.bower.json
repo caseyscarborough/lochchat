@@ -41,7 +41,6 @@
     "commit": "0ee737c1cfedaa7620df534f3034aafc86eb29f6"
   },
   "_source": "git://github.com/HitSend/jQuery-linkify.git",
-  "_target": "~1.1.7",
-  "_originalSource": "jQuery-linkify",
-  "_direct": true
+  "_target": "1.1.7",
+  "_originalSource": "jQuery-linkify"
 }

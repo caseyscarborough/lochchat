@@ -12,7 +12,8 @@
     "bootstrap": "3.3.0",
     "zeroclipboard": "2.1.6",
     "fontawesome": "4.2.0",
-    "jQuery-linkify": "1.1.7"
+    "jQuery-linkify": "1.1.7",
+    "bootstrap-sweetalert": "0.4.3"
   },
   "license": "MIT",
   "private": true,
