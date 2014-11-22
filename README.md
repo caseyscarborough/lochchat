@@ -47,3 +47,4 @@ The following open source libraries were used in the development of LochChat:
 * [Linkify jQuery plugin](http://soapbox.github.io/jQuery-linkify/)
 * [RTCMultiConnection](http://www.rtcmulticonnection.org/)
 * [Google Mobwrite](http://code.google.com/p/google-mobwrite/)
+* [Bootstrap SweetAlert](http://lipis.github.io/bootstrap-sweetalert/)
