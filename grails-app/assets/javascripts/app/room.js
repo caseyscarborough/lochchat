@@ -164,6 +164,12 @@ var Room = (function($) {
     var _setupFileUpload = function() {
         $("#upload-file").click(function() {
             var file = document.getElementById('file').files[0];
+
+            if (typeof file == 'undefined') {
+                swal('Please choose a file', 'You must choose a file to upload.', 'error');
+                return;
+            }
+
             var filename = file.name.substring(0, file.name.lastIndexOf(".")) + "-" + new Date().getTime() + file.name.substring(file.name.lastIndexOf("."));
             console.log(filename);
             _socket.send("file:" + filename);
