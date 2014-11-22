@@ -126,7 +126,7 @@ public class LochChatAnnotation implements ServletContextListener {
           downloadUrl = file.downloadUrl
         }
         log.debug("Sending message to $chatId for download url: $downloadUrl")
-        message = "$username uploaded a file. Click <a href='$downloadUrl' target='_blank'>here</a> to download it."
+        message = "$username uploaded <a href='$downloadUrl' target='_blank'>$filename</a>."
         Message.withTransaction {
           def chat = Chat.findByUniqueId(chatId)
           new Message(contents: message, log: chat.log).save(flush: true)
