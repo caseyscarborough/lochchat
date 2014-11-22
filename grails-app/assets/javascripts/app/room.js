@@ -11,7 +11,7 @@ var Room = (function($) {
         _username = null,
         _modal = null;
 
-    var debugMode = true;
+    var debugMode = false;
 
     // WebSocket connection for chatroom
     var _socket = null;
