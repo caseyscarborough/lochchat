@@ -40,7 +40,7 @@ var Room = (function($) {
         return "<div class='chat-text " + clazz + "'>" + message + '</div>';
     };
 
-    var _setupIncomingChats = function(websocketUrl) {
+    var _setupIncomingChats = function(websocketUrl, username) {
         websocketUrl = websocketUrl.replace(/http:\/\/(.*):443/, "wss://$1");
         websocketUrl = websocketUrl.replace(/http/, "ws");
         _socket = new WebSocket(websocketUrl);
@@ -61,7 +61,8 @@ var Room = (function($) {
 
         _socket.onclose = function(message) {
             _socket.send("Client disconnected......\n");
-            _chatLog.append(_wrapMessage("Server is unavailable. Try rejoining the chatroom, or trying again at a later time."));
+            _chatLog.append(_wrapMessage("Lost connection. Reconnecting in 3 seconds..."));
+            setTimeout(function() { _setupIncomingChats(websocketUrl, _username) }, 3000);
         };
 
         _socket.onerror = function(message) {
@@ -77,6 +78,10 @@ var Room = (function($) {
                 }
             }
         });
+
+        if (username) {
+            setTimeout(function() { _socket.send(username); }, 500);
+        }
     };
 
     var _setupCopyUrl = function() {
