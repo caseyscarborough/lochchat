@@ -5,4 +5,6 @@ databaseChangeLog = {
 	include file: '201411171304-create-log-class.groovy'
 
 	include file: '201411180901-create-message-class.groovy'
+
+	include file: '201411211415-create-fileupload-class.groovy'
 }
