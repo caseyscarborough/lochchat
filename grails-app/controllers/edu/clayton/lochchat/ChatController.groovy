@@ -56,7 +56,7 @@ class ChatController {
     def chat = Chat.findByUniqueId(params.uniqueId)
     def decoder = codecLookup.lookupDecoder('HTML')
     response.contentType = 'application/octet-stream'
-    response.setHeader('Content-disposition', "attachment; filename=${params.uniqueId}-${new Date().toTimestamp()}.txt")
+    response.setHeader('Content-disposition', "attachment; filename=${params.uniqueId}-${new Date().toTimestamp().time}.txt")
     response.outputStream << "Chat log for room $chat.uniqueId, starting on $chat.log.formattedDateCreated.\n\n"
     chat.log.messages.sort { it.dateCreated }. each { Message message ->
       response.outputStream << message.dateCreated.format("h:mma '-' ") + message?.user + ": " + decoder.decode(message.contents) + "\n"
@@ -66,7 +66,7 @@ class ChatController {
 
   def exportWorkspace() {
     response.contentType = 'application/octet-stream'
-    response.setHeader('Content-disposition', "attachment; filename=${params.chatroom}-workspace-${new Date().toTimestamp()}.txt")
+    response.setHeader('Content-disposition', "attachment; filename=${params.chatroom}-workspace-${new Date().toTimestamp().time}.txt")
     response.outputStream << params.workspace
     response.outputStream.flush()
   }
