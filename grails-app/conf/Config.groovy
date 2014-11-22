@@ -146,3 +146,20 @@ log4j.main = {
 lochchat {
   uploadDir = '/tmp/lochchat'
 }
+
+
+// Added by the Spring Security Core plugin:
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'edu.clayton.lochchat.User'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'edu.clayton.lochchat.UserRole'
+grails.plugin.springsecurity.authority.className = 'edu.clayton.lochchat.Role'
+grails.plugin.springsecurity.controllerAnnotations.staticRules = [
+	'/':                              ['permitAll'],
+	'/index':                         ['permitAll'],
+	'/index.gsp':                     ['permitAll'],
+	'/assets/**':                     ['permitAll'],
+	'/**/js/**':                      ['permitAll'],
+	'/**/css/**':                     ['permitAll'],
+	'/**/images/**':                  ['permitAll'],
+	'/**/favicon.ico':                ['permitAll']
+]
+
