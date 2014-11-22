@@ -153,7 +153,9 @@ var Room = (function($) {
     var _setupFileUpload = function() {
         $("#upload-file").click(function() {
             var file = document.getElementById('file').files[0];
-            _socket.send("file:" + file.name);
+            var filename = file.name.substring(0, file.name.lastIndexOf(".")) + "-" + new Date().getTime() + file.name.substring(file.name.lastIndexOf("."));
+            console.log(filename);
+            _socket.send("file:" + filename);
 
             var reader = new FileReader();
             var data = new ArrayBuffer();
@@ -165,7 +167,7 @@ var Room = (function($) {
                 console.log(e);
                 data = e.target.result;
                 _socket.send(data);
-                _socket.send("endFile:" + file.name);
+                _socket.send("endFile:" + filename);
             };
 
             reader.readAsArrayBuffer(file);

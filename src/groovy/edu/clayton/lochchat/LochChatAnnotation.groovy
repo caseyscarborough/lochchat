@@ -95,6 +95,10 @@ public class LochChatAnnotation implements ServletContextListener {
       log.debug("Beginning file upload for file: $filename")
       try {
         outputStream = new FileOutputStream("/tmp/$filename")
+        FileUpload.withTransaction {
+          def chat = Chat.findByUniqueId(userSession.userProperties.get("chatId"))
+          new FileUpload(filename: filename, location: "/tmp", chat: chat).save(flush: true)
+        }
       } catch (FileNotFoundException e) {
         log.error("An error occurred creating the file: $filename", e)
       }
@@ -104,7 +108,11 @@ public class LochChatAnnotation implements ServletContextListener {
       try {
         outputStream.close()
         outputStream.flush()
-        sendMessage([message: "$username uploaded file $filename"], chatId)
+        def file
+        FileUpload.withTransaction {
+          file = FileUpload.findByFilename(filename)
+        }
+        sendMessage([message: "$username uploaded file ${file.id}"], chatId)
       } catch (IOException e) {
         log.error("An error occurred closing the file.", e)
       }
