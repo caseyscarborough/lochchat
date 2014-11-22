@@ -121,7 +121,7 @@ public class LochChatAnnotation implements ServletContextListener {
           new Message(contents: message, log: chat.log).save(flush: true)
         }
         def javascriptCallback = """
-          swal('Successfully uploaded file!');
+          swal('Success!', 'Your file was successfully uploaded.', 'success');
           \$('#upload-file').html('Upload File');
           \$('#upload-file').removeAttr('disabled');
           \$('#file').val('');"""
