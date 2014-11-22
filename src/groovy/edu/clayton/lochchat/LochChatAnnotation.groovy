@@ -101,10 +101,13 @@ public class LochChatAnnotation implements ServletContextListener {
       def filename = message.split(":")[1]
       log.debug("Beginning file upload for file: $filename")
       try {
-        outputStream = new FileOutputStream("/tmp/lochchat/$filename")
+        def uniqueId = filename.encodeAsMD5()
+        def newFilename = filename.substring(0, filename.lastIndexOf('.')) + "-$uniqueId" + filename.substring(filename.lastIndexOf('.'))
+        outputStream = new FileOutputStream("/tmp/lochchat/$newFilename")
+
         FileUpload.withTransaction {
           def chat = Chat.findByUniqueId(userSession.userProperties.get("chatId"))
-          new FileUpload(filename: filename, location: "/tmp/lochchat", chat: chat, uniqueId: filename.encodeAsMD5()).save(flush: true)
+          new FileUpload(filename: newFilename, location: "/tmp/lochchat", chat: chat, uniqueId: uniqueId, originalFilename: filename).save(flush: true)
         }
       } catch (FileNotFoundException e) {
         log.error("An error occurred creating the file: $filename", e)
@@ -118,7 +121,8 @@ public class LochChatAnnotation implements ServletContextListener {
         FileUpload file = null
         def downloadUrl = ""
         FileUpload.withTransaction {
-          file = FileUpload.findByFilename(filename)
+          def chat = Chat.findByUniqueId(chatId)
+          file = FileUpload.findByOriginalFilenameAndChat(filename, chat)
           downloadUrl = file.downloadUrl
         }
         log.debug("Sending message to $chatId for download url: $downloadUrl")

@@ -9,7 +9,7 @@ class FileUploadController {
         def file = new File(fileUpload.path)
         if (file.exists()) {
           response.setContentType("application/octet-stream")
-          response.setHeader("Content-disposition", "attachment;filename=${fileUpload.filename}")
+          response.setHeader("Content-disposition", "attachment;filename=${fileUpload.originalFilename}")
           response.outputStream << file.bytes
           response.outputStream.flush()
         }
