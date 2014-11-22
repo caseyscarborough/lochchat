@@ -50,13 +50,13 @@ public class LochChatAnnotation implements ServletContextListener {
   }
 
   @OnOpen
-  public void handleOpen(Session userSession, @PathParam("chatId") String chatId) {
+  public void onOpen(Session userSession, @PathParam("chatId") String chatId) {
     chatroomUsers.add(userSession)
     userSession.userProperties.put("chatId", chatId)
   }
 
   @OnMessage
-  public String handleMessage(String message, Session userSession)  throws IOException {
+  public String onMessage(String message, Session userSession)  throws IOException {
     def output = [:]
     message = StringEscapeUtils.escapeHtml(message)
     log.debug("Received message from user: $message")
@@ -85,24 +85,8 @@ public class LochChatAnnotation implements ServletContextListener {
     }
   }
 
-  private void sendMessage(output, chatId) {
-    Iterator<Session> iterator = chatroomUsers.iterator()
-
-    while (iterator.hasNext()) {
-      def user = iterator.next()
-      try {
-        log.info(user.userProperties.toMapString())
-        if (user.userProperties.get("chatId") == chatId) {
-          user.basicRemote.sendText((output as JSON).toString())
-        }
-      } catch (IllegalStateException e) {
-        log.error("An error occurred, but was caught.", e)
-      }
-    }
-  }
-
   @OnClose
-  public void handleClose(Session userSession) {
+  public void onClose(Session userSession) {
     String chatId = userSession.userProperties.get("chatId")
     String username = userSession.userProperties.get("username")
     chatroomUsers.remove(userSession)
@@ -127,7 +111,22 @@ public class LochChatAnnotation implements ServletContextListener {
   }
 
   @OnError
-  public void handleError(Throwable t) {
+  public void onError(Throwable t) {
     log.error("An error occurred.", t)
+  }
+
+  private void sendMessage(output, chatId) {
+    Iterator<Session> iterator = chatroomUsers.iterator()
+
+    while (iterator.hasNext()) {
+      def user = iterator.next()
+      try {
+        if (user.userProperties.get("chatId") == chatId) {
+          user.basicRemote.sendText((output as JSON).toString())
+        }
+      } catch (IllegalStateException e) {
+        log.error("An error occurred, but was caught.", e)
+      }
+    }
   }
 }
