@@ -129,9 +129,18 @@ var Room = (function($) {
 
     var _setupExitChatroom = function() {
         $("#exit-chatroom").click(function() {
-            if (confirm("Are you sure you'd like to exit the chatroom?")) {
+            swal({
+                title: "Are you sure?",
+                text: "Are you sure you'd like to exit the chatroom?",
+                type: "error",
+                showCancelButton: true,
+                confirmButtonClass: "btn-danger",
+                confirmButtonText: "Yes, get me out of here!",
+                closeOnConfirm: false
+            },
+            function(){
                 window.location.href = "/" + config.application.name;
-            }
+            });
         });
     };
 
