@@ -4,6 +4,7 @@ class FileUpload {
 
   String filename
   String location
+  String originalFilename
   Chat chat
   String uniqueId
 
