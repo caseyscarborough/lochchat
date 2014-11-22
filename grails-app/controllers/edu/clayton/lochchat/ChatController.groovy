@@ -96,7 +96,7 @@ class ChatController {
       }
     } catch (MailSendException e) {
       log.error("Could not deliver email to recipient.", e)
-      new Message(contents: "Cound not deliver email to recipient: $email. Are you sure this email address exists?", log: chat.log).save(flush: true)
+      new Message(contents: "Could not deliver email to recipient: $email. Are you sure this email address exists?", log: chat.log).save(flush: true)
       chat.log.save(flush: true)
       chat.save(flush: true)
     }
