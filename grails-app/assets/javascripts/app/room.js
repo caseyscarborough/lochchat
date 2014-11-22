@@ -16,6 +16,10 @@ var Room = (function($) {
     // WebSocket connection for chatroom
     var _socket = null;
 
+    var _scrollChatLog = function() {
+        _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() + 20 }, 200);
+    }
+
     var _connectVideoAndAudio = function() {
         var connection = new RTCMultiConnection();
 
@@ -47,6 +51,7 @@ var Room = (function($) {
 
         _socket.onopen = function(message) {
             _chatLog.append(_wrapMessage("Connected to server..."));
+            _scrollChatLog();
         };
 
         _socket.onmessage = function(message) {
@@ -56,7 +61,7 @@ var Room = (function($) {
                     var new_chatLog = $(_wrapMessage(data.message));
                     new_chatLog.linkify();
                     _chatLog.append(new_chatLog);
-                    _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() }, 200);
+                    _scrollChatLog();
                 }
 
                 if (data.callback) {
@@ -69,11 +74,13 @@ var Room = (function($) {
             _socket.send("Client disconnected......\n");
             _chatLog.append(_wrapMessage("Lost connection."));
             _chatLog.append(_wrapMessage("Reconnecting in 3 seconds..."));
+            _scrollChatLog();
             setTimeout(function() { _setupIncomingChats(websocketUrl, _username) }, 3000);
         };
 
         _socket.onerror = function(message) {
             _chatLog.append(_wrapMessage("An error occurred."));
+            _scrollChatLog();
         };
 
         _chatText.keypress(function(event) {
