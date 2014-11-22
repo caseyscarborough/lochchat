@@ -13,4 +13,6 @@ databaseChangeLog = {
 	include file: '201411211448-add-unique-id-to-fileupload.groovy'
 
 	include file: '201411211724-add-original-filename-to-fileupload.groovy'
+
+	include file: '201411211835-add-spring-security-classes.groovy'
 }
