@@ -115,7 +115,12 @@ public class LochChatAnnotation implements ServletContextListener {
           downloadUrl = file.downloadUrl
         }
         log.debug("Sending message to $chatId for download url: $downloadUrl")
-        sendMessage([message: "$username uploaded a file. Click <a href='$downloadUrl' target='_blank'>here</a> to download it."], chatId)
+        message = "$username uploaded a file. Click <a href='$downloadUrl' target='_blank'>here</a> to download it."
+        Message.withTransaction {
+          def chat = Chat.findByUniqueId(chatId)
+          new Message(contents: message, log: chat.log).save(flush: true)
+        }
+        sendMessage([message: message], chatId)
       } catch (IOException e) {
         log.error("An error occurred closing the file.", e)
       }
