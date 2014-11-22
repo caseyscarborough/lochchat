@@ -7,6 +7,7 @@ class UrlMappings {
       }
     }
 
+    "/f/$chatId/$fileId"(controller: "fileUpload", action: "download")
     "/r/$uniqueId"(controller: "chat", action: "room")
     "/"(controller: "home", action: "index")
     "500"(view: '/error')

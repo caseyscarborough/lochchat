@@ -8,6 +8,17 @@ class FileUpload {
 
   Date dateCreated
 
+  def grailsLinkGenerator
+  static transients = ['grailsLinkGenerator']
+
   static constraints = {
+  }
+
+  def getPath() {
+    "$location/$filename"
+  }
+
+  def getDownloadUrl() {
+    grailsLinkGenerator.link(controller: 'fileUpload', action: 'download', params: [chatId: chat.uniqueId, fileId: id], absolute: true)
   }
 }
