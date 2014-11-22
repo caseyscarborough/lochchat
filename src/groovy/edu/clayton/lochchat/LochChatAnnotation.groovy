@@ -16,9 +16,6 @@ import javax.servlet.annotation.WebListener
 import javax.websocket.*
 import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
-import java.sql.Driver
-import java.sql.DriverManager
-import java.sql.SQLException
 
 @WebListener
 @ServerEndpoint("/chatMessage")
