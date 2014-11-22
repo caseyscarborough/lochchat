@@ -66,6 +66,13 @@ public class LochChatAnnotation implements ServletContextListener {
         outputStream.write(data.get())
       } catch (IOException e) {
         log.error("An error occurred trying to write data to file.", e)
+        def javascriptCallback = """
+          swal("A fatal error occurred", "Your session will now be reset.", "error");
+          \$('#upload-file').html('Upload File');
+          \$('#upload-file').removeAttr('disabled');
+          \$('#file').val('');"""
+        sendMessage([message: '', callback: javascriptCallback], session)
+        session.close()
       }
     }
   }
@@ -94,10 +101,10 @@ public class LochChatAnnotation implements ServletContextListener {
       def filename = message.split(":")[1]
       log.debug("Beginning file upload for file: $filename")
       try {
-        outputStream = new FileOutputStream("/tmp/$filename")
+        outputStream = new FileOutputStream("/tmp/lochchat/$filename")
         FileUpload.withTransaction {
           def chat = Chat.findByUniqueId(userSession.userProperties.get("chatId"))
-          new FileUpload(filename: filename, location: "/tmp", chat: chat, uniqueId: filename.encodeAsMD5()).save(flush: true)
+          new FileUpload(filename: filename, location: "/tmp/lochchat", chat: chat, uniqueId: filename.encodeAsMD5()).save(flush: true)
         }
       } catch (FileNotFoundException e) {
         log.error("An error occurred creating the file: $filename", e)
@@ -125,7 +132,8 @@ public class LochChatAnnotation implements ServletContextListener {
           \$('#upload-file').html('Upload File');
           \$('#upload-file').removeAttr('disabled');
           \$('#file').val('');"""
-        sendMessage([message: message, callback: javascriptCallback], chatId)
+        sendMessage([message: message], chatId)
+        sendMessage([message: '', callback: javascriptCallback], userSession)
       } catch (IOException e) {
         log.error("An error occurred closing the file.", e)
       }
@@ -169,7 +177,7 @@ public class LochChatAnnotation implements ServletContextListener {
     log.error("An error occurred.", t)
   }
 
-  private void sendMessage(output, chatId) {
+  private void sendMessage(Map output, String chatId) {
     Iterator<Session> iterator = chatroomUsers.iterator()
 
     while (iterator.hasNext()) {
@@ -182,5 +190,9 @@ public class LochChatAnnotation implements ServletContextListener {
         log.error("An error occurred, but was caught.", e)
       }
     }
+  }
+
+  private void sendMessage(Map output, Session userSession) {
+    userSession.basicRemote.sendText((output as JSON).toString())
   }
 }
