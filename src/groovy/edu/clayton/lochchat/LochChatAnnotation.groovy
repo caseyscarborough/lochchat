@@ -17,6 +17,7 @@ import javax.websocket.*
 import javax.websocket.server.PathParam
 import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
+import java.nio.ByteBuffer
 
 @WebListener
 @ServerEndpoint("/chatEndpoint/{chatId}")
@@ -24,6 +25,7 @@ public class LochChatAnnotation implements ServletContextListener {
 
   private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Set<Session> chatroomUsers = ([] as Set).asSynchronized()
+  static FileOutputStream outputStream = null
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
@@ -56,6 +58,19 @@ public class LochChatAnnotation implements ServletContextListener {
   }
 
   @OnMessage
+  public void uploadFile(ByteBuffer data, boolean last, Session session) {
+    log.debug("Uploading binary data...")
+
+    while (data.hasRemaining()) {
+      try {
+        outputStream.write(data.get())
+      } catch (IOException e) {
+        log.error("An error occurred trying to write data to file.", e)
+      }
+    }
+  }
+
+  @OnMessage
   public String onMessage(String message, Session userSession)  throws IOException {
     def output = [:]
     message = StringEscapeUtils.escapeHtml(message)
@@ -75,6 +90,24 @@ public class LochChatAnnotation implements ServletContextListener {
 
       output.put("message", "$message")
       sendMessage(output, chatId)
+    } else if (message.startsWith("file:")) {
+      def filename = message.split(":")[1]
+      log.debug("Beginning file upload for file: $filename")
+      try {
+        outputStream = new FileOutputStream("/tmp/$filename")
+      } catch (FileNotFoundException e) {
+        log.error("An error occurred creating the file: $filename", e)
+      }
+    } else if (message.startsWith("endFile:")) {
+      def filename = message.split(":")[1]
+      log.debug("Closing file: $filename")
+      try {
+        outputStream.close()
+        outputStream.flush()
+        sendMessage([message: "$username uploaded file $filename"], chatId)
+      } catch (IOException e) {
+        log.error("An error occurred closing the file.", e)
+      }
     } else {
       Message.withTransaction {
         def chat = Chat.findByUniqueId(chatId)
@@ -86,11 +119,11 @@ public class LochChatAnnotation implements ServletContextListener {
   }
 
   @OnClose
-  public void onClose(Session userSession) {
+  public void onClose(Session userSession, CloseReason reason) {
     String chatId = userSession.userProperties.get("chatId")
     String username = userSession.userProperties.get("username")
     chatroomUsers.remove(userSession)
-
+    log.info("User left chatroom for the following reason: ${reason.reasonPhrase}")
     if (chatId && username) {
       def message = "${username} has left the chatroom."
       Message.withTransaction {

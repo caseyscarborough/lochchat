@@ -54,6 +54,10 @@
       <asset:image id="exit-chatroom" src="flat-icons/Icons/set-2/PNG/3.png" />
       <label>Exit Chatroom</label>
     </div>
+    <div class="chat-option">
+      <input type="file" id="file">
+      <label><button id="upload-file" class="btn btn-primary">Upload File</button></label>
+    </div>
   </div>
 </div>
 <g:render template="usernameModal" />
