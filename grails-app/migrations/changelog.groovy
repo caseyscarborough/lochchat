@@ -7,4 +7,6 @@ databaseChangeLog = {
 	include file: '201411180901-create-message-class.groovy'
 
 	include file: '201411211415-create-fileupload-class.groovy'
+
+	include file: '201411211421-associate-chat-with-fileupload.groovy'
 }

@@ -4,6 +4,7 @@ class FileUpload {
 
   String filename
   String location
+  Chat chat
 
   Date dateCreated
 
