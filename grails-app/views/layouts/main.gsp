@@ -6,6 +6,7 @@
 <!--[if (gt IE 9)|!(IE)]><!--> <html lang="en" class="no-js"><!--<![endif]-->
 	<head>
 		<title>LochChat - <g:layoutTitle /></title>
+    <link rel="icon" type="image/png" href="${resource(src: "favicon.png")}">
 		<asset:stylesheet src="application.css"/>
 		<asset:javascript src="application.js"/>
 		<g:layoutHead/>
