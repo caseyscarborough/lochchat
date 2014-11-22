@@ -14,11 +14,12 @@ import javax.servlet.ServletContextEvent
 import javax.servlet.ServletContextListener
 import javax.servlet.annotation.WebListener
 import javax.websocket.*
+import javax.websocket.server.PathParam
 import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
 
 @WebListener
-@ServerEndpoint("/chatMessage")
+@ServerEndpoint("/chatEndpoint/{chatId}")
 public class LochChatAnnotation implements ServletContextListener {
 
   private final Logger log = LoggerFactory.getLogger(getClass().name)
@@ -49,24 +50,23 @@ public class LochChatAnnotation implements ServletContextListener {
   }
 
   @OnOpen
-  public void handleOpen(Session userSession) {
+  public void handleOpen(Session userSession, @PathParam("chatId") String chatId) {
     chatroomUsers.add(userSession)
+    userSession.userProperties.put("chatId", chatId)
   }
 
   @OnMessage
-  public String handleMessage(String message, Session userSession) throws IOException {
+  public String handleMessage(String message, Session userSession)  throws IOException {
     def output = [:]
+    message = StringEscapeUtils.escapeHtml(message)
     log.debug("Received message from user: $message")
+
     String username = userSession.userProperties.get("username") as String
-    def array = message?.split(/\|/) as List
-    def chatId = array.pop()
-    message = StringEscapeUtils.escapeHtml(array.join(""))
+    String chatId = userSession.userProperties.get("chatId") as String
     if (!username) {
       log.debug("User has connected to the chatroom.")
 
       userSession.userProperties.put("username", message)
-      userSession.userProperties.put("chatId", chatId)
-
       Message.withTransaction {
         def chat = Chat.findByUniqueId(chatId)
         new Message(user: message, contents: message + " has joined the chatroom.", log: chat?.log).save(flush: true)

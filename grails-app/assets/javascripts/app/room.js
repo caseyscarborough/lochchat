@@ -66,7 +66,7 @@ var Room = (function($) {
             if (event.keyCode == 13) {
                 event.preventDefault();
                 if ($.trim(_chatText.val()) !== "") {
-                    _socket.send(_chatText.val() + "|" + _uniqueId);
+                    _socket.send(_chatText.val());
                     _chatText.val("");
                 }
             }
@@ -100,7 +100,7 @@ var Room = (function($) {
                 },
                 url: "/" + config.application.name + "/chat/invite",
                 success: function() {
-                    _socket.send(_username + " invited the following users to the chatroom: " + emails.val() + "|" + _uniqueId);
+                    _socket.send(_username + " invited the following users to the chatroom: " + emails.val());
                     emails.val("");
                     $("#inviteUsersModal").modal('hide');
                     $(this).button('reset');
@@ -189,7 +189,7 @@ var Room = (function($) {
 
             modal.modal('hide');
             _username = username.val();
-            _socket.send(_username + "|" + _uniqueId );
+            _socket.send(_username);
             _connectVideoAndAudio();
         });
 

@@ -7,7 +7,7 @@
   <script src="//mobwrite3.appspot.com/static/compressed_form.js"></script>
   <script>
     $(function(){
-      Room.init("${chatroom.uniqueId}", "${createLink(uri: '/chatMessage', absolute: true)}");
+      Room.init("${chatroom.uniqueId}", "${createLink(uri: "/chatEndpoint/${chatroom.uniqueId}", absolute: true)}");
       mobwrite.syncGateway = 'https://mobwrite3.appspot.com/scripts/q.py';
       mobwrite.share('chat-workspace-${chatroom.uniqueId}');
     });
