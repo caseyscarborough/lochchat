@@ -86,6 +86,42 @@
               <p class="info">You have not yet attended any chatrooms. <g:link controller="home" action="index">Get started now</g:link>.</p>
             </g:else>
           </div>
+          <div class="profile-section">
+            <h4>User Information</h4>
+            <div class="row option">
+              <div class="col-md-3">
+                <h5 class="pull-right">Update Password</h5>
+                <p class="info pull-right" style="text-align: right">Use this section to change your password.</p>
+              </div>
+              <div class="col-md-9">
+                <div class="option-section">
+                  <form role="form">
+                    <div class="form-group">
+                      <label for="password">Current Password</label>
+                      <input type="password" id="password" class="form-control" placeholder="Current Password" required>
+                    </div>
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="new-password">New Password</label>
+                          <input type="password" id="new-password" class="form-control" placeholder="New Password" required>
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label for="password-confirmation">Confirm Password</label>
+                          <input type="password" id="password-confirmation" class="form-control" placeholder="Current Password" required>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group">
+                      <button type="button" id="change-password" class="btn btn-primary" data-loading-text="Updating Password...">Update Password</button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

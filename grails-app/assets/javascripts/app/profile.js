@@ -1,6 +1,39 @@
 var Profile = (function($) {
+    'use strict';
 
     var self = {};
+
+    var _updatePassword = function() {
+        var password = $("#password");
+        var passwordConf = $("#password-confirmation");
+        var newPassword = $("#new-password");
+
+        if ($.trim(password.val()) !== '' && ($.trim(newPassword.val()) == $.trim(passwordConf.val()))) {
+            var data = { currentPassword: password.val(), newPassword: newPassword.val() };
+            var btn = $("#update-password");
+            btn.button('loading');
+            $.ajax({
+                type: "put",
+                contentType: "application/json",
+                dataType: "json",
+                url: "/" + config.application.name + "/user/updatePassword",
+                data: JSON.stringify(data),
+                success: function() {
+                    btn.button('reset');
+                    swal("Success!", "Successfully updated password.", "success");
+                    password.val("");
+                    passwordConf.val("");
+                    newPassword.val("");
+                },
+                error: function(response) {
+                    swal("An error occurred", response.responseJSON.message, "error");
+                    password.focus();
+                }
+            });
+        } else {
+            swal("Passwords do not match", "The passwords that you entered do not match.", "error");
+        }
+    };
 
     var _deleteChatroom = function(uniqueId) {
         $.ajax({
@@ -49,6 +82,10 @@ var Profile = (function($) {
             function() {
                 _deleteChatroom(uniqueId);
             });
+        });
+
+        $("#change-password").click(function() {
+            _updatePassword();
         });
     };
 
