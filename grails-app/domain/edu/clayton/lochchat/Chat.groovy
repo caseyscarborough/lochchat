@@ -21,6 +21,10 @@ class Chat {
     uniqueId unique: true
   }
 
+  def getFormattedStartTime() {
+    startTime.format("MMM. dd, yyyy 'at' h:mma")
+  }
+
   def getUrl() {
     if (!uniqueId) {
       uniqueId = UUID.randomUUID().encodeAsSHA1().substring(0, 16)

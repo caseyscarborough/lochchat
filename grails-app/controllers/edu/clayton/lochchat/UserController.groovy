@@ -31,4 +31,9 @@ class UserController {
     flash.message = "You have successfully logged in."
     redirect(controller: 'home', action: 'index')
   }
+
+  @Secured(['IS_AUTHENTICATED_FULLY'])
+  def profile() {
+    [user: (User)springSecurityService.currentUser]
+  }
 }
