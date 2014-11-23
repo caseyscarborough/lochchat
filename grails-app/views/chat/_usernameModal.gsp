@@ -5,8 +5,7 @@
         <h4 class="modal-title" id="usernameModalLabel">Who are you?</h4>
       </div>
       <div class="modal-body">
-        Enter your desired username in the box below:
-
+        You are not logged in, but this chatroom requires a username. Please enter your desired username in the box below:
         <div class="form-group">
           <label for="username">Username</label>
           <input type="text" id="username" class="form-control" placeholder="Username">
