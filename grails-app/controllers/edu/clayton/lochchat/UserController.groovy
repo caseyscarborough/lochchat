@@ -45,12 +45,12 @@ class UserController {
     redirect(controller: 'home', action: 'index')
   }
 
-  @Secured(['IS_AUTHENTICATED_FULLY'])
+  @Secured(['IS_AUTHENTICATED_REMEMBERED'])
   def profile() {
     [user: (User)springSecurityService.currentUser, uniqueUrl: new Chat().url]
   }
 
-  @Secured(['IS_AUTHENTICATED_FULLY'])
+  @Secured(['IS_AUTHENTICATED_REMEMBERED'])
   def updatePassword() {
     User user = (User) springSecurityService.currentUser
     log.debug(request.JSON)

@@ -107,7 +107,7 @@ class ChatController {
     render result as JSON
   }
 
-  @Secured(['IS_AUTHENTICATED_FULLY'])
+  @Secured(['IS_AUTHENTICATED_REMEMBERED'])
   def delete(String uniqueId) {
     def chat = Chat.findByUniqueId(uniqueId)
     User user = springSecurityService.currentUser
