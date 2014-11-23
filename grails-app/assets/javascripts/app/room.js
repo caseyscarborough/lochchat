@@ -10,7 +10,8 @@ var Room = (function($) {
         _chatText = null,
         _username = null,
         _modal = null,
-        _connectionRetries = 0;
+        _connectionRetries = 0,
+        _hasUserAccount = false;
 
     var debugMode = false;
 
@@ -173,10 +174,34 @@ var Room = (function($) {
                 showCancelButton: true,
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Yes, get me out of here!",
-                closeOnConfirm: false
+                closeOnConfirm: false,
+                closeOnCancel: true
             },
-            function(){
-                window.location.href = "/" + config.application.name;
+            function(isConfirm){
+                if (_hasUserAccount) {
+                    window.location.href = "/" + config.application.name;
+                } else {
+                    if (isConfirm) {
+                        swal({
+                            title: "Save this chatroom",
+                            text: "By creating a user account, you can save a record of this chat, along with the log and files uploaded. Would you like to create one now?",
+                            type: "warning",
+                            showCancelButton: true,
+                            confirmButtonClass: "btn-success",
+                            confirmButtonText: "Yes, let me create an account!",
+                            cancelButtonText: "No, just exit",
+                            closeOnConfirm: true,
+                            closeOnCancel: true
+                        },
+                        function(isConfirm) {
+                            if (isConfirm) {
+                                window.location.href = '/' + config.application.name + '/signup';
+                            } else {
+                                window.location.href = '/' + config.application.name + '/';
+                            }
+                        });
+                    }
+                }
             });
         });
     };
@@ -262,6 +287,7 @@ var Room = (function($) {
         }
 
         if (loggedInUsername !== "") {
+            _hasUserAccount = true;
             setTimeout(function() { _enterRoom(loggedInUsername); }, 500);
         } else {
             _modal.modal();
