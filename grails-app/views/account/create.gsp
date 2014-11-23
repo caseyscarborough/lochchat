@@ -14,7 +14,7 @@
         <div class='alert alert-info'><small>${flash.message}</small></div>
       </g:if>
 
-      <form action='${createLink(controller: 'user', action: 'save')}' method='POST' id='loginForm' autocomplete='off'>
+      <form action='${createLink(controller: 'account', action: 'save')}' method='POST' id='loginForm' autocomplete='off'>
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">

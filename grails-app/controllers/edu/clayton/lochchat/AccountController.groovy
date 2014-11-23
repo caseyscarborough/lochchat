@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.AuthenticationException
 
-class UserController {
+class AccountController {
 
   def authenticationManager
   def messageService
