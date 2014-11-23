@@ -40,11 +40,12 @@
                   <th>Other Users</th>
                   <th>Uploaded Files</th>
                   <th>Log</th>
+                  <th>Options</th>
                 </tr>
                 </thead>
                 <tbody>
                 <g:each in="${user.chats.sort { it.startTime }}" var="chatroom">
-                  <tr>
+                  <tr id="chatroom-${chatroom.uniqueId}">
                     <td>${chatroom.uniqueId}</td>
                     <td>${chatroom.formattedStartTime}</td>
                     <td><g:link controller="chat" action="room" params="[uniqueId: chatroom.uniqueId]" target="_blank">${chatroom.url}</g:link></td>
@@ -69,6 +70,14 @@
                       </g:else>
                     </td>
                     <td><g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]" target="_blank">Export</g:link></td>
+                    <td>
+                      <g:if test="${(chatroom.users - user).size() == 0}">
+                        <a href="#" class="delete-chat tooltip-link" data-id="${chatroom.uniqueId}" title="Delete Chatroom" data-placement="right"><i class="fa fa-trash-o"></i></a>
+                      </g:if>
+                      <g:else>
+                        <a href="#" class="disabled"><i class="fa fa-trash-o"></i></a>
+                      </g:else>
+                    </td>
                   </tr>
                 </g:each>
                 </tbody>

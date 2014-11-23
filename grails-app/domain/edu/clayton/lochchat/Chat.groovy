@@ -21,6 +21,10 @@ class Chat {
     uniqueId unique: true
   }
 
+  static mapping = {
+    files cascade: 'all-delete-orphan'
+  }
+
   def getFormattedStartTime() {
     startTime.format("MMM. dd, yyyy 'at' h:mma")
   }

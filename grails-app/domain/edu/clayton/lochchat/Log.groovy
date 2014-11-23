@@ -11,6 +11,7 @@ class Log {
   }
 
   static mapping = {
+    messages cascade: 'all-delete-orphan'
   }
 
   String getFormattedDateCreated() {

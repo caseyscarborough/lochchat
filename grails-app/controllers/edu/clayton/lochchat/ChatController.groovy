@@ -11,7 +11,7 @@ class ChatController {
 
   CodecLookup codecLookup
 
-  static allowedMethods = [create: 'POST', invite: 'POST']
+  static allowedMethods = [create: 'POST', invite: 'POST', delete: 'DELETE']
 
   def mailService
   def messageService
@@ -105,6 +105,21 @@ class ChatController {
     }
     def result = [status: HttpStatus.OK]
     render result as JSON
+  }
+
+  @Secured(['IS_AUTHENTICATED_FULLY'])
+  def delete(String uniqueId) {
+    def chat = Chat.findByUniqueId(uniqueId)
+    User user = springSecurityService.currentUser
+
+    if (user.chats.contains(chat) && (chat.users - user).size() == 0) {
+      user.chats.remove(chat)
+      chat.delete(flush: true)
+      response.status = 200
+      render ""
+      return
+    }
+    response.status = 404
   }
 
   protected void emailUser(String email, Chat chat) {

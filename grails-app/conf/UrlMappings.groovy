@@ -11,6 +11,7 @@ class UrlMappings {
     "/logout"(controller: "logout", action: "index")
     "/signup"(controller: "user", action: "create")
     "/profile"(controller: "user", action: "profile")
+    "/chat/delete/$uniqueId"(controller: "chat", action: "delete")
     "/f/$chatId/$fileId"(controller: "fileUpload", action: "download")
     "/r/$uniqueId"(controller: "chat", action: "room")
     "/"(controller: "home", action: "index")

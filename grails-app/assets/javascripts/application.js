@@ -31,5 +31,7 @@ if (typeof jQuery !== 'undefined') {
         }).blur(function() {
             $(this).parent().css("border-color", "#ebedef");
         });
+
+        $(".tooltip-link").tooltip();
     });
 }
