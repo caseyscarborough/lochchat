@@ -9,8 +9,8 @@ class UrlMappings {
 
     "/login"(controller: "login", action: "auth")
     "/logout"(controller: "logout", action: "index")
-    "/signup"(controller: "user", action: "create")
-    "/profile"(controller: "user", action: "profile")
+    "/signup"(controller: "account", action: "create")
+    "/profile"(controller: "account", action: "profile")
     "/chat/delete/$uniqueId"(controller: "chat", action: "delete")
     "/chatEndpoint"(uri: "/chatEndpoint")
     "/f/$chatId/$fileId"(controller: "fileUpload", action: "download")
