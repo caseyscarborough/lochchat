@@ -71,11 +71,9 @@ var Room = (function($) {
         };
 
         _socket.onclose = function(message) {
-            _socket.send("Client disconnected......\n");
-            _chatLog.append(_wrapMessage("Lost connection."));
-            _chatLog.append(_wrapMessage("Reconnecting in 3 seconds..."));
+            _chatLog.append(_wrapMessage("Lost connection. Reconnecting..."));
             _scrollChatLog();
-            setTimeout(function() { _setupIncomingChats(websocketUrl, _username) }, 3000);
+            setTimeout(function() { _setupIncomingChats(websocketUrl, _username) }, 2000);
         };
 
         _socket.onerror = function(message) {
