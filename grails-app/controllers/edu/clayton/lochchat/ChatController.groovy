@@ -54,9 +54,11 @@ class ChatController {
     }
 
     if (springSecurityService.isLoggedIn()) {
-      if (!chatroom.users.contains(springSecurityService.principal)) {
-        chatroom.users.add(springSecurityService.principal)
-        chatroom.save(flush: true)
+      User user = springSecurityService.currentUser
+
+      if (!chatroom.users.contains(user)) {
+        user.chats.add(chatroom)
+        user.save(flush: true)
       }
     }
     [chatroom: chatroom]

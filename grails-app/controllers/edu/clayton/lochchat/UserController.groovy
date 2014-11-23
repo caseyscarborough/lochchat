@@ -15,7 +15,7 @@ class UserController {
 
   @Secured(['permitAll'])
   def save() {
-    def user = new User(firstName: params.firstName, lastName: params.lastName, email: params.email, username: params.username, password: params.password)
+    def user = new User(firstName: params.firstName, lastName: params.lastName, email: params.email, username: params.username, password: params.password, chats: [])
 
     if (!user.save(flush: true)) {
       def error = messageService.getErrorMessage(user)
