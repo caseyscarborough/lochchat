@@ -29,9 +29,10 @@
                 <tr>
                   <th>Chatroom ID</th>
                   <th>Start Time</th>
-                  <th>Log</th>
                   <th>URL</th>
                   <th>Other Users</th>
+                  <th>Uploaded Files</th>
+                  <th>Log</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -39,11 +40,28 @@
                   <tr>
                     <td>${chatroom.uniqueId}</td>
                     <td>${chatroom.formattedStartTime}</td>
-                    <td><g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]" target="_blank">Export Chatlog</g:link></td>
-                    <td><a href="${chatroom.url}" target="_blank">${chatroom.url}</a></td>
-                    <td><g:each in="${chatroom.users - user}" var="chatroomUser" status="i">
-                      <g:if test="${i != 0}">, </g:if>${chatroomUser}
-                    </g:each></td>
+                    <td><g:link controller="chat" action="room" params="[uniqueId: chatroom.uniqueId]" target="_blank">${chatroom.url}</g:link></td>
+                    <td>
+                      <g:if test="${(chatroom.users - user).size() > 0}">
+                        <g:each in="${chatroom.users - user}" var="chatroomUser" status="i">
+                          <g:if test="${i != 0}">, </g:if>${chatroomUser}
+                        </g:each>
+                      </g:if>
+                      <g:else>
+                        Just you
+                      </g:else>
+                    </td>
+                    <td>
+                      <g:if test="${chatroom.files.size() > 0}">
+                        <g:each in="${chatroom.files}" var="file" status="i">
+                          <g:if test="${i != 0}">, </g:if><a href="${file.downloadUrl}" target="_blank">${file.originalFilename}</a>
+                        </g:each>
+                      </g:if>
+                      <g:else>
+                        None
+                      </g:else>
+                    </td>
+                    <td><g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]" target="_blank">Export</g:link></td>
                   </tr>
                 </g:each>
                 </tbody>
