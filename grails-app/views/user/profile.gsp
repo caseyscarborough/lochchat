@@ -15,7 +15,12 @@
 
       <div class="row">
         <div class="col-md-2">
-          <lochchat:gravatarFor user="${user}" width="100%" class="" />
+          <a href="http://en.gravatar.com/" target="_blank" class="popover-link" data-title="Where does this come from?"
+             data-content="Your avatar comes from <a href='http://en.gravatar.com/'>Gravatar</a>, a service that gives
+             you a globally recognized avatar. Click your photo to change your avatar at <a href='http://en.gravatar.com/'>
+             Gravatar</a>'s website." data-container="body" data-html="true" data-placement="left">
+            <lochchat:gravatarFor user="${user}" width="100%" class="" />
+          </a>
           <h4>${user}</h4>
           <p class="info"><a href="mailto:${user.email}">${user.email}</a></p>
           <p class="info">Joined on ${user.dateCreated.format("MMM. dd, yyyy")}</p>

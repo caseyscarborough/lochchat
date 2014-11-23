@@ -6,7 +6,6 @@
   <script>
     $(document).ready(function() {
       Home.init();
-      $('.popover-link').popover({ trigger: 'hover' });
     })
   </script>
 </head>

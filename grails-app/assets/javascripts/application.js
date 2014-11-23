@@ -33,5 +33,6 @@ if (typeof jQuery !== 'undefined') {
         });
 
         $(".tooltip-link").tooltip();
+        $('.popover-link').popover({ trigger: 'hover' });
     });
 }
