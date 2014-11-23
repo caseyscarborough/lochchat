@@ -9,6 +9,10 @@ class User {
   String email
   String username
   String password
+
+  Date dateCreated
+  Date lastUpdated
+
   boolean enabled = true
   boolean accountExpired
   boolean accountLocked
@@ -41,6 +45,14 @@ class User {
     if (isDirty('password')) {
       encodePassword()
     }
+  }
+
+  def getName() {
+    "$firstName $lastName"
+  }
+
+  String toString() {
+    name
   }
 
   protected void encodePassword() {
