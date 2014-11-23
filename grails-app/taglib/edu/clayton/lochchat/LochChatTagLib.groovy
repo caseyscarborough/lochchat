@@ -18,5 +18,4 @@ class LochChatTagLib {
     }
     out << "<img src='https://gravatar.com/avatar/${user.email.encodeAsMD5()}?s=800' width='${attrs.width}' class='${attrs.class}'>"
   }
-
 }

@@ -15,7 +15,7 @@
       </ul>
       <ul class="nav navbar-nav navbar-right">
       <sec:ifNotLoggedIn>
-        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="account" action="create">Sign Up</g:link></li>
+        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="register" action="index">Sign Up</g:link></li>
         <li<g:if test="${params.controller == 'login'}"> class="active"</g:if>><g:link controller="login" action="auth">Login</g:link></li>
       </sec:ifNotLoggedIn>
       <sec:ifLoggedIn>
