@@ -62,14 +62,14 @@
                     <td>
                       <g:if test="${chatroom.files.size() > 0}">
                         <g:each in="${chatroom.files}" var="file" status="i">
-                          <g:if test="${i != 0}">, </g:if><a href="${file.downloadUrl}" target="_blank">${file.originalFilename}</a>
+                          <g:if test="${i != 0}">, </g:if><a href="${file.downloadUrl}">${file.originalFilename}</a>
                         </g:each>
                       </g:if>
                       <g:else>
                         None
                       </g:else>
                     </td>
-                    <td><g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]" target="_blank">Export</g:link></td>
+                    <td><g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]">Export</g:link></td>
                     <td>
                       <g:if test="${(chatroom.users - user).size() == 0}">
                         <a href="#" class="delete-chat tooltip-link" data-id="${chatroom.uniqueId}" title="Delete Chatroom" data-placement="right"><i class="fa fa-trash-o"></i></a>
