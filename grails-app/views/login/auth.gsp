@@ -39,7 +39,6 @@
 <div id='login'>
 
 </div>
-<g:render template="../shared/footer" />
 <script type='text/javascript'>
   <!--
   (function() {

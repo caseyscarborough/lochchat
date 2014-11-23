@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/html">
 <head>
   <title>Chatroom</title>
-  <meta name="layout" content="main">
+  <meta name="layout" content="chat">
   <script src="//cdn.webrtc-experiment.com/RTCMultiConnection.js"></script>
   <script src="//mobwrite3.appspot.com/static/compressed_form.js"></script>
   <script>

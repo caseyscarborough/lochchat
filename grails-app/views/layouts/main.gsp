@@ -12,7 +12,13 @@
 		<g:layoutHead/>
 	</head>
 	<body>
-    <g:render template="../shared/navigation" />
-		<g:layoutBody/>
+    <div id="wrap">
+      <g:render template="../shared/navigation" />
+
+      <div class="content">
+        <g:layoutBody/>
+      </div>
+    </div>
+    <g:render template="../shared/footer" />
 	</body>
 </html>
