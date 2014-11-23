@@ -59,6 +59,7 @@ public class LochChatAnnotation implements ServletContextListener {
     def chatroom = chatroomUsers.get(chatId)
     if (!chatroom) {
       chatroomUsers.put(chatId, [] as Set)
+      chatroom = chatroomUsers.get(chatId)
     }
 
     if (chatroom.size() >= config.lochchat.maxParticipants) {
@@ -73,7 +74,8 @@ public class LochChatAnnotation implements ServletContextListener {
       sendMessage([callback: javascriptCallback], userSession);
       return
     }
-    chatroomUsers.get(chatId).add(userSession)
+
+    chatroom.add(userSession)
     userSession.userProperties.put("chatId", chatId)
   }
 
@@ -167,7 +169,7 @@ public class LochChatAnnotation implements ServletContextListener {
   public void onClose(Session userSession, CloseReason reason) {
     String chatId = userSession.userProperties.get("chatId")
     String username = userSession.userProperties.get("username")
-    chatroomUsers.get(chatId).remove(userSession)
+    chatroomUsers.get(chatId)?.remove(userSession)
     log.info("User left chatroom for the following reason: ${CloseReason.CloseCodes.getCloseCode(reason.closeCode.code)}")
     if (chatId && username) {
       def message = "${username} has left the chatroom."
