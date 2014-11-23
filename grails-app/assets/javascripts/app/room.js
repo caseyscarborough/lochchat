@@ -16,9 +16,16 @@ var Room = (function($) {
     // WebSocket connection for chatroom
     var _socket = null;
 
+    var _resetUploadButton = function() {
+        var btn = $("#upload-file");
+        btn.html('Upload File');
+        btn.removeAttr('disabled');
+        $('#file').val('');
+    };
+
     var _scrollChatLog = function() {
         _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() + 20 }, 200);
-    }
+    };
 
     var _connectVideoAndAudio = function() {
         var connection = new RTCMultiConnection();
@@ -73,6 +80,7 @@ var Room = (function($) {
         _socket.onclose = function(message) {
             _chatLog.append(_wrapMessage("Lost connection. Reconnecting..."));
             _scrollChatLog();
+            _resetUploadButton();
             setTimeout(function() { _setupIncomingChats(websocketUrl, _username) }, 2000);
         };
 

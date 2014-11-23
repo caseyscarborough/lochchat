@@ -73,11 +73,7 @@ public class LochChatAnnotation implements ServletContextListener {
         outputStream.write(data.get())
       } catch (IOException e) {
         log.error("An error occurred trying to write data to file.", e)
-        def javascriptCallback = """
-          swal("A fatal error occurred", "Your session will now be reset.", "error");
-          \$('#upload-file').html('Upload File');
-          \$('#upload-file').removeAttr('disabled');
-          \$('#file').val('');"""
+        def javascriptCallback = "swal('A fatal error occurred', 'Your session will now be reset.', 'error'); _resetUploadButton();"
         sendMessage([message: '', callback: javascriptCallback], session)
         session.close()
       }
@@ -138,11 +134,7 @@ public class LochChatAnnotation implements ServletContextListener {
           def chat = Chat.findByUniqueId(chatId)
           new Message(contents: message, log: chat.log).save(flush: true)
         }
-        def javascriptCallback = """
-          swal('Success!', 'Your file was successfully uploaded.', 'success');
-          \$('#upload-file').html('Upload File');
-          \$('#upload-file').removeAttr('disabled');
-          \$('#file').val('');"""
+        def javascriptCallback = "swal('Success!', 'Your file was successfully uploaded.', 'success'); _resetUploadButton();"
         sendMessage([message: message], chatId)
         sendMessage([message: '', callback: javascriptCallback], userSession)
       } catch (IOException e) {
