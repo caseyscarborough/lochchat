@@ -11,7 +11,7 @@ class Chat {
   def grailsLinkGenerator
   static transients = ['grailsLinkGenerator']
 
-  static hasMany = [users: User]
+  static hasMany = [users: User, files: FileUpload]
   static belongsTo = [User]
 
   static constraints = {
