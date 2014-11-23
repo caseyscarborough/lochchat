@@ -21,4 +21,6 @@ databaseChangeLog = {
 	include file: '201411211950-associate-user-and-chat.groovy'
 
 	include file: '201411221105-add-dates-to-user.groovy'
+
+	include file: '201411221725-add-spring-security-ui.groovy'
 }
