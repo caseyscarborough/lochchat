@@ -60,6 +60,19 @@ public class LochChatAnnotation implements ServletContextListener {
     if (!chatroom) {
       chatroomUsers.put(chatId, [] as Set)
     }
+
+    if (chatroom.size() >= config.lochchat.maxParticipants) {
+      def javascriptCallback = """
+        swal({
+        title:'This chatroom is full',
+        text:'Chatrooms are limited to a total of ${config.lochchat.maxParticipants} participants. Try again later, or create your own.',
+        type:'error',
+        showCancelButton:false
+        }, function(){ window.location.href='/lochchat/'; });
+      """;
+      sendMessage([callback: javascriptCallback], userSession);
+      return
+    }
     chatroomUsers.get(chatId).add(userSession)
     userSession.userProperties.put("chatId", chatId)
   }

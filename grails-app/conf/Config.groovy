@@ -145,6 +145,7 @@ log4j.main = {
 
 lochchat {
   uploadDir = '/tmp/lochchat'
+  maxParticipants = 4
 }
 
 
