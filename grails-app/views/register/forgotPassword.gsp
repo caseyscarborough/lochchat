@@ -1,43 +1,33 @@
 <html>
-
 <head>
-<title><g:message code='spring.security.ui.forgotPassword.title'/></title>
-<meta name='layout' content='register'/>
+  <meta name="layout" content="main">
+  <title>Forgot Password</title>
 </head>
 
 <body>
+<div class="container">
+  <div class="row">
+    <div class="col-md-8 col-md-offset-2">
+      <h3>Forgot Password</h3>
 
-<p/>
+      <g:if test='${emailSent}'>
+        <div class='alert alert-info'><small><g:message code='spring.security.ui.register.sent'/></small></div>
+      </g:if>
+      <g:else>
+        <g:form action='forgotPassword' name="forgotPasswordForm" autocomplete='off'>
+          <p><g:message code='spring.security.ui.forgotPassword.description'/></p>
 
-<s2ui:form width='400' height='220' elementId='forgotPasswordFormContainer'
-           titleCode='spring.security.ui.forgotPassword.header' center='true'>
+          <div class="form-group">
+            <label for="username">Username</label>&nbsp;&nbsp;<g:if test="${flash.error}"><span class="s2ui_error">${flash.error}</span></g:if>
+            <input type="text" id="username" class="form-control" name="username" placeholder="Username" required>
+          </div>
 
-	<g:form action='forgotPassword' name="forgotPasswordForm" autocomplete='off'>
-
-	<g:if test='${emailSent}'>
-	<br/>
-	<g:message code='spring.security.ui.forgotPassword.sent'/>
-	</g:if>
-
-	<g:else>
-
-	<br/>
-	<h4><g:message code='spring.security.ui.forgotPassword.description'/></h4>
-
-	<table>
-		<tr>
-			<td><label for="username"><g:message code='spring.security.ui.forgotPassword.username'/></label></td>
-			<td><g:textField name="username" size="25" /></td>
-		</tr>
-	</table>
-
-	<s2ui:submitButton elementId='reset' form='forgotPasswordForm' messageCode='spring.security.ui.forgotPassword.submit'/>
-
-	</g:else>
-
-	</g:form>
-</s2ui:form>
-
+          <input type="submit" class="btn btn-primary" content="Reset my password">
+        </g:form>
+      </g:else>
+    </div>
+  </div>
+</div>
 <script>
 $(document).ready(function() {
 	$('#username').focus();

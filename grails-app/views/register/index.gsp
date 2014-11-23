@@ -8,7 +8,8 @@
 <div class="container">
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
-      <h4>Use the following form to sign up.</h4>
+      <h3>Sign Up</h3>
+      <p>Use the following form to sign up.</p>
 
       <g:if test='${emailSent}'>
         <div class='alert alert-info'><small><g:message code='spring.security.ui.register.sent'/></small></div>
