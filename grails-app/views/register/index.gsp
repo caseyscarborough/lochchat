@@ -9,21 +9,20 @@
   <div class="row">
     <div class="col-md-8 col-md-offset-2">
       <h3>Sign Up</h3>
-      <p>Use the following form to sign up.</p>
 
       <g:if test='${emailSent}'>
-        <div class='alert alert-info'><small><g:message code='spring.security.ui.register.sent'/></small></div>
+        <p><g:message code='spring.security.ui.register.sent'/></p>
       </g:if>
       <g:else>
+        <p>Use the following form to sign up.</p>
+
         <g:form action='register' name='registerForm'>
           <div class="row">
             <div class="col-md-6">
-              <ss2ui:fieldRow type="text" name='firstName' labelCode='user.firstName.label' bean="${command}"
-                                 size='40' labelCodeDefault='First Name' value="${command.firstName}"/>
+              <ss2ui:fieldRow type="text" name='firstName' labelCode='user.firstName.label' bean="${command}" size='40' labelCodeDefault='First Name' value="${command.firstName}"/>
             </div>
             <div class="col-md-6">
-              <ss2ui:fieldRow type="text" name='lastName' labelCode='user.lastName.label' bean="${command}"
-                                 size='40' labelCodeDefault='Last Name' value="${command.lastName}"/>
+              <ss2ui:fieldRow type="text" name='lastName' labelCode='user.lastName.label' bean="${command}" size='40' labelCodeDefault='Last Name' value="${command.lastName}"/>
             </div>
           </div>
           <ss2ui:fieldRow type="email" name='email' bean="${command}" value="${command.email}" labelCode='user.email.label' labelCodeDefault='Email Address'/>

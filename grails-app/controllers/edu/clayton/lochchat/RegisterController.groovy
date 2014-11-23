@@ -7,6 +7,16 @@ import grails.plugin.springsecurity.ui.RegistrationCode
 @Secured(['permitAll'])
 class RegisterController extends grails.plugin.springsecurity.ui.RegisterController {
 
+  def mailService
+
+  def register(RegisterCommand command) {
+    if (command.hasErrors()) {
+      render view: 'index', model: [command: command]
+      return
+    }
+    super.register(command)
+  }
+
   @Override
   def verifyRegistration() {
 
@@ -62,4 +72,25 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 class RegisterCommand extends grails.plugin.springsecurity.ui.RegisterCommand {
   String firstName
   String lastName
+
+  static constraints = {
+    username blank: false, validator: { value, command ->
+      if (value) {
+        def User = command.grailsApplication.getDomainClass(SpringSecurityUtils.securityConfig.userLookup.userDomainClassName).clazz
+        if (User.findByUsername(value)) {
+          return 'registerCommand.username.unique'
+        }
+      }
+    }
+    email blank: false, email: true, validator: { value, command ->
+      if (value) {
+        def User = command.grailsApplication.getDomainClass(SpringSecurityUtils.securityConfig.userLookup.userDomainClassName).clazz
+        if (User.findByEmail(value)) {
+          return 'registerCommand.email.unique'
+        }
+      }
+    }
+    password blank: false, validator: RegisterController.passwordValidator
+    password2 validator: RegisterController.password2Validator
+  }
 }
