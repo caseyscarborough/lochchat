@@ -22,7 +22,7 @@ var Profile = (function($) {
                 type: "put",
                 contentType: "application/json",
                 dataType: "json",
-                url: "/" + config.application.name + "/account/updatePassword",
+                url: "/" + config.application.name + "/user/updatePassword",
                 data: JSON.stringify(data),
                 success: function() {
                     btn.button('reset');

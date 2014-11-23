@@ -92,7 +92,7 @@
         </g:else>
       </div>
       <div class="profile-section">
-        <h4>User Information</h4>
+        <br>
         <div class="row option">
           <div class="col-md-3">
             <h5 class="pull-right">Update Password</h5>

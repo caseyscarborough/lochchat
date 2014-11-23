@@ -19,7 +19,7 @@
         <li<g:if test="${params.controller == 'login'}"> class="active"</g:if>><g:link controller="login" action="auth">Login</g:link></li>
       </sec:ifNotLoggedIn>
       <sec:ifLoggedIn>
-        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="account" action="profile">Profile</g:link></li>
+        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="user" action="profile">Profile</g:link></li>
         <li><g:link controller="logout" action="index">Logout</g:link></li>
       </sec:ifLoggedIn>
       </ul>

@@ -6,10 +6,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.AuthenticationException
 
-class AccountController {
+class UserController extends grails.plugin.springsecurity.ui.UserController {
 
   def authenticationManager
-  def messageService
   def springSecurityService
 
   static allowedMethods = [save: 'POST', updatePassword: 'PUT']
