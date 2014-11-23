@@ -9,7 +9,8 @@ var Room = (function($) {
         _chatRoom = null,
         _chatText = null,
         _username = null,
-        _modal = null;
+        _modal = null,
+        _connectionRetries = 0;
 
     var debugMode = false;
 
@@ -58,6 +59,7 @@ var Room = (function($) {
 
         _socket.onopen = function(message) {
             _chatLog.append(_wrapMessage("Connected to server..."));
+            _connectionRetries = 0;
             _scrollChatLog();
         };
 
@@ -81,12 +83,16 @@ var Room = (function($) {
             _chatLog.append(_wrapMessage("Lost connection. Reconnecting..."));
             _scrollChatLog();
             _resetUploadButton();
-            setTimeout(function() { _setupIncomingChats(websocketUrl, _username) }, 2000);
+            if (_connectionRetries < 5) {
+                _connectionRetries++;
+                setTimeout(function() { _setupIncomingChats(websocketUrl, _username); }, 2000);
+            } else {
+                _chatLog.append(_wrapMessage("There is a problem connecting to the server. Please try again later."));
+            }
         };
 
         _socket.onerror = function(message) {
-            _chatLog.append(_wrapMessage("An error occurred."));
-            _scrollChatLog();
+            // Not necessary, handled in socket.onclose
         };
 
         _chatText.keypress(function(event) {
@@ -193,7 +199,6 @@ var Room = (function($) {
             };
 
             reader.onload = function(e) {
-                console.log(e);
                 data = e.target.result;
                 $("#upload-file").html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', 'disabled');
                 _socket.send(data);
