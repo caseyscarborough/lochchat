@@ -125,7 +125,7 @@ public class LochChatAnnotation implements ServletContextListener {
         def downloadUrl = ""
         FileUpload.withTransaction {
           def chat = Chat.findByUniqueId(chatId)
-          file = FileUpload.findByOriginalFilenameAndChat(filename, chat)
+          file = FileUpload.findAllByOriginalFilenameAndChat(filename, chat).sort { it.dateCreated }.reverse().first()
           downloadUrl = file.downloadUrl
         }
         log.debug("Sending message to $chatId for download url: $downloadUrl")
