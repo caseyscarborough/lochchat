@@ -31,17 +31,22 @@
           </label>
         </div>
 
-        <input type='submit' class="btn btn-primary" id="submit" value='Login'>
+        <input type='submit' class="btn btn-primary" id="submit" value='Login'><br><br>
+
+        <p>
+          <g:link controller='register' action='forgotPassword'><g:message code='spring.security.ui.login.forgotPassword'/></g:link><br>
+          <s2ui:linkButton elementId='register' controller='register' messageCode='spring.security.ui.login.register'/>
+        </p>
       </form>
     </div>
   </div>
 </div>
 <script type='text/javascript'>
-  <!--
-  (function() {
-    document.forms['loginForm'].elements['j_username'].focus();
-  })();
-  // -->
+  $(document).ready(function() {
+    $('#username').focus();
+  });
+
+  <s2ui:initCheckboxes/>
 </script>
 </body>
 </html>
