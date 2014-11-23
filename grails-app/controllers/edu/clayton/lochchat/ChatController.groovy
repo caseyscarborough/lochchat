@@ -20,6 +20,7 @@ class ChatController {
   def create() {
     def logInstance = new Log(messages: [])
     log.info(logInstance.save(flush: true))
+
     def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: logInstance, users: [])
     def result
     if (!chat.save(flush: true)) {

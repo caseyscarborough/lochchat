@@ -41,6 +41,6 @@ class UserController {
 
   @Secured(['IS_AUTHENTICATED_FULLY'])
   def profile() {
-    [user: (User)springSecurityService.currentUser]
+    [user: (User)springSecurityService.currentUser, uniqueUrl: new Chat().url]
   }
 }

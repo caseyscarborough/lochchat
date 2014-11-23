@@ -8,12 +8,10 @@
 //= require jquery
 //= require bootstrap/dist/js/bootstrap
 //= require flat-ui/dist/js/flat-ui
-//= require app/config
 //= require zeroclipboard/dist/ZeroClipboard
 //= require jQuery-linkify/dist/jquery.linkify.min
 //= require bootstrap-sweetalert/lib/sweet-alert
-//= require app/home
-//= require app/room
+//= require_tree ./app
 //= require_self
 
 if (typeof jQuery !== 'undefined') {

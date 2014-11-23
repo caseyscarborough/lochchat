@@ -2,6 +2,7 @@
 <head>
   <meta name="layout" content="main">
   <title>Profile</title>
+  <script>$(function() { Profile.init(); });</script>
 </head>
 
 <body>
@@ -23,6 +24,12 @@
           <div class="profile-section">
             <h4>Chatrooms</h4>
             <g:if test="${user.chats.size() > 0}">
+              <form name="hidden">
+                <input type="hidden" id="new-url" value="${uniqueUrl}">
+                <input type="hidden" id="fresh" name="fresh" value="0">
+              </form>
+              <p class="info"><a id="enter-new-chatroom" href="#">Enter new chatroom now</a></p>
+
               <p class="info">The following is a list of chatrooms that you have attended:</p>
               <table class="table table-condensed table-hover">
                 <thead>
