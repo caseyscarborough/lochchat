@@ -60,7 +60,10 @@ class ChatController {
         user.chats.add(chatroom)
         user.save(flush: true)
       }
+    } else {
+      session.chatId = chatroom.uniqueId
     }
+
     [chatroom: chatroom]
   }
 

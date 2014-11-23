@@ -28,6 +28,13 @@ class UserController {
     UserRole.create(user, role, true)
     springSecurityService.reauthenticate(params.username, params.password)
 
+    // Add previous chat to user if they were not logged in during chat
+    if (session.chatId) {
+      def chat = Chat.findByUniqueId(session.chatId)
+      user.chats.add(chat)
+      user.save(flush: true)
+    }
+
     flash.message = "You have successfully logged in."
     redirect(controller: 'home', action: 'index')
   }
