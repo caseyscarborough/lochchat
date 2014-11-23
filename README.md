@@ -39,6 +39,8 @@ grails run-app
 
 The following open source libraries were used in the development of LochChat:
 
+* [Grails Framework](http://grails.org)
+* [Grails Spring Security Plugin](http://grails.org/plugin/spring-security-core)
 * [jQuery](http://jquery.com/)
 * [Bootstrap CSS Framework](http://getbootstrap.com/)
 * [Flat UI Bootstrap Theme](http://designmodo.github.io/Flat-UI/)
