@@ -39,7 +39,6 @@
                   <th>URL</th>
                   <th>Other Users</th>
                   <th>Uploaded Files</th>
-                  <th>Log</th>
                   <th>Options</th>
                 </tr>
                 </thead>
@@ -69,8 +68,8 @@
                         None
                       </g:else>
                     </td>
-                    <td><g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]">Export</g:link></td>
                     <td class="options">
+                      <g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]" title="Export chat log" class="tooltip-link" data-container="body"><i class="fa fa-download"></i></g:link>&nbsp;
                       <g:if test="${(chatroom.users - user).size() == 0}">
                         <a href="#" class="delete-chat tooltip-link" data-id="${chatroom.uniqueId}" title="Delete chatroom" data-container="body"><i class="fa fa-trash-o"></i></a>
                       </g:if>
