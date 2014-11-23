@@ -36,9 +36,6 @@
     </div>
   </div>
 </div>
-<div id='login'>
-
-</div>
 <script type='text/javascript'>
   <!--
   (function() {
