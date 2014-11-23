@@ -68,6 +68,11 @@ class ChatController {
     [chatroom: chatroom]
   }
 
+  def generateChatroomUrl() {
+    def url = new Chat().url
+    render url
+  }
+
   def exportLog() {
     def chat = Chat.findByUniqueId(params.uniqueId)
     def decoder = codecLookup.lookupDecoder('HTML')

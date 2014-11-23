@@ -10,6 +10,13 @@ var Profile = (function($) {
             url: "/" + config.application.name + "/chat/create",
             success: function(response) {
                 window.location.href = response.data.url;
+            },
+            error: function() {
+                // If user came from back button, chat url will already be taken, this will grab a new url.
+                $.get("/" + config.application.name + "/chat/generateChatroomUrl", function(data) {
+                    $("#new-url").val(data);
+                    _enterNewChatroom();
+                });
             }
         });
     };
