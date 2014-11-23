@@ -11,6 +11,9 @@ class Chat {
   def grailsLinkGenerator
   static transients = ['grailsLinkGenerator']
 
+  static hasMany = [users: User]
+  static belongsTo = [User]
+
   static constraints = {
     log nullable: true
     endTime nullable: true
