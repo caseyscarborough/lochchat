@@ -32,12 +32,25 @@ var Profile = (function($) {
                     newPassword.val("");
                 },
                 error: function(response) {
-                    swal("An error occurred", response.responseJSON.message, "error");
-                    password.focus();
+                    swal({
+                        title: "An error occurred",
+                        text: response.responseJSON.message,
+                        type: "error"
+                    },
+                    function() {
+                        setTimeout(function() { password.focus(); }, 200);
+                    });
                 }
             });
         } else {
-            swal("Passwords do not match", "The passwords that you entered do not match.", "error");
+            swal({
+                title: "Passwords do not match",
+                text: "The passwords that you entered do not match.",
+                type: "error"
+            },
+            function() {
+                setTimeout(function() { newPassword.focus(); }, 200);
+            });
         }
     };
 
