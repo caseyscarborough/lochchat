@@ -62,6 +62,13 @@ class UserController {
       render ([status: HttpStatus.BAD_REQUEST, message: "The current password you entered was incorrect. Please try again."] as JSON)
       return
     }
+
+    if (request.JSON.newPassword.isEmpty()) {
+      response.status = 400
+      render ([status: HttpStatus.BAD_REQUEST, message: "Your new password cannot be blank."] as JSON)
+      return
+    }
+
     user.password = request.JSON.newPassword
     user.save(flush: true)
     render ([status: HttpStatus.OK] as JSON)

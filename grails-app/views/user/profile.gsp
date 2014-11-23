@@ -92,6 +92,9 @@
               <div class="col-md-3">
                 <h5 class="pull-right">Update Password</h5>
                 <p class="info pull-right" style="text-align: right">Use this section to change your password.</p>
+                <p class="info pull-right" style="text-align: right">
+                  <a id="show-passwords" data-status="hidden">Show Passwords</a>
+                </p>
               </div>
               <div class="col-md-9">
                 <div class="option-section">

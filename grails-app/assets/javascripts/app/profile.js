@@ -3,6 +3,12 @@ var Profile = (function($) {
 
     var self = {};
 
+    var _showHidePasswords = function(type) {
+        $("#password").attr("type", type);
+        $("#password-confirmation").attr("type", type);
+        $("#new-password").attr("type", type);
+    };
+
     var _updatePassword = function() {
         var password = $("#password");
         var passwordConf = $("#password-confirmation");
@@ -86,6 +92,19 @@ var Profile = (function($) {
 
         $("#change-password").click(function() {
             _updatePassword();
+        });
+
+        $("#show-passwords").click(function() {
+            var status = $(this).attr("data-status");
+            if (status == "hidden") {
+                _showHidePasswords("text");
+                $(this).attr("data-status", "shown");
+                $(this).html("Hide Passwords");
+            } else {
+                _showHidePasswords("password");
+                $(this).attr("data-status", "hidden");
+                $(this).html("Show Passwords");
+            }
         });
     };
 
