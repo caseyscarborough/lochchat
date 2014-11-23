@@ -15,4 +15,6 @@ databaseChangeLog = {
 	include file: '201411211724-add-original-filename-to-fileupload.groovy'
 
 	include file: '201411211835-add-spring-security-classes.groovy'
+
+	include file: '201411211919-add-name-and-email-to-user.groovy'
 }

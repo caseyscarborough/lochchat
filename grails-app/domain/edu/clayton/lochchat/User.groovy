@@ -4,6 +4,9 @@ class User {
 
   transient springSecurityService
 
+  String firstName
+  String lastName
+  String email
   String username
   String password
   boolean enabled = true
@@ -16,6 +19,9 @@ class User {
   static constraints = {
     username blank: false, unique: true
     password blank: false
+    email blank: false, unique: true
+    firstName blank: false
+    lastName blank: false
   }
 
   static mapping = {
