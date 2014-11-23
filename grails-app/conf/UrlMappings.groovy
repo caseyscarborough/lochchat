@@ -12,7 +12,7 @@ class UrlMappings {
     "/signup"(controller: "user", action: "create")
     "/profile"(controller: "user", action: "profile")
     "/chat/delete/$uniqueId"(controller: "chat", action: "delete")
-    "/chatEndpoint/$room"(uri: "/chatEndpoint/$room")
+    "/chatEndpoint"(uri: "/chatEndpoint")
     "/f/$chatId/$fileId"(controller: "fileUpload", action: "download")
     "/$uniqueId"(controller: "chat", action: "room")
     "/"(controller: "home", action: "index")

@@ -75,8 +75,8 @@ public class LochChatAnnotation implements ServletContextListener {
       return
     }
 
-    chatroom.add(userSession)
     userSession.userProperties.put("chatId", chatId)
+    chatroom.add(userSession)
   }
 
   @OnMessage
