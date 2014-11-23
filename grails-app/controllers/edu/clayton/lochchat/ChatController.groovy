@@ -15,11 +15,12 @@ class ChatController {
 
   def mailService
   def messageService
+  def springSecurityService
 
   def create() {
     def logInstance = new Log(messages: [])
     log.info(logInstance.save(flush: true))
-    def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: logInstance)
+    def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: logInstance, users: [])
     def result
     if (!chat.save(flush: true)) {
       logInstance.delete(flush: true)
@@ -50,6 +51,13 @@ class ChatController {
     if (!chatroom) {
       redirect(controller: "home", action: "index")
       return
+    }
+
+    if (springSecurityService.isLoggedIn()) {
+      if (!chatroom.users.contains(springSecurityService.principal)) {
+        chatroom.users.add(springSecurityService.principal)
+        chatroom.save(flush: true)
+      }
     }
     [chatroom: chatroom]
   }

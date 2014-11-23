@@ -199,13 +199,15 @@ var Room = (function($) {
     };
 
     var _enterRoom = function(username) {
-        _modal.modal('hide');
+        if (_modal.hasClass('in')) {
+            _modal.modal('hide');
+        }
         _username = username;
         _socket.send(_username);
         _connectVideoAndAudio();
     };
 
-    self.init = function(uniqueId, websocketUrl) {
+    self.init = function(uniqueId, websocketUrl, loggedInUsername) {
         _uniqueId = uniqueId;
         _chatLog = $("#chat-log");
         _chatText = $("#chat-text");
@@ -222,34 +224,6 @@ var Room = (function($) {
 
         var username = $("#username");
         var enterRoom = $("#enter-room-button");
-        _modal = $("#usernameModal");
-        _modal.modal();
-
-        if ($.trim(username.val()) !== "") {
-            enterRoom.removeAttr("disabled");
-        }
-
-        username.keyup(function(event) {
-            if ($.trim(username.val()) !== "") {
-                enterRoom.removeAttr("disabled");
-            } else {
-                enterRoom.attr("disabled", "disabled");
-            }
-
-            if (event.keyCode == 13) {
-                enterRoom.trigger('click');
-            }
-        });
-
-        enterRoom.click(function() {
-            if ($.trim(username.val()) === "") {
-                username.val("");
-                username.focus();
-                return false;
-            }
-
-            _enterRoom(username.val());
-        });
 
         _chatLog.height(_chatRoom.height() - 70);
         _chatWorkspace.css({ height: _chatRoom.height() - 110, width: _chatRoom.width() - 300 });
@@ -270,8 +244,42 @@ var Room = (function($) {
         $(window).on('load', function() { _chatLog.linkify(); });
         $("#export-workspace").click(function() { $("#workspace-form").submit(); });
 
+        _modal = $("#usernameModal");
+
         if (debugMode) {
             setTimeout(function() { _enterRoom("Debug User"); }, 500);
+        }
+
+        if (loggedInUsername !== "") {
+            setTimeout(function() { _enterRoom(loggedInUsername); }, 500);
+        } else {
+            _modal.modal();
+
+            if ($.trim(username.val()) !== "") {
+                enterRoom.removeAttr("disabled");
+            }
+
+            username.keyup(function(event) {
+                if ($.trim(username.val()) !== "") {
+                    enterRoom.removeAttr("disabled");
+                } else {
+                    enterRoom.attr("disabled", "disabled");
+                }
+
+                if (event.keyCode == 13) {
+                    enterRoom.trigger('click');
+                }
+            });
+
+            enterRoom.click(function() {
+                if ($.trim(username.val()) === "") {
+                    username.val("");
+                    username.focus();
+                    return false;
+                }
+
+                _enterRoom(username.val());
+            });
         }
     };
 

@@ -1,6 +1,7 @@
 package edu.clayton.lochchat
 
 import grails.converters.JSON
+import grails.plugin.springsecurity.annotation.Secured
 import grails.util.Environment
 import org.apache.commons.lang.StringEscapeUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication

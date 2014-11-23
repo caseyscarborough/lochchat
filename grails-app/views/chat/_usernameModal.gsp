@@ -9,7 +9,7 @@
 
         <div class="form-group">
           <label for="username">Username</label>
-          <input id="username" class="form-control" placeholder="Username">
+          <input type="text" id="username" class="form-control" placeholder="Username">
         </div>
       </div>
       <div class="modal-footer">
