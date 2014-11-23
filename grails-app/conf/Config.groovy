@@ -154,6 +154,8 @@ grails.plugin.springsecurity.userLookup.userDomainClassName = 'edu.clayton.lochc
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'edu.clayton.lochchat.UserRole'
 grails.plugin.springsecurity.authority.className = 'edu.clayton.lochchat.Role'
 grails.plugin.springsecurity.logout.postOnly = false
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/profile'
+grails.plugin.springsecurity.auth.loginFormUrl = '/login'
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                              ['permitAll'],
 	'/index':                         ['permitAll'],
@@ -165,4 +167,3 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/favicon.ico':                ['permitAll'],
   '/chatEndpoint/**':               ['permitAll']
 ]
-
