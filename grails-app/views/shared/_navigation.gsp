@@ -10,6 +10,9 @@
       <a class="navbar-brand" href="${createLink(controller: 'home', action: 'index')}"><asset:image src="loch.png" class="logo" /> LochChat</a>
     </div>
     <div class="collapse navbar-collapse" id="navigation-bar">
+      <ul class="nav navbar-nav">
+        <li<g:if test="${params.controller == 'home'}"> class="active"</g:if>><g:link controller="home" action="index">Home</g:link></li>
+      </ul>
       <ul class="nav navbar-nav navbar-right">
       <sec:ifNotLoggedIn>
         <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="user" action="create">Sign Up</g:link></li>
