@@ -18,35 +18,29 @@
         <div class="row">
           <div class="col-md-6">
             <div class="form-group">
-              <label for="first_name"">First Name</label>
-              <input type='text' class='form-control' name='first_name' id='first_name' placeholder="First Name" required>
+              <label for="firstName"">First Name</label>
+              <input type='text' class='form-control' name='firstName' id='firstName' placeholder="First Name" value="${user?.firstName}" required>
             </div>
           </div>
           <div class="col-md-6">
             <div class="form-group">
-              <label for="last_name"">Last Name</label>
-              <input type='text' class='form-control' name='last_name' id='last_name' placeholder="Last Name" required>
+              <label for="lastName"">Last Name</label>
+              <input type='text' class='form-control' name='lastName' id='lastName' placeholder="Last Name" value="${user?.lastName}" required>
             </div>
           </div>
         </div>
         <div class="form-group">
           <label for="email">Email Address</label>
-          <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" required>
+          <input type="email" class="form-control" name="email" id="email" placeholder="Email Address" value="${user?.email}" required>
         </div>
         <div class="form-group">
           <label for="username">Username</label>
-          <input type='text' class='form-control' name='j_username' id='username' placeholder="Username" required>
+          <input type='text' class='form-control' name='username' id='username' placeholder="Username" value="${user?.username}" required>
         </div>
 
         <div class="form-group">
           <label for='password'>Password</label>
-          <input type='password' class='form-control' name='j_password' id='password' placeholder="Password" required>
-        </div>
-
-        <div class="checkbox">
-          <label for='remember_me'>
-            <input type='checkbox' name='${rememberMeParameter}' id='remember_me' <g:if test='${hasCookie}'>checked='checked'</g:if>> Remember Me
-          </label>
+          <input type='password' class='form-control' name='password' id='password' placeholder="Password" required>
         </div>
 
         <input type='submit' class="btn btn-primary" id="submit" value='Login'>

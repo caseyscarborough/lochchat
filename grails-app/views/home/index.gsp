@@ -18,6 +18,9 @@
       <div id="jumbotron-background-image"></div>
       <div class="new-chat">
         <h3><asset:image src="loch.png" class="logo" /> Welcome to LochChat!</h3>
+        <g:if test="${flash.message}">
+          <div class="alert alert-info"><small>${flash.message}</small></div>
+        </g:if>
         <p><strong>LochChat is a group discussion and collaboration tool targeted at college students, which allows multi-user chatting along with concurrent editing of a central workspace.</strong></p>
         <p><strong>Use the form below to enter a new chatroom:</strong></p>
         <div id="error-message" class="alert alert-danger hidden"></div>
