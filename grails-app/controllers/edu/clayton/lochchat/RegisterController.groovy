@@ -7,8 +7,6 @@ import grails.plugin.springsecurity.ui.RegistrationCode
 @Secured(['permitAll'])
 class RegisterController extends grails.plugin.springsecurity.ui.RegisterController {
 
-  def mailService
-
   def register(RegisterCommand command) {
     if (command.hasErrors()) {
       render view: 'index', model: [command: command]
