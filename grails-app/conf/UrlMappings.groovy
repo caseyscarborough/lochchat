@@ -17,6 +17,7 @@ class UrlMappings {
     "/f/$chatId/$fileId"(controller: "fileUpload", action: "download")
     "/$uniqueId"(controller: "chat", action: "room")
     "/"(controller: "home", action: "index")
+    "404"(view: '/notFound')
     "500"(view: '/error')
   }
 }
