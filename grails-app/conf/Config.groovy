@@ -156,6 +156,7 @@ grails.plugin.springsecurity.authority.className = 'edu.clayton.lochchat.Role'
 grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/profile'
 grails.plugin.springsecurity.auth.loginFormUrl = '/login'
+grails.plugin.springsecurity.fii.rejectPublicInvocations = false
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/':                              ['permitAll'],
 	'/index':                         ['permitAll'],
@@ -166,9 +167,11 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	'/**/images/**':                  ['permitAll'],
 	'/**/favicon.ico':                ['permitAll'],
   '/chatEndpoint/**':               ['permitAll'],
+  '/register/**':                   ['permitAll'],
   '/user/**':                       ['ROLE_ADMIN'],
   '/role/**':                       ['ROLE_ADMIN'],
   '/securityInfo/**':               ['ROLE_ADMIN'],
   '/registrationCode/**':           ['ROLE_ADMIN'],
-  '/register/**':                   ['permitAll']
+  '/requestmap/**':                 ['ROLE_ADMIN'],
+  '/persistentLogin/**':            ['ROLE_ADMIN']
 ]
