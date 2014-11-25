@@ -107,9 +107,13 @@ div h3 {
 
 #copy-button {
   cursor: pointer;
-  background: @carrot;
-  border-color: @carrot;
+  background-color: @carrot;
+  border-color: darken(@carrot, 5%);
   min-width: 100px;
+
+  &:hover {
+    background-color: darken(@carrot, 5%);
+  }
 }
 
 .logo {
