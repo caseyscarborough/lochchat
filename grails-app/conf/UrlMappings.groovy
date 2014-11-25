@@ -7,6 +7,7 @@ class UrlMappings {
       }
     }
 
+    "/admin"(controller: "admin", action: "index")
     "/login"(controller: "login", action: "auth")
     "/logout"(controller: "logout", action: "index")
     "/signup"(controller: "register", action: "index")
