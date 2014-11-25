@@ -24,8 +24,8 @@
         <p><strong>Use the form below to enter a new chatroom:</strong></p>
         <div id="error-message" class="alert alert-danger hidden"></div>
         <div class="form-group">
-          <label for="chatroom-url" class="fui-chat">
-            Chatroom URL
+          <label for="chatroom-url">
+            <i class="fa fa-user"></i>&nbsp;&nbsp;Chatroom URL
           </label>
           <div class="input-group">
             <input id="chatroom-url" class="form-control" placeholder="Chatroom URL" value="${chatroomUrl}" disabled>
@@ -33,8 +33,8 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="chatroom-emails" class="fui-mail">
-            Enter the email addresses to invite:
+          <label for="chatroom-emails">
+            <i class="fa fa-envelope"></i>&nbsp;&nbsp;Enter the email addresses to invite:
             <a href="#" class="popover-link" data-toggle="popover" title="Emails to Invite" data-content="Use the following text box to enter the email addresses of people that you'd like to invite to this chatroom. Press the Enter key between each email.">What's this?</a>
           </label>
 

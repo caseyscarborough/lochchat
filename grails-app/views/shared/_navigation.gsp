@@ -11,19 +11,19 @@
     </div>
     <div class="collapse navbar-collapse" id="navigation-bar">
       <ul class="nav navbar-nav">
-        <li<g:if test="${params.controller == 'home'}"> class="active"</g:if>><g:link controller="home" action="index">Home</g:link></li>
+        <li<g:if test="${params.controller == 'home'}"> class="active"</g:if>><g:link controller="home" action="index"><i class="fa fa-home"></i>&nbsp;&nbsp;Home</g:link></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
       <sec:ifNotLoggedIn>
-        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="register" action="index">Sign Up</g:link></li>
-        <li<g:if test="${params.controller == 'login'}"> class="active"</g:if>><g:link controller="login" action="auth">Login</g:link></li>
+        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="register" action="index"><i class="fa fa-user"></i>&nbsp;&nbsp;Sign Up</g:link></li>
+        <li<g:if test="${params.controller == 'login'}"> class="active"</g:if>><g:link controller="login" action="auth"><i class="fa fa-sign-in"></i>&nbsp;&nbsp;Login</g:link></li>
       </sec:ifNotLoggedIn>
       <sec:ifLoggedIn>
         <sec:ifAllGranted roles="ROLE_ADMIN">
-          <li><g:link controller="admin">Admin</g:link></li>
+          <li><g:link controller="admin"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Admin</g:link></li>
         </sec:ifAllGranted>
-        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="user" action="profile">Profile</g:link></li>
-        <li><g:link controller="logout" action="index">Logout</g:link></li>
+        <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="user" action="profile"><i class="fa fa-user"></i>&nbsp;&nbsp;Profile</g:link></li>
+        <li><g:link controller="logout" action="index"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</g:link></li>
       </sec:ifLoggedIn>
       </ul>
     </div>
