@@ -12,7 +12,7 @@
       <a href="http://en.gravatar.com/" target="_blank" class="popover-link" data-title="Where does this come from?"
          data-content="Your avatar comes from <a href='http://en.gravatar.com/'>Gravatar</a>, a service that gives
          you a globally recognized avatar. Click your photo to change your avatar at <a href='http://en.gravatar.com/'>
-         Gravatar</a>'s website." data-container="body" data-html="true" data-placement="left">
+         Gravatar</a>'s website." data-container="body" data-html="true" data-placement="right">
         <lochchat:gravatarFor user="${user}" width="100%" class="" />
       </a>
       <h4>${user}</h4>
