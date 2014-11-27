@@ -26,7 +26,6 @@ public class LochChatAnnotation implements ServletContextListener {
 
   private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Map<String, Set<Session>> chatroomUsers = ([:] as HashMap).asSynchronized()
-  static FileOutputStream outputStream
   static GrailsApplication grailsApplication
   static ConfigObject config
 
@@ -80,17 +79,49 @@ public class LochChatAnnotation implements ServletContextListener {
   }
 
   @OnMessage
-  public void uploadFile(ByteBuffer data, boolean last, Session session) {
-    log.debug("Uploading binary data...")
+  public void uploadFile(ByteBuffer data, boolean last, Session userSession) {
+    def filename = userSession.userProperties.get("filename")
+    def username = userSession.userProperties.get("username")
+    def chatId   = userSession.userProperties.get("chatId")
+    log.debug("$username uploading binary data for $filename...")
 
+    FileOutputStream outputStream = (FileOutputStream) userSession.userProperties.get("outputStream")
     while (data.hasRemaining()) {
       try {
         outputStream.write(data.get())
       } catch (IOException e) {
         log.error("An error occurred trying to write data to file.", e)
         def javascriptCallback = "swal('A fatal error occurred', 'Your session will now be reset.', 'error'); _resetUploadButton();"
-        sendMessage([message: '', callback: javascriptCallback], session)
-        session.close()
+        sendMessage([message: '', callback: javascriptCallback], userSession)
+        userSession.close()
+      }
+    }
+
+    if (last) {
+      log.debug("Closing file...")
+      try {
+        outputStream.close()
+        outputStream.flush()
+        userSession.userProperties.remove("outputStream")
+        userSession.userProperties.remove("filename")
+        FileUpload file = null
+        def downloadUrl = ""
+        FileUpload.withTransaction {
+          def chat = Chat.findByUniqueId(chatId)
+          file = FileUpload.findAllByOriginalFilenameAndChat(filename, chat).sort { it.dateCreated }.reverse().first()
+          downloadUrl = file.downloadUrl
+        }
+        log.debug("Sending message to $chatId for download url: $downloadUrl")
+        def message = "$username uploaded <a href='$downloadUrl' target='_blank'>$filename</a>."
+        Message.withTransaction {
+          def chat = Chat.findByUniqueId(chatId)
+          new Message(contents: message, log: chat.log).save(flush: true)
+        }
+        def javascriptCallback = "swal('Success!', 'Your file was successfully uploaded.', 'success'); _resetUploadButton();"
+        sendMessage([message: message], chatId)
+        sendMessage([message: '', callback: javascriptCallback], userSession)
+      } catch (IOException e) {
+        log.error("An error occurred closing the file.", e)
       }
     }
   }
@@ -121,7 +152,9 @@ public class LochChatAnnotation implements ServletContextListener {
       try {
         def uniqueId = "${filename}-${new Date().toTimestamp().time}".encodeAsMD5()
         def newFilename = filename.substring(0, filename.lastIndexOf('.')) + "-$uniqueId" + filename.substring(filename.lastIndexOf('.'))
-        outputStream = new FileOutputStream("${config.lochchat.uploadDir}/$newFilename")
+        FileOutputStream outputStream = new FileOutputStream("${config.lochchat.uploadDir}/$newFilename")
+        userSession.userProperties.put("outputStream", outputStream)
+        userSession.userProperties.put("filename", filename)
 
         FileUpload.withTransaction {
           def chat = Chat.findByUniqueId(userSession.userProperties.get("chatId"))
@@ -129,31 +162,6 @@ public class LochChatAnnotation implements ServletContextListener {
         }
       } catch (FileNotFoundException e) {
         log.error("An error occurred creating the file: $filename", e)
-      }
-    } else if (message.startsWith("endFile:")) {
-      def filename = message.split(":")[1]
-      log.debug("Closing file: $filename")
-      try {
-        outputStream.close()
-        outputStream.flush()
-        FileUpload file = null
-        def downloadUrl = ""
-        FileUpload.withTransaction {
-          def chat = Chat.findByUniqueId(chatId)
-          file = FileUpload.findAllByOriginalFilenameAndChat(filename, chat).sort { it.dateCreated }.reverse().first()
-          downloadUrl = file.downloadUrl
-        }
-        log.debug("Sending message to $chatId for download url: $downloadUrl")
-        message = "$username uploaded <a href='$downloadUrl' target='_blank'>$filename</a>."
-        Message.withTransaction {
-          def chat = Chat.findByUniqueId(chatId)
-          new Message(contents: message, log: chat.log).save(flush: true)
-        }
-        def javascriptCallback = "swal('Success!', 'Your file was successfully uploaded.', 'success'); _resetUploadButton();"
-        sendMessage([message: message], chatId)
-        sendMessage([message: '', callback: javascriptCallback], userSession)
-      } catch (IOException e) {
-        log.error("An error occurred closing the file.", e)
       }
     } else {
       Message.withTransaction {

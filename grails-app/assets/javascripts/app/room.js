@@ -227,7 +227,6 @@ var Room = (function($) {
                 data = e.target.result;
                 $("#upload-file").html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', 'disabled');
                 _socket.send(data);
-                _socket.send("endFile:" + file.name);
             };
 
             reader.readAsArrayBuffer(file);
