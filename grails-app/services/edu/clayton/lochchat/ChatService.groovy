@@ -1,7 +1,7 @@
 package edu.clayton.lochchat
-
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
+import org.codehaus.groovy.grails.web.util.WebUtils
 import org.springframework.http.HttpStatus
 import org.springframework.mail.MailSendException
 
@@ -10,25 +10,65 @@ class ChatService {
 
   def mailService
   def messageService
+  def springSecurityService
 
   Map createChat(GrailsParameterMap params) {
-    def logInstance = new Log(messages: [])
+    Log logInstance = new Log(messages: [])
     logInstance.save(flush: true)
 
-    def chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: logInstance, users: [])
+    Chat chat = new Chat(uniqueId: params.url?.split("/")?.last(), startTime: new Date(), log: logInstance, users: [])
     if (!chat.save(flush: true)) {
       logInstance.delete(flush: true)
-      return [status: HttpStatus.BAD_REQUEST.reasonPhrase, message: messageService.getErrorMessage(chat)]
+      return [status: HttpStatus.BAD_REQUEST, message: messageService.getErrorMessage(chat)]
     }
 
     if (params.emails) {
-      params.emails?.trim()?.split(",")?.each { email ->
-        log.info("Emailing $email...")
+      params.emails.trim()?.split(",")?.each { email ->
         emailUser(email, chat)
       }
     }
-
     return [status: HttpStatus.OK, data: [chat: chat, url: chat.url]]
+  }
+
+  Map invite(GrailsParameterMap params) {
+    Chat chat = Chat.findByUniqueId(params.uniqueId)
+    if (params.emails) {
+      params.emails.split(",").each { String email ->
+        emailUser(email, chat)
+      }
+    }
+    return [status: HttpStatus.OK]
+  }
+
+  Map deleteChat(String uniqueId) {
+    Chat chat = Chat.findByUniqueId(uniqueId)
+    User user = springSecurityService.currentUser
+
+    if (user.chats.contains(chat) && (chat.users - user).size() == 0) {
+      user.chats.remove(chat)
+      chat.delete(flush: true)
+      return [status: HttpStatus.OK, data: null]
+    }
+    return [status: HttpStatus.NOT_FOUND]
+  }
+
+  Map enterRoom(String uniqueId) {
+    def chatroom = Chat.findByUniqueId(uniqueId)
+    if (!chatroom) {
+      return [status: HttpStatus.NOT_FOUND]
+    }
+
+    if (springSecurityService.isLoggedIn()) {
+      User user = springSecurityService.currentUser
+      if (!chatroom.users.contains(user)) {
+        user.chats.add(chatroom)
+        user.save(flush: true)
+      }
+    } else {
+      def session = WebUtils.retrieveGrailsWebRequest().session
+      session.chatId = chatroom.uniqueId
+    }
+    return [status: HttpStatus.OK, chatroom: chatroom]
   }
 
 

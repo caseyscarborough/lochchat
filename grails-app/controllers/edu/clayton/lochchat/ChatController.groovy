@@ -1,11 +1,12 @@
 package edu.clayton.lochchat
+
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import org.codehaus.groovy.grails.support.encoding.CodecLookup
 import org.springframework.http.HttpStatus
 
 @Secured(['permitAll'])
-class ChatController extends BaseController {
+class ChatController {
 
   CodecLookup codecLookup
 
@@ -17,34 +18,34 @@ class ChatController extends BaseController {
 
   def create() {
     def result = chatService.createChat(params)
-    renderResult(result)
+    response.status = result.status.value
+    render result as JSON
   }
 
   def room(String uniqueId) {
-    def chatroom = Chat.findByUniqueId(uniqueId)
-
-    if (!chatroom) {
-      redirect(controller: "home", action: "index")
+    def result = chatService.enterRoom(uniqueId)
+    if (result.status == HttpStatus.NOT_FOUND) {
+      redirect(controller: 'home', action: 'index')
       return
     }
-
-    if (springSecurityService.isLoggedIn()) {
-      User user = springSecurityService.currentUser
-
-      if (!chatroom.users.contains(user)) {
-        user.chats.add(chatroom)
-        user.save(flush: true)
-      }
-    } else {
-      session.chatId = chatroom.uniqueId
-    }
-
-    [chatroom: chatroom]
+    result
   }
 
   def generateChatroomUrl() {
-    def url = new Chat().url
-    render url
+    render new Chat().url
+  }
+
+  def invite() {
+    def result = chatService.invite(params)
+    response.status = result.status.value
+    render result as JSON
+  }
+
+  @Secured(['IS_AUTHENTICATED_REMEMBERED'])
+  def delete(String uniqueId) {
+    def result = chatService.deleteChat(uniqueId)
+    response.status = result.status.value
+    render result as JSON
   }
 
   def exportLog() {
@@ -69,31 +70,4 @@ class ChatController extends BaseController {
     response.outputStream << params.workspace
     response.outputStream.flush()
   }
-
-  def invite() {
-    def chat = Chat.findByUniqueId(params.uniqueId)
-    if (params.emails) {
-      params.emails.split(",").each { String email ->
-        emailUser(email, chat)
-      }
-    }
-    def result = [status: HttpStatus.OK]
-    render result as JSON
-  }
-
-  @Secured(['IS_AUTHENTICATED_REMEMBERED'])
-  def delete(String uniqueId) {
-    def chat = Chat.findByUniqueId(uniqueId)
-    User user = springSecurityService.currentUser
-
-    if (user.chats.contains(chat) && (chat.users - user).size() == 0) {
-      user.chats.remove(chat)
-      chat.delete(flush: true)
-      response.status = 200
-      render ""
-      return
-    }
-    response.status = 404
-  }
-
 }
