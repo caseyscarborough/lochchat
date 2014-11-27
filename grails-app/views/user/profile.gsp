@@ -65,7 +65,7 @@
                 </td>
                 <td>
                   <g:if test="${chatroom.files.size() > 0}">
-                    <g:each in="${chatroom.files}" var="file" status="i">
+                    <g:each in="${chatroom.files.sort { it.filename }}" var="file" status="i">
                       <g:if test="${i != 0}">, </g:if><a href="${file.downloadUrl}">${file.originalFilename}</a>
                     </g:each>
                   </g:if>
