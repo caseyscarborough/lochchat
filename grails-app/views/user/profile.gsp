@@ -50,7 +50,7 @@
             <tbody>
             <g:each in="${user.chats.sort { it.startTime }}" var="chatroom">
               <tr id="chatroom-${chatroom.uniqueId}">
-                <td>${chatroom.uniqueId}</td>
+                <td class="monospace">${chatroom.uniqueId}</td>
                 <td>${chatroom.formattedStartTime}</td>
                 <td><g:link controller="chat" action="room" params="[uniqueId: chatroom.uniqueId]" target="_blank">${chatroom.url}</g:link></td>
                 <td>
@@ -74,12 +74,24 @@
                   </g:else>
                 </td>
                 <td class="options">
+                  <a id="copy-url-${chatroom.uniqueId}" class="copy-url tooltip-link" data-clipboard-text="${chatroom.url}" title="Copy URL" data-container="body"><i class="fa fa-clipboard"></i></a>&nbsp;
+                  <script>
+                    var client_${chatroom.uniqueId} = new ZeroClipboard(document.getElementById("copy-url-${chatroom.uniqueId}"));
+                    var timer_${chatroom.uniqueId};
+                    client_${chatroom.uniqueId}.on('ready', function(readyEvent) {
+                      client_${chatroom.uniqueId}.on('aftercopy', function(event) {
+                        clearTimeout(timer_${chatroom.uniqueId});
+                        $("#copy-url-${chatroom.uniqueId}").html('<i class="fa fa-check"></i>');
+                        timer_${chatroom.uniqueId} = setTimeout(function() { $("#copy-url-${chatroom.uniqueId}").html('<i class="fa fa-clipboard"></i>'); }, 1000);
+                      });
+                    });
+                  </script>
                   <g:link controller="chat" action="exportLog" params="[uniqueId: chatroom.uniqueId]" title="Export chat log" class="tooltip-link" data-container="body"><i class="fa fa-download"></i></g:link>&nbsp;
                   <g:if test="${(chatroom.users - user).size() == 0}">
-                    <a href="#" class="delete-chat tooltip-link" data-id="${chatroom.uniqueId}" title="Delete chatroom" data-container="body"><i class="fa fa-trash-o"></i></a>
+                    <a class="delete-chat tooltip-link" data-id="${chatroom.uniqueId}" title="Delete chatroom" data-container="body"><i class="fa fa-trash-o"></i></a>
                   </g:if>
                   <g:else>
-                    <a href="#" class="disabled tooltip-link" title="Cannot delete this chatroom" data-container="body"><i class="fa fa-trash-o"></i></a>
+                    <a class="disabled tooltip-link" title="Cannot delete this chatroom" data-container="body"><i class="fa fa-trash-o"></i></a>
                   </g:else>
                 </td>
               </tr>
