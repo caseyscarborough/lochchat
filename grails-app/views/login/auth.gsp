@@ -17,12 +17,12 @@
       <form action='${postUrl}' method='POST' id='loginForm' autocomplete='off'>
         <div class="form-group">
           <label for="username">Username</label>
-          <input type='text' class='form-control' name='j_username' id='username' placeholder="Username">
+          <input type='text' class='form-control' name='j_username' id='username' placeholder="Username" required>
         </div>
 
         <div class="form-group">
           <label for='password'>Password</label>
-          <input type='password' class='form-control' name='j_password' id='password' placeholder="Password">
+          <input type='password' class='form-control' name='j_password' id='password' placeholder="Password" required>
         </div>
 
         <div class="checkbox">
