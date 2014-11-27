@@ -7,6 +7,14 @@ import grails.plugin.springsecurity.ui.RegistrationCode
 @Secured(['permitAll'])
 class RegisterController extends grails.plugin.springsecurity.ui.RegisterController {
 
+  @Override
+  def index() {
+    def copy = [:] + (flash.chainedParams ?: [:])
+    copy.remove 'controller'
+    copy.remove 'action'
+    [command: new RegisterCommand(copy)]
+  }
+
   def register(RegisterCommand command) {
     if (command.hasErrors()) {
       render view: 'index', model: [command: command]
