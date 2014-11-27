@@ -14,7 +14,7 @@ class UrlMappings {
     "/signup/pending"(controller: "register", action: "register")
     "/profile"(controller: "user", action: "profile")
     "/chat/log/$uniqueId"(controller: "chat", action: "exportLog")
-    "/chat/workspace/$uniqueId"(controller: "chat", action: "exportWorkspace")
+    "/chat/workspace"(controller: "chat", action: "exportWorkspace")
     "/chat/delete/$uniqueId"(controller: "chat", action: "delete")
     "/chatEndpoint"(uri: "/chatEndpoint")
     "/f/$chatId/$fileId"(controller: "fileUpload", action: "download")
