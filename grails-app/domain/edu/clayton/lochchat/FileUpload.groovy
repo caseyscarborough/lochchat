@@ -10,6 +10,12 @@ class FileUpload {
 
   Date dateCreated
 
+  def beforeDelete() {
+    log.debug("Deleting file $filename...")
+    new File(path).delete()
+    return true
+  }
+
   def grailsLinkGenerator
   static transients = ['grailsLinkGenerator']
 
