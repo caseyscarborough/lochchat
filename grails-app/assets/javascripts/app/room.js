@@ -124,11 +124,24 @@ var Room = (function($) {
 
     var _setupUserInvitations = function() {
         var emails = $("#chatroom-emails");
+
         $("#invite-users").click(function() {
             $("#inviteUsersModal").modal();
+            setTimeout(function() { emails.tagsinput('focus'); }, 500);
         });
 
         $("#invite-users-button").click(function() {
+            if ($.trim(emails.val()) == '') {
+                swal({
+                    title: "Email address list can't be blank",
+                    text: 'Please enter some email addresses to invite users to this chatroom.',
+                    type: 'warning'
+                }, function() {
+                    setTimeout(function() { emails.tagsinput('focus'); }, 200);
+                });
+                return;
+            }
+
             $(this).button('loading');
             $.ajax({
                 type: "POST",
@@ -139,13 +152,13 @@ var Room = (function($) {
                 url: "/" + config.application.name + "/chat/invite",
                 success: function() {
                     _socket.send(_username + " invited the following users to the chatroom: " + emails.val());
-                    emails.val("");
                     $("#inviteUsersModal").modal('hide');
-                    $(this).button('reset');
+                    $("#invite-users-button").button('reset');
+                    emails.tagsinput('removeAll');
                 },
                 error: function(data) {
-                    alert(data.responseJSON.message);
-                    $(this).button('reset');
+                    swal("An error occurred", data.responseJSON.message, "error");
+                    $("#invite-users-button").button('reset');
                 }
             });
         });
