@@ -116,7 +116,7 @@ log4j.main = {
 
   root {
     info 'stdout'
-    warn 'stdout', 'file'
+    warn 'file'
   }
 
   error 'org.codehaus.groovy.grails.web.servlet',        // controllers
@@ -135,10 +135,11 @@ log4j.main = {
     development {
       debug 'grails.app'
       debug 'edu.clayton.lochchat'
+      debug 'edu.clayton.lochchat.marshallers'
     }
     production {
-      debug 'grails.app'
-      debug 'edu.clayton.lochchat'
+      warn 'grails.app'
+      warn 'edu.clayton.lochchat'
     }
   }
 }
