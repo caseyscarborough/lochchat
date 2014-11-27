@@ -18,7 +18,7 @@ class ChatController {
 
   def create() {
     def result = chatService.createChat(params)
-    response.status = result.status.value
+    response.status = result.status.value()
     render result as JSON
   }
 
@@ -37,14 +37,14 @@ class ChatController {
 
   def invite() {
     def result = chatService.invite(params)
-    response.status = result.status.value
+    response.status = result.status.value()
     render result as JSON
   }
 
   @Secured(['IS_AUTHENTICATED_REMEMBERED'])
   def delete(String uniqueId) {
     def result = chatService.deleteChat(uniqueId)
-    response.status = result.status.value
+    response.status = result.status.value()
     render result as JSON
   }
 

@@ -2,9 +2,11 @@ import edu.clayton.lochchat.Role
 
 class BootStrap {
 
+  def customObjectMarshallers
   def grailsApplication
 
   def init = { servletContext ->
+    customObjectMarshallers.registerAllMarshallers()
 
     def uploadDir = new File(grailsApplication.config.lochchat.uploadDir)
     if (!uploadDir.exists()) {
