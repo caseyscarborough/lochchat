@@ -15,15 +15,17 @@
 //= require_self
 
 if (typeof jQuery !== 'undefined') {
-	(function($) {
-		$('#spinner').ajaxStart(function() {
-			$(this).fadeIn();
-		}).ajaxStop(function() {
-			$(this).fadeOut();
-		});
-	})(jQuery);
+    (function($) {
+        'use strict';
+        $('#spinner').ajaxStart(function() {
+            $(this).fadeIn();
+        }).ajaxStop(function() {
+            $(this).fadeOut();
+        });
+    })(jQuery);
 
     $(function() {
+        'use strict';
         ZeroClipboard.config({ swfPath: "/" + config.application.name + "/assets/zeroclipboard/dist/ZeroClipboard.swf" });
 
         $('.bootstrap-tagsinput input').focus(function() {

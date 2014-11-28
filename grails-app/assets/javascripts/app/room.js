@@ -1,4 +1,4 @@
-var Room = (function($) {
+var Room = (function ($) {
     'use strict';
 
     var self = {},
@@ -11,25 +11,24 @@ var Room = (function($) {
         _username = null,
         _modal = null,
         _connectionRetries = 0,
-        _hasUserAccount = false;
+        _hasUserAccount = false,
 
-    var debugMode = false;
+        // WebSocket connection for chatroom
+        _socket = null,
+        _debugMode = false;
 
-    // WebSocket connection for chatroom
-    var _socket = null;
-
-    var _resetUploadButton = function() {
+    var _resetUploadButton = function () {
         var btn = $("#upload-file");
         btn.html('Upload File');
         btn.removeAttr('disabled');
         $('#file').val('');
     };
 
-    var _scrollChatLog = function() {
-        _chatLog.animate({ scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() + 20 }, 200);
+    var _scrollChatLog = function () {
+        _chatLog.animate({scrollTop: _chatLog.prop("scrollHeight") - _chatLog.height() + 20}, 200);
     };
 
-    var _connectVideoAndAudio = function() {
+    var _connectVideoAndAudio = function () {
         var connection = new RTCMultiConnection();
 
         connection.session = {
@@ -37,34 +36,34 @@ var Room = (function($) {
             video: true
         };
 
-        connection.onstream = function(e) {
+        connection.onstream = function (e) {
             _chatVideo.show();
             _chatVideo.append(e.mediaElement);
         };
 
         connection.connect();
 
-        document.querySelector('#enable-video').onclick = function() {
+        document.querySelector('#enable-video').onclick = function () {
             connection.open();
         };
     };
 
-    var _wrapMessage = function(message, clazz) {
+    var _wrapMessage = function (message, clazz) {
         return "<div class='chat-text " + clazz + "'>" + message + '</div>';
     };
 
-    var _setupIncomingChats = function(websocketUrl, username) {
+    var _setupIncomingChats = function (websocketUrl, username) {
         websocketUrl = websocketUrl.replace(/http:\/\/(.*):443/, "wss://$1");
         websocketUrl = websocketUrl.replace(/http/, "ws");
         _socket = new WebSocket(websocketUrl);
 
-        _socket.onopen = function(message) {
+        _socket.onopen = function () {
             _chatLog.append(_wrapMessage("Connected to server..."));
             _connectionRetries = 0;
             _scrollChatLog();
         };
 
-        _socket.onmessage = function(message) {
+        _socket.onmessage = function (message) {
             try {
                 var data = JSON.parse(message.data);
                 if (data.message) {
@@ -77,27 +76,30 @@ var Room = (function($) {
                 if (data.callback) {
                     eval(data.callback);
                 }
-            } catch (SyntaxError) {}
+            } catch (ignore) {
+            }
         };
 
-        _socket.onclose = function(message) {
+        _socket.onclose = function (message) {
             _chatLog.append(_wrapMessage("Lost connection. Reconnecting..."));
             _scrollChatLog();
             _resetUploadButton();
             if (_connectionRetries < 5) {
-                _connectionRetries++;
-                setTimeout(function() { _setupIncomingChats(websocketUrl, _username); }, 2000);
+                _connectionRetries += 1;
+                setTimeout(function () {
+                    _setupIncomingChats(websocketUrl, _username);
+                }, 2000);
             } else {
                 _chatLog.append(_wrapMessage("There is a problem connecting to the server. Please try again later."));
             }
         };
 
-        _socket.onerror = function(message) {
+        _socket.onerror = function (message) {
             // Not necessary, handled in socket.onclose
         };
 
-        _chatText.keypress(function(event) {
-            if (event.keyCode == 13) {
+        _chatText.keypress(function (event) {
+            if (event.keyCode === 13) {
                 event.preventDefault();
                 if ($.trim(_chatText.val()) !== "") {
                     _socket.send(_chatText.val());
@@ -107,37 +109,43 @@ var Room = (function($) {
         });
 
         if (username) {
-            setTimeout(function() { _socket.send(username); }, 500);
+            setTimeout(function () {
+                _socket.send(username);
+            }, 500);
         }
     };
 
-    var _setupCopyUrl = function() {
+    var _setupCopyUrl = function () {
         var copyButton = $("#chat-copy-url");
         var zc = new ZeroClipboard(copyButton);
 
-        zc.on("ready", function() {
-            zc.on("aftercopy", function() {
+        zc.on("ready", function () {
+            zc.on("aftercopy", function () {
                 swal("URL Copied!", "The chatroom URL has been copied to the clipboard.", "success");
             });
         });
     };
 
-    var _setupUserInvitations = function() {
+    var _setupUserInvitations = function () {
         var emails = $("#chatroom-emails");
 
-        $("#invite-users").click(function() {
+        $("#invite-users").click(function () {
             $("#inviteUsersModal").modal();
-            setTimeout(function() { emails.tagsinput('focus'); }, 500);
+            setTimeout(function () {
+                emails.tagsinput('focus');
+            }, 500);
         });
 
-        $("#invite-users-button").click(function() {
-            if ($.trim(emails.val()) == '') {
+        $("#invite-users-button").click(function () {
+            if ($.trim(emails.val()) === '') {
                 swal({
                     title: "Email address list can't be blank",
                     text: 'Please enter some email addresses to invite users to this chatroom.',
                     type: 'warning'
-                }, function() {
-                    setTimeout(function() { emails.tagsinput('focus'); }, 200);
+                }, function () {
+                    setTimeout(function () {
+                        emails.tagsinput('focus');
+                    }, 200);
                 });
                 return;
             }
@@ -150,13 +158,13 @@ var Room = (function($) {
                     emails: emails.val()
                 },
                 url: "/" + config.application.name + "/chat/invite",
-                success: function() {
+                success: function () {
                     _socket.send(_username + " invited the following users to the chatroom: " + emails.val());
                     $("#inviteUsersModal").modal('hide');
                     $("#invite-users-button").button('reset');
                     emails.tagsinput('removeAll');
                 },
-                error: function(data) {
+                error: function (data) {
                     swal("An error occurred", data.responseJSON.message, "error");
                     $("#invite-users-button").button('reset');
                 }
@@ -164,22 +172,22 @@ var Room = (function($) {
         });
     };
 
-    var _setupToggleChat = function() {
-        $("#toggle-chat").click(function() {
+    var _setupToggleChat = function () {
+        $("#toggle-chat").click(function () {
             if (_chatLog.css("right") === "-300px") {
-                _chatLog.animate({ right: 0 }, 200);
-                _chatText.animate({ right: 0 }, 200);
-                _chatWorkspace.animate({ width: _chatWorkspace.width() - 252}, 200);
+                _chatLog.animate({right: 0}, 200);
+                _chatText.animate({right: 0}, 200);
+                _chatWorkspace.animate({width: _chatWorkspace.width() - 252}, 200);
                 return;
             }
-            _chatLog.animate({ right: -300 }, 200);
-            _chatText.animate({ right: -300 }, 200);
-            _chatWorkspace.animate({ width: _chatWorkspace.width() + 300}, 200);
+            _chatLog.animate({right: -300}, 200);
+            _chatText.animate({right: -300}, 200);
+            _chatWorkspace.animate({width: _chatWorkspace.width() + 300}, 200);
         });
     };
 
-    var _setupExitChatroom = function() {
-        $("#exit-chatroom").click(function() {
+    var _setupExitChatroom = function () {
+        $("#exit-chatroom").click(function () {
             swal({
                 title: "Are you sure?",
                 text: "Are you sure you'd like to exit the chatroom?",
@@ -190,7 +198,7 @@ var Room = (function($) {
                 closeOnConfirm: false,
                 closeOnCancel: true
             },
-            function(isConfirm){
+            function (isConfirm) {
                 if (_hasUserAccount) {
                     window.location.href = "/" + config.application.name;
                 } else {
@@ -206,7 +214,7 @@ var Room = (function($) {
                             closeOnConfirm: true,
                             closeOnCancel: true
                         },
-                        function(isConfirm) {
+                        function (isConfirm) {
                             if (isConfirm) {
                                 window.location.href = '/' + config.application.name + '/signup';
                             } else {
@@ -219,34 +227,30 @@ var Room = (function($) {
         });
     };
 
-    var _setupFileUpload = function() {
-        $("#upload-file").click(function() {
-            var file = document.getElementById('file').files[0];
+    var _setupFileUpload = function () {
+        $("#upload-file").click(function () {
+            var file = document.getElementById('file').files[0],
+                reader = new FileReader(),
+                data = new ArrayBuffer();
 
-            if (typeof file == 'undefined') {
+            if (typeof file === 'undefined') {
                 swal('Please choose a file', 'You must choose a file to upload.', 'error');
                 return;
             }
 
-            _socket.send("file:" + file.name);
-
-            var reader = new FileReader();
-            var data = new ArrayBuffer();
-
-            reader.loadend = function() {
-            };
-
-            reader.onload = function(e) {
+            reader.loadend = function () {};
+            reader.onload = function (e) {
                 data = e.target.result;
                 $("#upload-file").html('<i class="fa fa-refresh fa-spin"></i>').attr('disabled', 'disabled');
                 _socket.send(data);
             };
 
+            _socket.send("file:" + file.name);
             reader.readAsArrayBuffer(file);
         });
     };
 
-    var _enterRoom = function(username) {
+    var _enterRoom = function (username) {
         if (_modal.hasClass('in')) {
             _modal.modal('hide');
         }
@@ -255,7 +259,7 @@ var Room = (function($) {
         _connectVideoAndAudio();
     };
 
-    self.init = function(uniqueId, websocketUrl, loggedInUsername) {
+    self.init = function (uniqueId, websocketUrl, loggedInUsername) {
         _uniqueId = uniqueId;
         _chatLog = $("#chat-log");
         _chatText = $("#chat-text");
@@ -270,37 +274,49 @@ var Room = (function($) {
         _setupExitChatroom();
         _setupFileUpload();
 
-        var username = $("#username");
-        var enterRoom = $("#enter-room-button");
+        var username = $("#username"),
+            enterRoom = $("#enter-room-button");
 
         _chatLog.height(_chatRoom.height() - 70);
-        _chatWorkspace.css({ height: _chatRoom.height() - 110, width: _chatRoom.width() - 300 });
+        _chatWorkspace.css({height: _chatRoom.height() - 110, width: _chatRoom.width() - 300});
 
-        $(window).resize(function() {
+        $(window).resize(function () {
             _chatLog.height(_chatRoom.height() - 70);
             if (_chatVideo.is(":visible")) {
-                _chatWorkspace.css({ height: _chatRoom.height() - 110, width: _chatRoom.width() - 500, "margin-left": 200 });
+                _chatWorkspace.css({
+                    height: _chatRoom.height() - 110,
+                    width: _chatRoom.width() - 500,
+                    "margin-left": 200
+                });
             } else {
-                _chatWorkspace.css({ height: _chatRoom.height() - 110, width: _chatRoom.width() - 300 });
+                _chatWorkspace.css({height: _chatRoom.height() - 110, width: _chatRoom.width() - 300});
             }
         });
 
         if (_chatWorkspace.is(":visible")) {
-            _chatVideo.css({ position: "fixed", left: 0, width: 200 });
+            _chatVideo.css({position: "fixed", left: 0, width: 200});
         }
 
-        $(window).on('load', function() { _chatLog.linkify(); });
-        $("#export-workspace").click(function() { $("#workspace-form").submit(); });
+        $(window).on('load', function () {
+            _chatLog.linkify();
+        });
+        $("#export-workspace").click(function () {
+            $("#workspace-form").submit();
+        });
 
         _modal = $("#usernameModal");
 
-        if (debugMode) {
-            setTimeout(function() { _enterRoom("Debug User"); }, 500);
+        if (_debugMode) {
+            setTimeout(function () {
+                _enterRoom("Debug User");
+            }, 500);
         }
 
         if (loggedInUsername !== "") {
             _hasUserAccount = true;
-            setTimeout(function() { _enterRoom(loggedInUsername); }, 500);
+            setTimeout(function () {
+                _enterRoom(loggedInUsername);
+            }, 500);
         } else {
             _modal.modal();
 
@@ -308,19 +324,19 @@ var Room = (function($) {
                 enterRoom.removeAttr("disabled");
             }
 
-            username.keyup(function(event) {
+            username.keyup(function (event) {
                 if ($.trim(username.val()) !== "") {
                     enterRoom.removeAttr("disabled");
                 } else {
                     enterRoom.attr("disabled", "disabled");
                 }
 
-                if (event.keyCode == 13) {
+                if (event.keyCode === 13) {
                     enterRoom.trigger('click');
                 }
             });
 
-            enterRoom.click(function() {
+            enterRoom.click(function () {
                 if ($.trim(username.val()) === "") {
                     username.val("");
                     username.focus();
@@ -333,5 +349,4 @@ var Room = (function($) {
     };
 
     return self;
-
 }(jQuery));

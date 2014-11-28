@@ -1,22 +1,22 @@
-var Profile = (function($) {
+var Profile = (function ($) {
     'use strict';
 
     var self = {};
 
-    var _showHidePasswords = function(type) {
+    var _showHidePasswords = function (type) {
         $("#password").attr("type", type);
         $("#password-confirmation").attr("type", type);
         $("#new-password").attr("type", type);
     };
 
-    var _updatePassword = function() {
-        var password = $("#password");
-        var passwordConf = $("#password-confirmation");
-        var newPassword = $("#new-password");
+    var _updatePassword = function () {
+        var password = $("#password"),
+            passwordConf = $("#password-confirmation"),
+            newPassword = $("#new-password");
 
-        if ($.trim(password.val()) !== '' && ($.trim(newPassword.val()) == $.trim(passwordConf.val()))) {
-            var data = { currentPassword: password.val(), newPassword: newPassword.val() };
-            var btn = $("#update-password");
+        if ($.trim(password.val()) !== '' && ($.trim(newPassword.val()) === $.trim(passwordConf.val()))) {
+            var data = {currentPassword: password.val(), newPassword: newPassword.val()},
+                btn = $("#update-password");
             btn.button('loading');
             $.ajax({
                 type: "put",
@@ -24,21 +24,22 @@ var Profile = (function($) {
                 dataType: "json",
                 url: "/" + config.application.name + "/user/updatePassword",
                 data: JSON.stringify(data),
-                success: function() {
+                success: function () {
                     btn.button('reset');
                     swal("Success!", "Successfully updated password.", "success");
                     password.val("");
                     passwordConf.val("");
                     newPassword.val("");
                 },
-                error: function(response) {
+                error: function (response) {
                     swal({
                         title: "An error occurred",
                         text: response.responseJSON.message,
                         type: "error"
-                    },
-                    function() {
-                        setTimeout(function() { password.focus(); }, 200);
+                    }, function () {
+                        setTimeout(function () {
+                            password.focus();
+                        }, 200);
                     });
                 }
             });
@@ -48,34 +49,36 @@ var Profile = (function($) {
                 text: "The passwords that you entered do not match.",
                 type: "error"
             },
-            function() {
-                setTimeout(function() { newPassword.focus(); }, 200);
+            function () {
+                setTimeout(function () {
+                    newPassword.focus();
+                }, 200);
             });
         }
     };
 
-    var _deleteChatroom = function(uniqueId) {
+    var _deleteChatroom = function (uniqueId) {
         $.ajax({
             type: "delete",
             url: "/" + config.application.name + "/chat/delete/" + uniqueId,
-            success: function() {
+            success: function () {
                 $("#chatroom-" + uniqueId).fadeOut(400);
             }
         });
     };
 
-    var _enterNewChatroom = function() {
-        var data = { url: $("#new-url").val() };
+    var _enterNewChatroom = function () {
+        var data = {url: $("#new-url").val()};
         $.ajax({
             type: "POST",
             data: data,
             url: "/" + config.application.name + "/chat/create",
-            success: function(response) {
+            success: function (response) {
                 window.location.href = response.data.url;
             },
-            error: function() {
+            error: function () {
                 // If user came from back button, chat url will already be taken, this will grab a new url.
-                $.get("/" + config.application.name + "/chat/generateChatroomUrl", function(data) {
+                $.get("/" + config.application.name + "/chat/generateChatroomUrl", function (data) {
                     $("#new-url").val(data);
                     _enterNewChatroom();
                 });
@@ -83,12 +86,12 @@ var Profile = (function($) {
         });
     };
 
-    self.init = function() {
-        $("#enter-new-chatroom").click(function() {
+    self.init = function () {
+        $("#enter-new-chatroom").click(function () {
             _enterNewChatroom();
         });
 
-        $(".delete-chat").click(function() {
+        $(".delete-chat").click(function () {
             var uniqueId = $(this).attr("data-id");
             swal({
                 title: "Are you sure?",
@@ -98,18 +101,18 @@ var Profile = (function($) {
                 confirmButtonClass: "btn-danger",
                 confirmButtonText: "Yes, delete it!"
             },
-            function() {
+            function () {
                 _deleteChatroom(uniqueId);
             });
         });
 
-        $("#change-password").click(function() {
+        $("#change-password").click(function () {
             _updatePassword();
         });
 
-        $("#show-passwords").click(function() {
+        $("#show-passwords").click(function () {
             var status = $(this).attr("data-status");
-            if (status == "hidden") {
+            if (status === "hidden") {
                 _showHidePasswords("text");
                 $(this).attr("data-status", "shown");
                 $(this).html("Hide Passwords");
