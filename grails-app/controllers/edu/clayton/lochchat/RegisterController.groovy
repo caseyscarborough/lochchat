@@ -46,7 +46,7 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
         return
       }
       user.accountLocked = false
-      user.save(flush:true)
+      user.save(flush: true)
       def UserRole = lookupUserRoleClass()
       def Role = lookupRoleClass()
       for (roleName in conf.ui.register.defaultRoleNames) {

@@ -11,9 +11,9 @@ class LogMarshaller implements ObjectMarshaller {
     log.info("Registering JSON marshaller for Log")
     JSON.registerObjectMarshaller(Log) { Log logInstance ->
       return [
-        id: logInstance.id,
+        id         : logInstance.id,
         dateCreated: logInstance.dateCreated,
-        messages: logInstance.messages
+        messages   : logInstance.messages
       ]
     }
   }

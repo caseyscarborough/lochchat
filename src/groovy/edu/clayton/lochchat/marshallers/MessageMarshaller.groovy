@@ -11,8 +11,8 @@ class MessageMarshaller implements ObjectMarshaller {
     log.info("Registering JSON marshaller for Message")
     JSON.registerObjectMarshaller(Message) { Message message ->
       return [
-        user: message.user,
-        contents: message.contents,
+        user       : message.user,
+        contents   : message.contents,
         dateCreated: message.dateCreated
       ]
     }

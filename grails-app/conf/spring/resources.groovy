@@ -1,8 +1,4 @@
-import edu.clayton.lochchat.marshallers.ChatMarshaller
-import edu.clayton.lochchat.marshallers.CustomObjectMarshallers
-import edu.clayton.lochchat.marshallers.HttpStatusMarshaller
-import edu.clayton.lochchat.marshallers.LogMarshaller
-import edu.clayton.lochchat.marshallers.MessageMarshaller
+import edu.clayton.lochchat.marshallers.*
 
 // Place your Spring DSL code here
 beans = {

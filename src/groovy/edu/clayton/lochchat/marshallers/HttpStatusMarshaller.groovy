@@ -10,7 +10,7 @@ class HttpStatusMarshaller implements ObjectMarshaller {
   void register() {
     log.info("Registering JSON marshaller for HttpStatus")
     JSON.registerObjectMarshaller(HttpStatus) { HttpStatus status ->
-      return [ phrase: status.reasonPhrase, code: status.value() ]
+      return [phrase: status.reasonPhrase, code: status.value()]
     }
   }
 }

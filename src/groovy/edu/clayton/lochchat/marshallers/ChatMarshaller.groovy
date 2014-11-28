@@ -11,11 +11,11 @@ class ChatMarshaller implements ObjectMarshaller {
     log.info("Registering JSON marshaller for Chat")
     JSON.registerObjectMarshaller(Chat) { Chat chat ->
       return [
-        id: chat.id,
-        uniqueId: chat.uniqueId,
+        id       : chat.id,
+        uniqueId : chat.uniqueId,
         startTime: chat.startTime,
-        endTime: chat.endTime,
-        log: log
+        endTime  : chat.endTime,
+        log      : log
       ]
     }
   }

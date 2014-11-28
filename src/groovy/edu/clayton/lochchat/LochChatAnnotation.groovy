@@ -1,7 +1,6 @@
 package edu.clayton.lochchat
 
 import grails.converters.JSON
-import grails.plugin.springsecurity.annotation.Secured
 import grails.util.Environment
 import org.apache.commons.lang.StringEscapeUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
@@ -82,7 +81,7 @@ public class LochChatAnnotation implements ServletContextListener {
   public void uploadFile(ByteBuffer data, boolean last, Session userSession) {
     def filename = userSession.userProperties.get("filename")
     def username = userSession.userProperties.get("username")
-    def chatId   = userSession.userProperties.get("chatId")
+    def chatId = userSession.userProperties.get("chatId")
     log.debug("$username uploading binary data for $filename...")
 
     FileOutputStream outputStream = (FileOutputStream) userSession.userProperties.get("outputStream")
@@ -127,7 +126,7 @@ public class LochChatAnnotation implements ServletContextListener {
   }
 
   @OnMessage
-  public String onMessage(String message, Session userSession)  throws IOException {
+  public String onMessage(String message, Session userSession) throws IOException {
     def output = [:]
     message = StringEscapeUtils.escapeHtml(message)
     log.debug("Received message from user: $message")

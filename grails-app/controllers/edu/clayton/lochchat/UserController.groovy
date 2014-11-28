@@ -15,7 +15,7 @@ class UserController extends grails.plugin.springsecurity.ui.UserController {
 
   @Secured(['IS_AUTHENTICATED_REMEMBERED'])
   def profile() {
-    [user: (User)springSecurityService.currentUser, uniqueUrl: new Chat().url]
+    [user: (User) springSecurityService.currentUser, uniqueUrl: new Chat().url]
   }
 
   @Secured(['IS_AUTHENTICATED_REMEMBERED'])
@@ -27,18 +27,18 @@ class UserController extends grails.plugin.springsecurity.ui.UserController {
     } catch (AuthenticationException e) {
       // User provided incorrect password.
       response.status = 400
-      render ([status: HttpStatus.BAD_REQUEST, message: "The current password you entered was incorrect. Please try again."] as JSON)
+      render([status: HttpStatus.BAD_REQUEST, message: "The current password you entered was incorrect. Please try again."] as JSON)
       return
     }
 
     if (request.JSON.newPassword.isEmpty()) {
       response.status = 400
-      render ([status: HttpStatus.BAD_REQUEST, message: "Your new password cannot be blank."] as JSON)
+      render([status: HttpStatus.BAD_REQUEST, message: "Your new password cannot be blank."] as JSON)
       return
     }
 
     user.password = request.JSON.newPassword
     user.save(flush: true)
-    render ([status: HttpStatus.OK] as JSON)
+    render([status: HttpStatus.OK] as JSON)
   }
 }

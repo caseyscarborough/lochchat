@@ -54,7 +54,7 @@ class ChatController {
     response.contentType = 'application/octet-stream'
     response.setHeader('Content-disposition', "attachment; filename=${params.uniqueId}-${new Date().toTimestamp().time}.html")
     response.outputStream << "Chat log for room $chat.uniqueId, starting on $chat.log.formattedDateCreated.<br><br>"
-    chat.log.messages.sort { it.dateCreated }. each { Message message ->
+    chat.log.messages.sort { it.dateCreated }.each { Message message ->
       def output = message.dateCreated.format("h:mma '-' ")
       if (message.user) {
         output += message?.user + ": "
