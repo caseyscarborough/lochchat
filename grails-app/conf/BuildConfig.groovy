@@ -60,6 +60,7 @@ grails.project.dependency.resolution = {
     build('javax.websocket:javax.websocket-api:1.1') {
       export = false
     }
+    runtime 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9'
   }
 
   plugins {

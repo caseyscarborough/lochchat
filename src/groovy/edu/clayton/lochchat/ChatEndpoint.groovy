@@ -2,11 +2,10 @@ package edu.clayton.lochchat
 
 import grails.converters.JSON
 import grails.util.Environment
+import groovy.util.logging.Log4j
 import org.apache.commons.lang.StringEscapeUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes as GA
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 
 import javax.servlet.ServletContext
@@ -19,11 +18,11 @@ import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
 import java.nio.ByteBuffer
 
+@Log4j
 @WebListener
 @ServerEndpoint("/chatEndpoint/{chatId}")
-public class LochChatAnnotation implements ServletContextListener {
+public class ChatEndpoint implements ServletContextListener {
 
-  private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Map<String, Set<Session>> chatroomUsers = ([:] as HashMap).asSynchronized()
   static GrailsApplication grailsApplication
   static ConfigObject config
@@ -34,7 +33,7 @@ public class LochChatAnnotation implements ServletContextListener {
     ServerContainer serverContainer = (ServerContainer) servletContext.getAttribute("javax.websocket.server.ServerContainer")
     try {
       if (Environment.current == Environment.DEVELOPMENT) {
-        serverContainer.addEndpoint(LochChatAnnotation)
+        serverContainer.addEndpoint(ChatEndpoint)
       }
       ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GA.APPLICATION_CONTEXT)
       grailsApplication = ctx.grailsApplication
@@ -79,9 +78,9 @@ public class LochChatAnnotation implements ServletContextListener {
 
   @OnMessage
   public void uploadFile(ByteBuffer data, boolean last, Session userSession) {
-    def filename = userSession.userProperties.get("filename")
-    def username = userSession.userProperties.get("username")
-    def chatId = userSession.userProperties.get("chatId")
+    String filename = (String) userSession.userProperties.get("filename")
+    String username = (String) userSession.userProperties.get("username")
+    String chatId = (String) userSession.userProperties.get("chatId")
     log.debug("$username uploading binary data for $filename...")
 
     FileOutputStream outputStream = (FileOutputStream) userSession.userProperties.get("outputStream")
@@ -110,14 +109,8 @@ public class LochChatAnnotation implements ServletContextListener {
           file = FileUpload.findAllByOriginalFilenameAndChat(filename, chat).sort { it.dateCreated }.reverse().first()
           downloadUrl = file.downloadUrl
         }
-        log.debug("Sending message to $chatId for download url: $downloadUrl")
-        def message = "$username uploaded <a href='$downloadUrl' target='_blank'>$filename</a>."
-        Message.withTransaction {
-          def chat = Chat.findByUniqueId(chatId)
-          new Message(contents: message, log: chat.log).save(flush: true)
-        }
+        sendAndPersistMessage("$username uploaded <a href='$downloadUrl' target='_blank'>$filename</a>.", chatId)
         def javascriptCallback = "swal('Success!', 'Your file was successfully uploaded.', 'success'); _resetUploadButton();"
-        sendMessage([message: message], chatId)
         sendMessage([message: '', callback: javascriptCallback], userSession)
       } catch (IOException e) {
         log.error("An error occurred closing the file.", e)
@@ -127,25 +120,25 @@ public class LochChatAnnotation implements ServletContextListener {
 
   @OnMessage
   public String onMessage(String message, Session userSession) throws IOException {
-    def output = [:]
     message = StringEscapeUtils.escapeHtml(message)
     log.debug("Received message from user: $message")
 
     String username = userSession.userProperties.get("username")
     String chatId = userSession.userProperties.get("chatId")
-    if (!username) {
-      log.debug("User has connected to the chatroom.")
 
-      userSession.userProperties.put("username", message)
-      Message.withTransaction {
-        def chat = Chat.findByUniqueId(chatId)
-        new Message(contents: message + " has joined the chatroom.", log: chat?.log).save(flush: true)
-        message += " has joined the chatroom."
+    if (message.startsWith("_serverMessage:")) {
+      def serverMessage = new StringBuilder()
+      message.split(":")?.eachWithIndex { string, index ->
+        if (index != 0) {
+          serverMessage.append(string)
+        }
       }
-
-      output.put("message", "$message")
-      sendMessage(output, chatId)
-    } else if (message.startsWith("file:")) {
+      sendAndPersistMessage(serverMessage.toString(), chatId)
+    } else if (!username) {
+      log.debug("User has connected to the chatroom.")
+      userSession.userProperties.put("username", message)
+      sendAndPersistMessage(message + " has joined the chatroom.", chatId)
+    } else if (message.startsWith("_file:")) {
       def filename = message.split(":")[1]
       log.debug("Beginning file upload for file: $filename")
       try {
@@ -163,12 +156,7 @@ public class LochChatAnnotation implements ServletContextListener {
         log.error("An error occurred creating the file: $filename", e)
       }
     } else {
-      Message.withTransaction {
-        def chat = Chat.findByUniqueId(chatId)
-        new Message(user: username, contents: message, log: chat?.log).save(flush: true)
-      }
-      output.put("message", "${username}: ${message}")
-      sendMessage(output, chatId)
+      sendAndPersistMessage(message, chatId, username)
     }
   }
 
@@ -179,13 +167,7 @@ public class LochChatAnnotation implements ServletContextListener {
     chatroomUsers.get(chatId)?.remove(userSession)
     log.info("User left chatroom for the following reason: ${CloseReason.CloseCodes.getCloseCode(reason.closeCode.code)}")
     if (chatId && username) {
-      def message = "${username} has left the chatroom."
-      Message.withTransaction {
-        def chat = Chat.findByUniqueId(chatId)
-        new Message(contents: message, log: chat?.log).save(flush: true)
-      }
-      def output = [message: message]
-      sendMessage(output, chatId)
+      sendAndPersistMessage("${username} has left the chatroom.", chatId)
     }
   }
 
@@ -194,20 +176,30 @@ public class LochChatAnnotation implements ServletContextListener {
     log.error("An error occurred.", t)
   }
 
+  private void sendAndPersistMessage(String message, String chatId, String username=null) {
+    def output = [:]
+    log.debug("Sending message to $chatId...")
+    Message.withTransaction {
+      def chat = Chat.findByUniqueId(chatId)
+      new Message(user: username, contents: message, log: chat?.log).save(flush: true)
+    }
+    output.put("message", username ? "${username}: ${message}" : message)
+    sendMessage(output, chatId)
+  }
+
   private void sendMessage(Map output, String chatId) {
     Iterator<Session> iterator = chatroomUsers.get(chatId).iterator()
 
     while (iterator.hasNext()) {
-      def user = iterator.next()
-      try {
-        user.basicRemote.sendText((output as JSON).toString())
-      } catch (IllegalStateException e) {
-        log.error("An error occurred, but was caught.", e)
-      }
+      sendMessage(output, iterator.next())
     }
   }
 
   private void sendMessage(Map output, Session userSession) {
-    userSession.basicRemote.sendText((output as JSON).toString())
+    try {
+      userSession.basicRemote.sendText((output as JSON).toString())
+    } catch (Exception e) {
+      log.error("An error occurred, but was caught.", e)
+    }
   }
 }

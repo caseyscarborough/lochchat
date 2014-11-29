@@ -37,4 +37,8 @@ class Chat {
     def baseUrl = grailsLinkGenerator.link(uri: "/", absolute: true).replaceAll(/http:\/\/(.*):443\//, /https:\/\/$1\//)
     baseUrl + uniqueId
   }
+
+  def getWebsocketUrl() {
+    grailsLinkGenerator.link(uri: "/chatEndpoint/${uniqueId}", absolute: true).replaceAll(/http:\/\/(.*):443\//, /wss:\/\/$1\//).replaceAll(/http/, /ws/)
+  }
 }

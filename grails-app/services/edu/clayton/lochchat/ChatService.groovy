@@ -13,6 +13,8 @@ class ChatService {
   def messageService
   def springSecurityService
 
+  LochChatClient client = null
+
   Map createChat(GrailsParameterMap params) {
     Log logInstance = new Log(messages: [])
     logInstance.save(flush: true)
@@ -29,7 +31,7 @@ class ChatService {
 
   Map invite(GrailsParameterMap params) {
     Chat chat = Chat.findByUniqueId(params.uniqueId)
-    handleInvitees(params.invitees, chat)
+    handleInvitees(params.invitees, chat, params.username)
     return [status: HttpStatus.OK]
   }
 
@@ -64,34 +66,47 @@ class ChatService {
     return [status: HttpStatus.OK, chatroom: chatroom]
   }
 
-  protected void handleInvitees(String invitees, Chat chat) {
+  protected void handleInvitees(String invitees, Chat chat, String username) {
+    if (!client) {
+      client = new LochChatClient()
+    }
+    client.connect(chat.websocketUrl)
+
     if (invitees) {
+      if (username) {
+        client.sendMessage("_serverMessage:$username is inviting users to to the chatroom...")
+      }
+
       invitees.trim()?.split(",")?.each { String invitee ->
         def user = User.findByUsername(invitee.toLowerCase()) ?: User.findByEmail(invitee.toLowerCase())
-        if (user) {
-          new Notification(user: user, message: "Someone has invited you to join a chatroom. Click here to join it.", url: chat.url).save(flush: true)
-          emailUser(user.email, chat)
-          return
+        try {
+          if (user) {
+            new Notification(user: user, message: "Someone has invited you to join a chatroom. Click here to join it.", url: chat.url).save(flush: true)
+            emailUser(user.email, chat)
+            return
+          }
+          emailUser(invitee, chat)
+        } catch(MailSendException e) {
+          log.error("Could not deliver email to recipient $invitee")
+
+          def message = "Could not deliver email to $invitee. Are you sure this user or email address exists?"
+          new Message(contents: message, log: chat.log).save(flush: true)
+          client.sendMessage("_serverMessage:$message")
+          chat.log.save(flush: true)
+          chat.save(flush: true)
         }
-        emailUser(invitee, chat)
       }
     }
   }
 
-  protected void emailUser(String email, Chat chat) {
+  protected void emailUser(String email, Chat chat) throws MailSendException {
     log.info("Emailing $email...")
-    try {
-      mailService.sendMail {
-        to email
-        from 'LochChat'
-        subject "LochChat Invite"
-        body "You've been invited to join a chat at the following url: ${chat.url}"
-      }
-    } catch (MailSendException e) {
-      log.error("Could not deliver email to recipient.", e)
-      new Message(contents: "Could not deliver email to recipient: $email. Are you sure this email address exists?", log: chat.log).save(flush: true)
-      chat.log.save(flush: true)
-      chat.save(flush: true)
+    mailService.sendMail {
+      to email
+      from 'LochChat'
+      subject "LochChat Invite"
+      body "You've been invited to join a chat at the following url: ${chat.url}"
     }
+    client.sendMessage("_serverMessage:Invited $email to the chatroom.")
   }
 }

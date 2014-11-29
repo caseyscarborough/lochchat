@@ -154,12 +154,12 @@ var Room = (function ($) {
             $.ajax({
                 type: "POST",
                 data: {
+                    username: _username,
                     uniqueId: _uniqueId,
                     invitees: invitees.val()
                 },
                 url: "/" + config.application.name + "/chat/invite",
                 success: function () {
-                    _socket.send(_username + " invited the following users to the chatroom: " + invitees.val());
                     $("#inviteUsersModal").modal('hide');
                     $("#invite-users-button").button('reset');
                     invitees.tagsinput('removeAll');
@@ -245,7 +245,7 @@ var Room = (function ($) {
                 _socket.send(data);
             };
 
-            _socket.send("file:" + file.name);
+            _socket.send("_file:" + file.name);
             reader.readAsArrayBuffer(file);
         });
     };
