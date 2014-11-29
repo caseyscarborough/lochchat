@@ -80,6 +80,7 @@ module.exports = function (grunt) {
           '<%= bower_conf.directory %>/bootstrap-tagsinput/dist/bootstrap-tagsinput.js',
           '<%= bower_conf.directory %>/holderjs/holder.js',
           '<%= bower_conf.directory %>/typeahead.js/dist/typeahead.bundle.js',
+          '<%= bower_conf.directory %>/videojs/dist/video-js/video.js',
           '<%= bower_conf.directory %>/select2/select2.js',
 
           'js/*.js',
@@ -163,8 +164,7 @@ module.exports = function (grunt) {
 
     csslint: {
       options: {
-        csslintrc: 'less/.csslintrc',
-        'overqualified-elements': false
+        csslintrc: 'less/.csslintrc'
       },
       src: [
         'dist/css/<%= pkg.name %>.css'
@@ -246,7 +246,6 @@ module.exports = function (grunt) {
           'jquery/dist/jquery.min.map',
           'respond/dest/respond.min.js',
           'html5shiv/dist/html5shiv.js',
-          'videojs/dist/video-js/video.js',
           'videojs/dist/video-js/video-js.swf'
         ],
         dest: 'dist/js/vendor/'
