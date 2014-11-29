@@ -22,6 +22,17 @@
         <sec:ifAllGranted roles="ROLE_ADMIN">
           <li><g:link controller="admin"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Admin</g:link></li>
         </sec:ifAllGranted>
+        <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+            <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Notifications <span class="navbar-unread"<g:if test="${notifications?.size() == 0}"> style="display:none"</g:if>></span>
+          </a>
+          <ul class="dropdown-menu" role="menu" id="notifications-dropdown">
+            <div class="notification" id="no-notifications"<g:if test="${notifications?.size() > 0}"> style="display:none"</g:if>>You currently have no notifications.</div>
+            <g:each in="${notifications}" var="notification">
+              <div class="notification" data-id="${notification.id}"<g:if test="${notification.url}"> data-url="${notification.url}"</g:if>>${notification.message}</div>
+            </g:each>
+          </ul>
+        </li>
         <li<g:if test="${params.controller == 'user'}"> class="active"</g:if>><g:link controller="user" action="profile"><i class="fa fa-user"></i>&nbsp;&nbsp;Profile</g:link></li>
         <li><g:link controller="logout" action="index"><i class="fa fa-sign-out"></i>&nbsp;&nbsp;Logout</g:link></li>
       </sec:ifLoggedIn>

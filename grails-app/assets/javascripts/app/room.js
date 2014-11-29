@@ -127,24 +127,24 @@ var Room = (function ($) {
     };
 
     var _setupUserInvitations = function () {
-        var emails = $("#chatroom-emails");
+        var invitees = $("#chatroom-invitees");
 
         $("#invite-users").click(function () {
             $("#inviteUsersModal").modal();
             setTimeout(function () {
-                emails.tagsinput('focus');
+                invitees.tagsinput('focus');
             }, 500);
         });
 
         $("#invite-users-button").click(function () {
-            if ($.trim(emails.val()) === '') {
+            if ($.trim(invitees.val()) === '') {
                 swal({
                     title: "Email address list can't be blank",
                     text: 'Please enter some email addresses to invite users to this chatroom.',
                     type: 'warning'
                 }, function () {
                     setTimeout(function () {
-                        emails.tagsinput('focus');
+                        invitees.tagsinput('focus');
                     }, 200);
                 });
                 return;
@@ -155,14 +155,14 @@ var Room = (function ($) {
                 type: "POST",
                 data: {
                     uniqueId: _uniqueId,
-                    emails: emails.val()
+                    invitees: invitees.val()
                 },
                 url: "/" + config.application.name + "/chat/invite",
                 success: function () {
-                    _socket.send(_username + " invited the following users to the chatroom: " + emails.val());
+                    _socket.send(_username + " invited the following users to the chatroom: " + invitees.val());
                     $("#inviteUsersModal").modal('hide');
                     $("#invite-users-button").button('reset');
-                    emails.tagsinput('removeAll');
+                    invitees.tagsinput('removeAll');
                 },
                 error: function (data) {
                     swal("An error occurred", data.responseJSON.message, "error");

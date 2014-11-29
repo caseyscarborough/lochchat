@@ -23,27 +23,13 @@ class ChatService {
       return [status: HttpStatus.BAD_REQUEST, message: messageService.getErrorMessage(chat)]
     }
 
-    if (params.invitees) {
-      params.invitees.trim()?.split(",")?.each { String invitee ->
-        def user = User.findByUsername(invitee.toLowerCase()) ?: User.findByEmail(invitee.toLowerCase())
-        if (user) {
-          new Notification(user: user, message: "You've been invited to join a chat at the following url: ${chat.url}").save(flush: true)
-          emailUser(user.email, chat)
-          return
-        }
-        emailUser(invitee, chat)
-      }
-    }
+    handleInvitees(params.invitees, chat)
     return [status: HttpStatus.OK, data: [chat: chat, url: chat.url]]
   }
 
   Map invite(GrailsParameterMap params) {
     Chat chat = Chat.findByUniqueId(params.uniqueId)
-    if (params.emails) {
-      params.emails.split(",").each { String email ->
-        emailUser(email, chat)
-      }
-    }
+    handleInvitees(params.invitees, chat)
     return [status: HttpStatus.OK]
   }
 
@@ -76,6 +62,20 @@ class ChatService {
       session.chatId = chatroom.uniqueId
     }
     return [status: HttpStatus.OK, chatroom: chatroom]
+  }
+
+  protected void handleInvitees(String invitees, Chat chat) {
+    if (invitees) {
+      invitees.trim()?.split(",")?.each { String invitee ->
+        def user = User.findByUsername(invitee.toLowerCase()) ?: User.findByEmail(invitee.toLowerCase())
+        if (user) {
+          new Notification(user: user, message: "Someone has invited you to join a chatroom. Click here to join it.", url: chat.url).save(flush: true)
+          emailUser(user.email, chat)
+          return
+        }
+        emailUser(invitee, chat)
+      }
+    }
   }
 
   protected void emailUser(String email, Chat chat) {

@@ -6,8 +6,8 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label for="chatroom-emails">Email Addresses</label>
-          <input id="chatroom-emails" class="form-control tagsinput" data-role="tagsinput" placeholder="Email Addresses">
+          <label for="chatroom-invitees">Email Addresses or Usernames</label>
+          <input id="chatroom-invitees" class="form-control tagsinput" data-role="tagsinput" placeholder="Email Addresses or Usernames">
         </div>
       </div>
       <div class="modal-footer">

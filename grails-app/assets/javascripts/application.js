@@ -36,5 +36,12 @@ if (typeof jQuery !== 'undefined') {
 
         $(".tooltip-link").tooltip();
         $('.popover-link').popover({ trigger: 'hover' });
+
+        $('.notification').click(function() {
+            var url = $(this).attr("data-url");
+            if (url) {
+                window.location.href = url;
+            }
+        });
     });
 }
