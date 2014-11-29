@@ -33,12 +33,12 @@
           </div>
         </div>
         <div class="form-group">
-          <label for="chatroom-emails">
-            <i class="fa fa-envelope"></i>&nbsp;&nbsp;Enter the email addresses to invite:
-            <a href="#" class="popover-link" data-toggle="popover" title="Emails to Invite" data-content="Use the following text box to enter the email addresses of people that you'd like to invite to this chatroom. Press the Enter key between each email.">What's this?</a>
+          <label for="chatroom-invitees">
+            <i class="fa fa-envelope"></i>&nbsp;&nbsp;Enter email addresses or usernames to invite:
+            <a href="#" class="popover-link" data-toggle="popover" title="Emails or Usernames to Invite" data-content="Use the following text box to enter the email addresses or usernames of people that you'd like to invite to this chatroom. Press the Enter key between each email or username.">What's this?</a>
           </label>
 
-          <input id="chatroom-emails" class="form-control tagsinput" data-role="tagsinput" placeholder="Email Addresses">
+          <input id="chatroom-invitees" class="form-control tagsinput" data-role="tagsinput" placeholder="Email Addresses or Usernames">
         </div>
         <button type="button" class="btn btn-primary btn-lg" id="create-chatroom-button" data-loading-text="Creating Chatroom...">Create Chatroom</button>
       </div>

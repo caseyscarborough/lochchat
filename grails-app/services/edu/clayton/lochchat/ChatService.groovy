@@ -23,9 +23,15 @@ class ChatService {
       return [status: HttpStatus.BAD_REQUEST, message: messageService.getErrorMessage(chat)]
     }
 
-    if (params.emails) {
-      params.emails.trim()?.split(",")?.each { email ->
-        emailUser(email, chat)
+    if (params.invitees) {
+      params.invitees.trim()?.split(",")?.each { String invitee ->
+        def user = User.findByUsername(invitee.toLowerCase()) ?: User.findByEmail(invitee.toLowerCase())
+        if (user) {
+          new Notification(user: user, message: "You've been invited to join a chat at the following url: ${chat.url}").save(flush: true)
+          emailUser(user.email, chat)
+          return
+        }
+        emailUser(invitee, chat)
       }
     }
     return [status: HttpStatus.OK, data: [chat: chat, url: chat.url]]
@@ -43,7 +49,7 @@ class ChatService {
 
   Map deleteChat(String uniqueId) {
     Chat chat = Chat.findByUniqueId(uniqueId)
-    User user = springSecurityService.currentUser
+    User user = (User) springSecurityService.currentUser
 
     if (user.chats.contains(chat) && (chat.users - user).size() == 0) {
       user.chats.remove(chat)
@@ -60,7 +66,7 @@ class ChatService {
     }
 
     if (springSecurityService.isLoggedIn()) {
-      User user = springSecurityService.currentUser
+      User user = (User) springSecurityService.currentUser
       if (!chatroom.users.contains(user)) {
         user.chats.add(chatroom)
         user.save(flush: true)
@@ -71,7 +77,6 @@ class ChatService {
     }
     return [status: HttpStatus.OK, chatroom: chatroom]
   }
-
 
   protected void emailUser(String email, Chat chat) {
     log.info("Emailing $email...")

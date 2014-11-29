@@ -5,8 +5,8 @@ var Home = (function ($) {
 
     var _createChatroom = function () {
         var url = $("#chatroom-url").val(),
-            emails = $("#chatroom-emails").val(),
-            data = {url: url, emails: emails};
+            invitees = $("#chatroom-invitees").val(),
+            data = {url: url, invitees: invitees};
 
         $.ajax({
             type: "POST",
