@@ -9,7 +9,8 @@ class NotificationsFilters {
             after = { Map model ->
                 if (springSecurityService.loggedIn) {
                     User user = (User) springSecurityService.currentUser
-                    model?.notifications = Notification.findAllByUserAndIsDismissed(user, false)?.sort { it.dateCreated }
+                    def notifications = Notification.findAllByUserAndIsDismissed(user, false)?.sort { it.dateCreated }
+                    model?.notifications = notifications
                 }
             }
         }

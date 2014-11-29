@@ -37,10 +37,38 @@ if (typeof jQuery !== 'undefined') {
         $(".tooltip-link").tooltip();
         $('.popover-link').popover({ trigger: 'hover' });
 
-        $('.notification').click(function() {
+        $('.notification-message').click(function () {
             var url = $(this).attr("data-url");
             if (url) {
                 window.location.href = url;
+            }
+        });
+
+        $("#notifications-link").click(function () {
+            var notifications = "";
+            $('.notification').each(function (index) {
+                if (index !== 0) {
+                    if (index !== 1) {
+                        notifications += ",";
+                    }
+                    notifications += $(this).attr("data-id");
+                }
+            });
+
+            if ($.trim(notifications) !== "") {
+                $.ajax({
+                    type: "put",
+                    data: JSON.stringify({ notifications: notifications }),
+                    dataType: "json",
+                    contentType: "application/json",
+                    url: "/" + config.application.name + "/notification/view",
+                    success: function () {
+                        console.log("Marked notifications " + notifications + " as viewed");
+                    },
+                    error: function (response) {
+                        console.error("An error occurred marking notifications as viewed: " + response.responseJSON.message);
+                    }
+                });
             }
         });
     });

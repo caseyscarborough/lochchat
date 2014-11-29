@@ -23,13 +23,15 @@
           <li><g:link controller="admin"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Admin</g:link></li>
         </sec:ifAllGranted>
         <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+          <a id="notifications-link" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
             <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Notifications <span class="navbar-unread"<g:if test="${notifications?.size() == 0}"> style="display:none"</g:if>></span>
           </a>
           <ul class="dropdown-menu" role="menu" id="notifications-dropdown">
             <div class="notification" id="no-notifications"<g:if test="${notifications?.size() > 0}"> style="display:none"</g:if>>You currently have no notifications.</div>
             <g:each in="${notifications}" var="notification">
-              <div class="notification" data-id="${notification.id}"<g:if test="${notification.url}"> data-url="${notification.url}"</g:if>>${notification.message}</div>
+              <div class="notification ${notification.isViewed ? 'viewed' : ''}" data-id="${notification.id}" data-viewed="${notification.isViewed}">
+                <div class="notification-message"<g:if test="${notification.url}"> data-url="${notification.url}"</g:if>>${notification.message}</div>
+              </div>
             </g:each>
           </ul>
         </li>

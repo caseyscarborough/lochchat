@@ -4737,24 +4737,24 @@ if (typeof jQuery === 'undefined') { throw new Error('Bootstrap\'s JavaScript re
 
     var $parent  = getParent($this)
     var isActive = $parent.hasClass('open')
-
     clearMenus()
 
-	if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
-	  // if mobile we use a backdrop because click events don't delegate
-	  $('<div class="dropdown-backdrop"/>').insertAfter($(this)).on('click', clearMenus)
+	if (isActive) {
+	  if ('ontouchstart' in document.documentElement && !$parent.closest('.navbar-nav').length) {
+		  // if mobile we use a backdrop because click events don't delegate
+		  $('<div class="dropdown-backdrop"/>').insertAfter($(this)).on('click', clearMenus)
+	  }
+
+	  var relatedTarget = {relatedTarget: this}
+	  $parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
+
+	  if (e.isDefaultPrevented()) return
+
+	  $this.trigger('focus')
+	  $parent
+		  .toggleClass('open')
+		  .trigger('shown.bs.dropdown', relatedTarget)
 	}
-
-	var relatedTarget = { relatedTarget: this }
-	$parent.trigger(e = $.Event('show.bs.dropdown', relatedTarget))
-
-	if (e.isDefaultPrevented()) return
-
-	$this.trigger('focus')
-
-	$parent
-	  .toggleClass('open')
-	  .trigger('shown.bs.dropdown', relatedTarget)
 
     return false
   }

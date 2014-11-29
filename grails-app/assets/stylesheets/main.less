@@ -373,8 +373,10 @@ footer {
 
 #notifications-dropdown {
   box-shadow: 1px 1px 5px #333;
-  min-width: 200px;
+  min-width: 300px;
+
   .notification {
+    font-size: 13px;
     height: auto;
     padding: 10px;
     cursor: pointer;
@@ -392,6 +394,21 @@ footer {
 
     &:hover {
       background-color: @carrot;
+      color: white;
+    }
+
+    a {
+      color: white;
+      text-decoration: underline;
+      font-size: 12px;
+    }
+  }
+
+  .notification.viewed {
+    color: #bbb;
+
+    &:hover {
+      color: white;
     }
   }
 }
