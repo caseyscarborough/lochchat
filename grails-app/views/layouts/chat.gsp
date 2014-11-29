@@ -14,5 +14,12 @@
 <body>
   <g:render template="../shared/navigation" />
   <g:layoutBody/>
+  <script>
+    $(function() {
+      <g:if test="${notificationEndpoint}">
+      subscribeToNotificationEndpoint("${notificationEndpoint}");
+      </g:if>
+    });
+  </script>
 </body>
 </html>

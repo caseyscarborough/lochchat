@@ -21,4 +21,11 @@
     </div>
     <g:render template="../shared/footer" />
 	</body>
+  <script>
+    $(function() {
+        <g:if test="${notificationEndpoint}">
+          subscribeToNotificationEndpoint("${notificationEndpoint}");
+        </g:if>
+    });
+  </script>
 </html>

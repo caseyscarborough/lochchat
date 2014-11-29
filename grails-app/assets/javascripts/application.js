@@ -14,6 +14,28 @@
 //= require_tree ./app
 //= require_self
 
+function subscribeToNotificationEndpoint(websocketUrl) {
+    websocketUrl = websocketUrl.replace(/http:\/\/(.*):443/, "wss://$1");
+    websocketUrl = websocketUrl.replace(/http/, "ws");
+    var socket = new WebSocket(websocketUrl);
+
+    socket.onopen = function () {
+        console.log("Connected to notification endpoint successfully...")
+    };
+
+    socket.onmessage = function (message) {
+
+    };
+
+    socket.onclose = function () {
+        setTimeout(function() { subscribeToNotificationEndpoint(websocketUrl) }, 4000);
+    };
+
+    socket.onerror = function () {
+        // Not necessary, handled in socket.onclose
+    };
+}
+
 if (typeof jQuery !== 'undefined') {
     (function($) {
         'use strict';
