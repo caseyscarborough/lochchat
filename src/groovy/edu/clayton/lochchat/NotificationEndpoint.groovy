@@ -36,8 +36,6 @@ class NotificationEndpoint implements ServletContextListener {
       serverContainer.defaultMaxSessionIdleTimeout = defaultMaxSessionIdleTimeout
     } catch (IOException e) {
       log.error(e.message, e)
-    } catch (NullPointerException e) {
-      log.error(e.message, e)
     }
   }
 
@@ -57,9 +55,13 @@ class NotificationEndpoint implements ServletContextListener {
     def iterator = subscribers.iterator()
     while (iterator.hasNext()) {
       def user = iterator.next()
-      log.debug("Sending message to ${subscribers.size()}")
+      log.debug("Sending message to $username")
       if (user.userProperties.get("username") == username) {
-        user.basicRemote.sendText(message)
+        try {
+          user.basicRemote.sendText(message)
+        } catch (IOException e) {
+          // log.error(e)
+        }
       }
     }
   }
@@ -73,5 +75,4 @@ class NotificationEndpoint implements ServletContextListener {
   public void onError(Throwable t) {
     log.error("An error occurred.", t)
   }
-
 }

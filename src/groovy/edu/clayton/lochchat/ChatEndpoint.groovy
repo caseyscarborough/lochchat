@@ -209,7 +209,7 @@ public class ChatEndpoint implements ServletContextListener {
   private void sendMessage(Map output, Session userSession) {
     try {
       userSession.basicRemote.sendText((output as JSON).toString())
-    } catch (Exception e) {
+    } catch (IOException e) {
       // log.error("An error occurred, but was caught.", e)
     }
   }
