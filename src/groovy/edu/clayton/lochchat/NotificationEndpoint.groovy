@@ -20,8 +20,7 @@ import javax.websocket.server.ServerEndpoint
 @ServerEndpoint("/notificationEndpoint/{username}")
 class NotificationEndpoint implements ServletContextListener {
 
-  private User user
-  private Set<Session> subscribers = ([] as Set).asSynchronized()
+  static final Set<Session> subscribers = ([] as Set).asSynchronized()
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
@@ -48,6 +47,7 @@ class NotificationEndpoint implements ServletContextListener {
 
   @OnOpen
   public void onOpen(Session userSession, @PathParam("username") String username) {
+    log.debug("User $username connected to notification endpoint")
     userSession.userProperties.put("username", username)
     subscribers.add(userSession)
   }
@@ -57,6 +57,7 @@ class NotificationEndpoint implements ServletContextListener {
     def iterator = subscribers.iterator()
     while (iterator.hasNext()) {
       def user = iterator.next()
+      log.debug("Sending message to ${subscribers.size()}")
       if (user.userProperties.get("username") == username) {
         user.basicRemote.sendText(message)
       }

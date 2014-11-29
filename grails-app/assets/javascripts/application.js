@@ -15,16 +15,14 @@
 //= require_self
 
 function subscribeToNotificationEndpoint(websocketUrl) {
-    websocketUrl = websocketUrl.replace(/http:\/\/(.*):443/, "wss://$1");
-    websocketUrl = websocketUrl.replace(/http/, "ws");
     var socket = new WebSocket(websocketUrl);
 
     socket.onopen = function () {
-        console.log("Connected to notification endpoint successfully...")
+        console.log("Connected to notification endpoint successfully...");
     };
 
     socket.onmessage = function (message) {
-
+        console.log(message);
     };
 
     socket.onclose = function () {

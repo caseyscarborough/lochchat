@@ -11,7 +11,7 @@ import javax.websocket.Session
 import org.glassfish.tyrus.client.ClientManager
 
 @Log4j
-public class ChatClient {
+public class NotificationClient {
 
   private Session session
 
@@ -20,19 +20,17 @@ public class ChatClient {
       final ClientEndpointConfig configuration = ClientEndpointConfig.Builder.create().build()
       ClientManager client = ClientManager.createClient()
       client.connectToServer(new Endpoint() {
-          @Override
-          public void onOpen(Session session,EndpointConfig config) {
-            ChatClient.this.session = session
-            ChatClient.this.session.addMessageHandler(new MessageHandler.Whole<String>() {
-
-              @Override
-              public void onMessage(String message) {
-                // log.debug("Received message: " + message)
-              }
-            })
-          }
-        },
-        configuration,new URI(url))
+        @Override
+        public void onOpen(Session session,EndpointConfig config) {
+          NotificationClient.this.session = session
+          NotificationClient.this.session.addMessageHandler(new MessageHandler.Whole<String>() {
+            @Override
+            public void onMessage(String message) {
+              log.debug("Received message: " + message)
+            }
+          })
+        }
+      }, configuration,new URI(url))
 
     } catch (Exception e) {
       e.printStackTrace()

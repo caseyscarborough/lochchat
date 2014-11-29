@@ -59,17 +59,28 @@ public class ChatEndpoint implements ServletContextListener {
       chatroom = chatroomUsers.get(chatId)
     }
 
-    if (chatroom.size() >= config.lochchat.maxParticipants) {
-      def javascriptCallback = """
-        swal({
-        title:'This chatroom is full',
-        text:'Chatrooms are limited to a total of ${config.lochchat.maxParticipants} participants. Try again later, or create your own.',
-        type:'error',
-        showCancelButton:false
-        }, function(){ window.location.href='/lochchat/'; });
-      """;
-      sendMessage([callback: javascriptCallback], userSession);
-      return
+    if (userSession.properties.httpSessionId) {
+      def count = 0
+      def iterator = chatroom.iterator()
+      while(iterator.hasNext()) {
+        def session = iterator.next()
+        if (session.properties.httpSessionId) {
+          count++
+        }
+      }
+
+      if (count >= config.lochchat.maxParticipants) {
+        def javascriptCallback = """
+          swal({
+          title:'This chatroom is full',
+          text:'Chatrooms are limited to a total of ${config.lochchat.maxParticipants} participants. Try again later, or create your own.',
+          type:'error',
+          showCancelButton:false
+          }, function(){ window.location.href='/lochchat/'; });
+        """;
+        sendMessage([callback: javascriptCallback], userSession);
+        return
+      }
     }
 
     userSession.userProperties.put("chatId", chatId)
@@ -199,7 +210,7 @@ public class ChatEndpoint implements ServletContextListener {
     try {
       userSession.basicRemote.sendText((output as JSON).toString())
     } catch (Exception e) {
-      log.error("An error occurred, but was caught.", e)
+      // log.error("An error occurred, but was caught.", e)
     }
   }
 }

@@ -2,6 +2,7 @@ package edu.clayton.lochchat
 
 class NotificationsFilters {
 
+    def chatService
     def grailsLinkGenerator
     def springSecurityService
 
@@ -12,7 +13,7 @@ class NotificationsFilters {
                     User user = (User) springSecurityService.currentUser
                     def notifications = Notification.findAllByUserAndIsDismissed(user, false)?.sort { it.dateCreated }
                     model?.notifications = notifications
-                    model?.notificationEndpoint = grailsLinkGenerator.link(uri: "/notificationEndpoint/${user.username}", absolute: true)
+                    model?.notificationEndpoint = chatService.notificationEndpointUrl
                 }
             }
         }
