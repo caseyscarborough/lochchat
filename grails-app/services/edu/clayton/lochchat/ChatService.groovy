@@ -1,5 +1,6 @@
 package edu.clayton.lochchat
 
+import grails.converters.JSON
 import grails.transaction.Transactional
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.codehaus.groovy.grails.web.util.WebUtils
@@ -102,9 +103,11 @@ class ChatService {
         def user = User.findByUsername(invitee.toLowerCase()) ?: User.findByEmail(invitee.toLowerCase())
         try {
           if (user) {
-            new Notification(user: user, message: "Someone has invited you to join a chatroom. Click here to join it.", url: chat.url).save(flush: true)
+            def message = "Someone has invited you to join a chatroom. Click here to join it."
+            def notification = new Notification(user: user, message: message, url: chat.url)
+            notification.save(flush: true)
             notificationClient.connect(getNotificationEndpointForUser(user))
-            notificationClient.sendMessage("TEST")
+            notificationClient.sendMessage((([notification: notification]) as JSON).toString())
             notificationClient.disconnect()
             emailUser(user.email, chat)
             return

@@ -22,7 +22,14 @@ function subscribeToNotificationEndpoint(websocketUrl) {
     };
 
     socket.onmessage = function (message) {
-        console.log(message);
+        var data = JSON.parse(message.data);
+        $("#no-notifications").hide();
+        $(".navbar-unread").show();
+        $("#notifications-dropdown").append(
+            '<div class="notification" data-id="' + data.notification.id + '" data-viewed="' + data.notification.isViewed + '">' +
+            '<div class="notification-message" data-url="' + data.notification.url + '">' + data.notification.message + '</div>' +
+            '</div>'
+        );
     };
 
     socket.onclose = function () {
