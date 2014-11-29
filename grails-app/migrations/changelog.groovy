@@ -27,4 +27,6 @@ databaseChangeLog = {
 	include file: '201411291301-create-notification-class.groovy'
 
 	include file: '201411291350-add-url-to-notification.groovy'
+
+	include file: '201411291359-add-date-created-to-notification.groovy'
 }

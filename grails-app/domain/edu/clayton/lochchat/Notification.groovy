@@ -8,6 +8,8 @@ class Notification {
   Boolean isViewed = false
   Boolean isDismissed = false
 
+  Date dateCreated
+
   static constraints = {
     url nullable: true
   }
