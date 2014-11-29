@@ -25,4 +25,6 @@ databaseChangeLog = {
   include file: '201411221725-add-spring-security-ui.groovy'
 
 	include file: '201411291301-create-notification-class.groovy'
+
+	include file: '201411291350-add-url-to-notification.groovy'
 }
