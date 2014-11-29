@@ -24,7 +24,7 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
 
     String salt = saltSource instanceof NullSaltSource ? null : command.username
     def user = lookupUserClass().newInstance(firstName: command.firstName, lastName: command.lastName,
-      email: command.email, username: command.username, accountLocked: true, enabled: true)
+      email: command.email.toLowerCase(), username: command.username, accountLocked: true, enabled: true)
 
     RegistrationCode registrationCode = springSecurityUiService.register(user, command.password, salt)
     if (registrationCode == null || registrationCode.hasErrors()) {
