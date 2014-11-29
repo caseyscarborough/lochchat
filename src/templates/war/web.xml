@@ -40,7 +40,11 @@
     </listener>
     
     <listener>
-        <listener-class>edu.clayton.lochchat.LochChatEndpoint</listener-class>
+        <listener-class>edu.clayton.lochchat.ChatEndpoint</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>edu.clayton.lochchat.NotificationEndpoint</listener-class>
     </listener>
 
     <!-- Grails dispatcher servlet -->

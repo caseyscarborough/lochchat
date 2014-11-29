@@ -13,7 +13,7 @@ class ChatService {
   def messageService
   def springSecurityService
 
-  LochChatClient client = null
+  ChatClient client = null
 
   Map createChat(GrailsParameterMap params) {
     Log logInstance = new Log(messages: [])
@@ -68,7 +68,7 @@ class ChatService {
 
   protected void handleInvitees(String invitees, Chat chat, String username) {
     if (!client) {
-      client = new LochChatClient()
+      client = new ChatClient()
     }
     client.connect(chat.websocketUrl)
 
