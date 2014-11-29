@@ -23,4 +23,6 @@ databaseChangeLog = {
   include file: '201411221105-add-dates-to-user.groovy'
 
   include file: '201411221725-add-spring-security-ui.groovy'
+
+	include file: '201411291301-create-notification-class.groovy'
 }
