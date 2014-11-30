@@ -37,11 +37,11 @@ grails run-app
 
 ## Deployment
 
-Deployment is currently tested and working in Tomcat 8. Setting the default protocol to `org.apache.coyote.http11.Http11Nio2Protocol` in your `$CATALINA_HOME/conf/server.xml` will improve the websocket connections:
+Deployment is currently tested and working in Tomcat 8. Setting the default protocol to `org.apache.coyote.http11.Http11NioProtocol` in your `$CATALINA_HOME/conf/server.xml` will improve the websocket connections:
 
 ```xml
 <Connector port="8080"
-           protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+           protocol="org.apache.coyote.http11.Http11NioProtocol"
            connectionTimeout="20000"
            redirectPort="8443" />
 ```
