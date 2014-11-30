@@ -6,6 +6,7 @@ grails.project.work.dir = "target/work"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 
+def buildVersion = "004"
 def warName = "${appName}##${appVersion}-build-${buildVersion}.war"
 grails.project.war.file = "target/$warName"
 
