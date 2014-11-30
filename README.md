@@ -35,6 +35,17 @@ You can then start the application up:
 grails run-app
 ```
 
+## Deployment
+
+Deployment is currently tested and working in Tomcat 8. Setting the default protocol to `org.apache.coyote.http11.Http11Nio2Protocol` in your `$CATALINA_HOME/conf/server.xml` will improve the websocket connections:
+
+```xml
+<Connector port="8080"
+           protocol="org.apache.coyote.http11.Http11Nio2Protocol"
+           connectionTimeout="20000"
+           redirectPort="8443" />
+```
+
 ## Credits
 
 The following open source libraries were used in the development of LochChat:
