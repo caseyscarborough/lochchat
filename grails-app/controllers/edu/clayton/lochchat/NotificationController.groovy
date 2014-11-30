@@ -9,7 +9,7 @@ class NotificationController {
 
   def springSecurityService
 
-  static allowedMethods = [view: 'PUT']
+  static allowedMethods = [view: 'PUT', dismiss: 'PUT']
 
   def view() {
     def user = springSecurityService.currentUser
@@ -18,9 +18,20 @@ class NotificationController {
       def n = Notification.get(id)
       if (n && n.user == user) {
         n.isViewed = true
-        n.isDismissed = true
         n.save(flush: true)
       }
+    }
+    render ([status: HttpStatus.OK] as JSON)
+  }
+
+  def dismiss() {
+    def user = springSecurityService.currentUser
+    def notification = Notification.get(request.JSON.id)
+    if (notification && notification.user == user) {
+      log.debug("Dismissing notification ${notification.id} for ${user}")
+      notification.isViewed = true
+      notification.isDismissed = true
+      notification.save(flush: true)
     }
     render ([status: HttpStatus.OK] as JSON)
   }

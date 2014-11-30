@@ -16,10 +16,25 @@
 
 function bindNotificationClick() {
     $('.notification-message').click(function () {
-        var url = $(this).attr("data-url");
-        if (url) {
-            window.location.href = url;
-        }
+        $.ajax({
+            type: "put",
+            data: JSON.stringify({ id: $(this).parent().attr("data-id") }),
+            dataType: "json",
+            contentType: "application/json",
+            url: "/" + config.application.name + "/notification/dismiss",
+            success: function() {
+                var notificationCount = $("#notification-count");
+                notificationCount.val(parseInt(notificationCount.val()) - 1);
+                if (notificationCount.val() === "0") {
+                    $("#no-notifications").show();
+                }
+
+                var url = $(this).attr("data-url");
+                if (url) {
+                    window.location.href = url;
+                }
+            }
+        });
     });
 }
 
@@ -33,7 +48,7 @@ function subscribeToNotificationEndpoint(websocketUrl) {
     socket.onmessage = function (message) {
         var data = JSON.parse(message.data);
         $("#no-notifications").hide();
-        $(".navbar-unread").show();
+        $(".navbar-unread").fadeIn(150).fadeOut(150).fadeIn(150).fadeOut(150).fadeIn(150);
         $("#notifications-dropdown").append(
             '<div class="notification" data-id="' + data.notification.id + '" data-viewed="' + data.notification.isViewed + '">' +
             '<div class="notification-message" data-url="' + data.notification.url + '">' + data.notification.message + '</div>' +
@@ -78,6 +93,7 @@ if (typeof jQuery !== 'undefined') {
 
         $("#notifications-link").click(function () {
             var notifications = "";
+            $(".navbar-unread").hide();
             $('.notification').each(function (index) {
                 if (index !== 0 && $(this).attr("data-viewed") === "false") {
                     if (index !== 1) {

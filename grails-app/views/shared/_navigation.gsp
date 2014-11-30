@@ -27,6 +27,7 @@
             <i class="fa fa-exclamation-circle"></i>&nbsp;&nbsp;Notifications <span class="navbar-unread"<g:if test="${notifications?.size() == 0}"> style="display:none"</g:if>></span>
           </a>
           <ul class="dropdown-menu" role="menu" id="notifications-dropdown">
+            <input type="hidden" id="notification-count" value="${notifications?.size() ?: 0}">
             <div class="notification" id="no-notifications"<g:if test="${notifications?.size() > 0}"> style="display:none"</g:if>>You currently have no notifications.</div>
             <g:each in="${notifications}" var="notification">
               <div class="notification ${notification.isViewed ? 'viewed' : ''}" data-id="${notification.id}" data-viewed="${notification.isViewed}">
