@@ -22,10 +22,10 @@ class SpringSecurityUiTagLib extends grails.plugin.springsecurity.ui.SecurityUiT
     def type = attrs.type
 
     out << """
-		<div class='form-group'>
-			<label for="${name}">${message(code: labelCode, default: labelCodeDefault)}</label>&nbsp;&nbsp;${fieldErrors(bean: bean, field: name)}
-			<input type="${type}" id="${name}" class="form-control" name="${name}" placeholder="${message(code: labelCode, default: labelCodeDefault)}" value="${value ?: ''}" required>
+    <div class='form-group'>
+      <label for="${name}">${message(code: labelCode, default: labelCodeDefault)}</label>&nbsp;&nbsp;${fieldErrors(bean: bean, field: name)}
+      <input type="${type}" id="${name}" class="form-control" name="${name}" placeholder="${message(code: labelCode, default: labelCodeDefault)}" value="${value ?: ''}" required>
     </div>
-		"""
+    """
   }
 }
