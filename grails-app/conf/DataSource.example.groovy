@@ -1,9 +1,10 @@
+// Example MySQL Datasource file
 dataSource {
   pooled = true
   jmxExport = true
   driverClassName = "com.mysql.jdbc.Driver"
   dialect = "org.hibernate.dialect.MySQL5InnoDBDialect"
-  username = "root"
+  username = ""
   password = ""
   dbCreate = "none"
 }

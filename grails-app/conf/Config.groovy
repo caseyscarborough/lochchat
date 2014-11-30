@@ -12,9 +12,10 @@
 // }
 
 def appName = 'lochchat'
-
+def configLocation = "/etc/grails/config/$appName"
 grails.config.locations = []
-grails.config.locations << "file:/opt/tomcat7/config/lochchat/EmailConfig.groovy"
+grails.config.locations << "file:$configLocation/EmailConfig.groovy"
+grails.config.locations << "file:$configLocation/DataSource.groovy"
 
 grails.project.groupId = appName // change this to alter the default package name and Maven publishing destination
 
