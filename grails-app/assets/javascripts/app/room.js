@@ -53,8 +53,6 @@ var Room = (function ($) {
     };
 
     var _setupIncomingChats = function (websocketUrl, username) {
-        websocketUrl = websocketUrl.replace(/http:\/\/(.*):443/, "wss://$1");
-        websocketUrl = websocketUrl.replace(/http/, "ws");
         _socket = new WebSocket(websocketUrl);
 
         _socket.onopen = function () {

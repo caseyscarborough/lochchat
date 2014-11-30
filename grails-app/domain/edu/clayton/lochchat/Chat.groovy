@@ -1,5 +1,7 @@
 package edu.clayton.lochchat
 
+import grails.util.Environment
+
 class Chat {
 
   String uniqueId
@@ -39,6 +41,9 @@ class Chat {
   }
 
   def getWebsocketUrl() {
-    grailsLinkGenerator.link(uri: "/chatEndpoint/${uniqueId}", absolute: true).replaceAll(/http:\/\/(.*):443\//, /wss:\/\/$1\//).replaceAll(/http/, /ws/)
+    grailsLinkGenerator
+      .link(uri: "/chatEndpoint/${uniqueId}", absolute: true)
+      .replaceFirst(/http:\/\/(.*):443\//, /wss:\/\/$1\//)
+      .replaceFirst(/http/, /ws/)
   }
 }

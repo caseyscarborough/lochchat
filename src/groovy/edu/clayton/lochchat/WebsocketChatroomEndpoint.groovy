@@ -2,10 +2,11 @@ package edu.clayton.lochchat
 
 import grails.converters.JSON
 import grails.util.Environment
-import groovy.util.logging.Log4j
 import org.apache.commons.lang.StringEscapeUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes as GA
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 
 import javax.servlet.ServletContext
@@ -18,11 +19,11 @@ import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
 import java.nio.ByteBuffer
 
-@Log4j
 @WebListener
 @ServerEndpoint("/chatEndpoint/{chatId}")
-public class ChatEndpoint implements ServletContextListener {
+public class WebsocketChatroomEndpoint implements ServletContextListener {
 
+  private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Map<String, Set<Session>> chatroomUsers = ([:] as HashMap).asSynchronized()
   static GrailsApplication grailsApplication
   static ConfigObject config
@@ -30,10 +31,10 @@ public class ChatEndpoint implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent sce) {
     ServletContext servletContext = sce.servletContext
-    ServerContainer serverContainer = (ServerContainer) servletContext.getAttribute("javax.websocket.server.ServerContainer")
+    ServerContainer serverContainer = servletContext.getAttribute("javax.websocket.server.ServerContainer")
     try {
       if (Environment.current == Environment.DEVELOPMENT) {
-        serverContainer.addEndpoint(ChatEndpoint)
+        serverContainer.addEndpoint(WebsocketChatroomEndpoint)
       }
       ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GA.APPLICATION_CONTEXT)
       grailsApplication = ctx.grailsApplication

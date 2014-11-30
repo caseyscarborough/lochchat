@@ -138,16 +138,15 @@ log4j.main = {
       debug 'edu.clayton.lochchat.marshallers'
     }
     production {
-      warn 'grails.app'
-      warn 'edu.clayton.lochchat'
+      debug 'grails.app'
+      debug 'edu.clayton.lochchat'
+      debug 'edu.clayton.lochchat.marshallers'
     }
   }
 }
 
-lochchat {
-  uploadDir = '/tmp/lochchat'
-  maxParticipants = 4
-}
+lochchat.uploadDir = '/tmp/lochchat'
+lochchat.maxParticipants = 4
 
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'edu.clayton.lochchat.User'

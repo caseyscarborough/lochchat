@@ -14,6 +14,15 @@
 //= require_tree ./app
 //= require_self
 
+function bindNotificationClick() {
+    $('.notification-message').click(function () {
+        var url = $(this).attr("data-url");
+        if (url) {
+            window.location.href = url;
+        }
+    });
+}
+
 function subscribeToNotificationEndpoint(websocketUrl) {
     var socket = new WebSocket(websocketUrl);
 
@@ -30,6 +39,7 @@ function subscribeToNotificationEndpoint(websocketUrl) {
             '<div class="notification-message" data-url="' + data.notification.url + '">' + data.notification.message + '</div>' +
             '</div>'
         );
+        bindNotificationClick();
     };
 
     socket.onclose = function () {
@@ -64,21 +74,17 @@ if (typeof jQuery !== 'undefined') {
         $(".tooltip-link").tooltip();
         $('.popover-link').popover({ trigger: 'hover' });
 
-        $('.notification-message').click(function () {
-            var url = $(this).attr("data-url");
-            if (url) {
-                window.location.href = url;
-            }
-        });
+        bindNotificationClick();
 
         $("#notifications-link").click(function () {
             var notifications = "";
             $('.notification').each(function (index) {
-                if (index !== 0) {
+                if (index !== 0 && $(this).attr("data-viewed") === "false") {
                     if (index !== 1) {
                         notifications += ",";
                     }
                     notifications += $(this).attr("data-id");
+                    $(this).attr("data-viewed", "true");
                 }
             });
 

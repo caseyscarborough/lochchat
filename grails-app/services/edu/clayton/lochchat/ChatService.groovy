@@ -2,10 +2,13 @@ package edu.clayton.lochchat
 
 import grails.converters.JSON
 import grails.transaction.Transactional
+import grails.util.Environment
 import org.codehaus.groovy.grails.web.servlet.mvc.GrailsParameterMap
 import org.codehaus.groovy.grails.web.util.WebUtils
 import org.springframework.http.HttpStatus
 import org.springframework.mail.MailSendException
+
+import javax.websocket.Session
 
 @Transactional
 class ChatService {
@@ -15,21 +18,19 @@ class ChatService {
   def messageService
   def springSecurityService
 
-  private ChatClient chatClient
-  private NotificationClient notificationClient
-
   String getNotificationEndpointUrl() {
-    grailsLinkGenerator
-      .link(uri: "/notificationEndpoint/${((User) springSecurityService.currentUser)?.username}", absolute: true)
-      .replaceAll(/http:\/\/(.*):443\//, /wss:\/\/$1\//)
-      .replaceAll(/http/, /ws/)
+    getNotificationEndpointFor(((User) springSecurityService.currentUser)?.username)
   }
 
   String getNotificationEndpointForUser(User user) {
+    getNotificationEndpointFor(user.username)
+  }
+
+  private String getNotificationEndpointFor(String username) {
     grailsLinkGenerator
-      .link(uri: "/notificationEndpoint/${user.username}", absolute: true)
-      .replaceAll(/http:\/\/(.*):443\//, /wss:\/\/$1\//)
-      .replaceAll(/http/, /ws/)
+      .link(uri: "/notificationEndpoint/$username", absolute: true)
+      .replaceFirst(/http:\/\/(.*):443\//, /wss:\/\/$1\//)
+      .replaceFirst(/http/, /ws/)
   }
 
   Map createChat(GrailsParameterMap params) {
@@ -84,32 +85,26 @@ class ChatService {
   }
 
   protected void handleInvitees(String invitees, Chat chat, String username=null) {
-    if (!chatClient) {
-      chatClient = new ChatClient()
-    }
     log.debug("Connecting to chatroom endpoint ${chat.websocketUrl}")
-    chatClient.connect(chat.websocketUrl)
-
-    if (!notificationClient) {
-      notificationClient = new NotificationClient()
-    }
+    Session chatSession = ClientHelper.getConnectedSession(chat.websocketUrl)
 
     if (invitees) {
       if (username) {
-        chatClient.sendMessage("_serverMessage:$username is inviting users to to the chatroom...")
+        ClientHelper.sendMessage(chatSession, "_serverMessage:$username is inviting users to to the chatroom...")
       }
 
       invitees.trim()?.split(",")?.each { String invitee ->
         def user = User.findByUsername(invitee.toLowerCase()) ?: User.findByEmail(invitee.toLowerCase())
         try {
           if (user) {
+            Session notificationSession = ClientHelper.getConnectedSession(getNotificationEndpointForUser(user))
+            emailUser(user.email, chat, chatSession)
+
             def message = "Someone has invited you to join a chatroom. Click here to join it."
             def notification = new Notification(user: user, message: message, url: chat.url)
             notification.save(flush: true)
-            notificationClient.connect(getNotificationEndpointForUser(user))
-            notificationClient.sendMessage((([notification: notification]) as JSON).toString())
-            notificationClient.disconnect()
-            emailUser(user.email, chat)
+            ClientHelper.sendMessage(notificationSession, (([notification: notification]) as JSON).toString())
+            notificationSession.close()
             return
           }
           emailUser(invitee, chat)
@@ -118,16 +113,16 @@ class ChatService {
 
           def message = "Could not deliver email to $invitee. Are you sure this user or email address exists?"
           new Message(contents: message, log: chat.log).save(flush: true)
-          chatClient.sendMessage("_serverMessage:$message")
+          ClientHelper.sendMessage(chatSession, "_serverMessage:$message")
           chat.log.save(flush: true)
           chat.save(flush: true)
         }
       }
     }
-    chatClient.disconnect()
+    chatSession.close()
   }
 
-  protected void emailUser(String email, Chat chat) throws MailSendException {
+  protected void emailUser(String email, Chat chat, Session session=null) throws MailSendException {
     log.info("Emailing $email...")
     mailService.sendMail {
       to email
@@ -135,6 +130,8 @@ class ChatService {
       subject "LochChat Invite"
       body "You've been invited to join a chat at the following url: ${chat.url}"
     }
-    chatClient.sendMessage("_serverMessage:Invited $email to the chatroom.")
+    if (session) {
+      ClientHelper.sendMessage(session, "_serverMessage:Invited $email to the chatroom.")
+    }
   }
 }

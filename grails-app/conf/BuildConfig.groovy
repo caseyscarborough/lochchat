@@ -6,7 +6,6 @@ grails.project.work.dir = "target/work"
 grails.project.target.level = 1.6
 grails.project.source.level = 1.6
 
-def buildVersion = "004"
 def warName = "${appName}##${appVersion}-build-${buildVersion}.war"
 grails.project.war.file = "target/$warName"
 
@@ -57,10 +56,9 @@ grails.project.dependency.resolution = {
     runtime 'mysql:mysql-connector-java:5.1.29'
     // runtime 'org.postgresql:postgresql:9.3-1101-jdbc41'
     test "org.grails:grails-datastore-test-support:1.0.2-grails-2.4"
-    build('javax.websocket:javax.websocket-api:1.1') {
+    bundle('javax.websocket:javax.websocket-api:1.1') {
       export = false
     }
-    runtime 'org.glassfish.tyrus.bundles:tyrus-standalone-client:1.9'
   }
 
   plugins {

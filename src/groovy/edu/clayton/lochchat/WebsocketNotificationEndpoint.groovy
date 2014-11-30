@@ -1,9 +1,10 @@
 package edu.clayton.lochchat
 
 import grails.util.Environment
-import groovy.util.logging.Log4j
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.context.ApplicationContext
 
 import javax.servlet.ServletContext
@@ -15,20 +16,20 @@ import javax.websocket.server.PathParam
 import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
 
-@Log4j
 @WebListener
 @ServerEndpoint("/notificationEndpoint/{username}")
-class NotificationEndpoint implements ServletContextListener {
+class WebsocketNotificationEndpoint implements ServletContextListener {
 
+  private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Set<Session> subscribers = ([] as Set).asSynchronized()
 
   @Override
   public void contextInitialized(ServletContextEvent sce) {
     ServletContext servletContext = sce.servletContext
-    ServerContainer serverContainer = (ServerContainer) servletContext.getAttribute("javax.websocket.server.ServerContainer")
+    ServerContainer serverContainer = servletContext.getAttribute("javax.websocket.server.ServerContainer")
     try {
       if (Environment.current == Environment.DEVELOPMENT) {
-        serverContainer.addEndpoint(NotificationEndpoint)
+        serverContainer.addEndpoint(WebsocketNotificationEndpoint)
       }
       ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
       GrailsApplication grailsApplication = ctx.grailsApplication
