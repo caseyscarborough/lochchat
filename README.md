@@ -21,17 +21,17 @@ git clone git@github.com:caseyscarborough/lochchat.git
 cd lochchat
 ```
 
-Create an [`EmailConfig.groovy`](https://github.com/caseyscarborough/lochchat/blob/ce6c36dc22287d62a3c95168e39b750e84c959a3/grails-app/conf/EmailConfig.example.groovy), and update the path to it in the [`grails-app/conf/Config.groovy`](https://github.com/caseyscarborough/lochchat/blob/ce6c36dc22287d62a3c95168e39b750e84c959a3/grails-app/conf/Config.groovy#L17) file.
+Copy the sample DataSource and Email configuration files somewhere on your machine, and update them with your configuration. You will need to update the location that you copy them to [`grails-app/conf/Config.groovy`](https://github.com/caseyscarborough/lochchat/blob/master/grails-app/conf/Config.groovy#L15).
 
-Ensure that you've created the following databases on your local MySQL instance: `lochchat_dev`, and run the database migrations:
+```bash
+cp grails-app/conf/DataSource.example.groovy /etc/grails/config/lochchat/DataSource.groovy
+cp grails-app/conf/EmailConfig.example.groovy /etc/grails/config/lochchat/EmailConfig.groovy
+```
+
+Ensure that you've created the following local MySQL instance: `lochchat_dev`, run the database migrations, and start the application:
 
 ```bash
 grails dbm-update
-```
-
-You can then start the application up:
-
-```bash
 grails run-app
 ```
 
