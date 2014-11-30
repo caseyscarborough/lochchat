@@ -1,6 +1,7 @@
 package edu.clayton.lochchat
 
 import grails.util.Environment
+import groovy.util.logging.Log4j
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes
 import org.slf4j.Logger
@@ -16,11 +17,11 @@ import javax.websocket.server.PathParam
 import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
 
+@Log4j
 @WebListener
 @ServerEndpoint("/notificationEndpoint/{username}")
 class WebsocketNotificationEndpoint implements ServletContextListener {
 
-  private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Set<Session> subscribers = ([] as Set).asSynchronized()
 
   @Override
@@ -31,10 +32,7 @@ class WebsocketNotificationEndpoint implements ServletContextListener {
       if (Environment.current == Environment.DEVELOPMENT) {
         serverContainer.addEndpoint(WebsocketNotificationEndpoint)
       }
-      ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GrailsApplicationAttributes.APPLICATION_CONTEXT)
-      GrailsApplication grailsApplication = ctx.grailsApplication
-      Integer defaultMaxSessionIdleTimeout =  grailsApplication.config.myservlet.timeout ?: 0
-      serverContainer.defaultMaxSessionIdleTimeout = defaultMaxSessionIdleTimeout
+      serverContainer.defaultMaxSessionIdleTimeout = 0
     } catch (IOException e) {
       log.error(e.message, e)
     }
@@ -47,6 +45,7 @@ class WebsocketNotificationEndpoint implements ServletContextListener {
   @OnOpen
   public void onOpen(Session userSession, @PathParam("username") String username) {
     log.debug("User $username connected to notification endpoint")
+    userSession.setMaxIdleTimeout(0)
     userSession.userProperties.put("username", username)
     subscribers.add(userSession)
   }

@@ -2,6 +2,7 @@ package edu.clayton.lochchat
 
 import grails.converters.JSON
 import grails.util.Environment
+import groovy.util.logging.Log4j
 import org.apache.commons.lang.StringEscapeUtils
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.codehaus.groovy.grails.web.servlet.GrailsApplicationAttributes as GA
@@ -19,13 +20,12 @@ import javax.websocket.server.ServerContainer
 import javax.websocket.server.ServerEndpoint
 import java.nio.ByteBuffer
 
+@Log4j
 @WebListener
 @ServerEndpoint("/chatEndpoint/{chatId}")
 public class WebsocketChatroomEndpoint implements ServletContextListener {
 
-  private final Logger log = LoggerFactory.getLogger(getClass().name)
   static final Map<String, Set<Session>> chatroomUsers = ([:] as HashMap).asSynchronized()
-  static GrailsApplication grailsApplication
   static ConfigObject config
 
   @Override
@@ -37,10 +37,8 @@ public class WebsocketChatroomEndpoint implements ServletContextListener {
         serverContainer.addEndpoint(WebsocketChatroomEndpoint)
       }
       ApplicationContext ctx = (ApplicationContext) servletContext.getAttribute(GA.APPLICATION_CONTEXT)
-      grailsApplication = ctx.grailsApplication
-      config = grailsApplication.config
-      Integer defaultMaxSessionIdleTimeout = config.myservlet.timeout ?: 0
-      serverContainer.defaultMaxSessionIdleTimeout = defaultMaxSessionIdleTimeout
+      config = ctx.grailsApplication.config
+      serverContainer.defaultMaxSessionIdleTimeout = 0
     } catch (IOException e) {
       log.error(e.message, e)
     } catch (NullPointerException e) {
@@ -54,6 +52,7 @@ public class WebsocketChatroomEndpoint implements ServletContextListener {
 
   @OnOpen
   public void onOpen(Session userSession, @PathParam("chatId") String chatId) {
+    userSession.setMaxIdleTimeout(0)
     def chatroom = chatroomUsers.get(chatId)
     if (!chatroom) {
       chatroomUsers.put(chatId, [] as Set)
