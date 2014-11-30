@@ -17,4 +17,8 @@ class Notification {
   static mapping = {
     message type: 'text'
   }
+
+  String getFormattedDateCreated() {
+    dateCreated.format("MMM. dd, yyyy 'at' h:mma")
+  }
 }

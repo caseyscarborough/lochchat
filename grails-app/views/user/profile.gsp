@@ -104,7 +104,40 @@
         </g:else>
       </div>
       <div class="profile-section">
-        <br>
+        <h4>Notifications</h4>
+        <g:if test="${user.notifications?.size() > 0}">
+          <table class="table table-hover table-condensed">
+            <thead>
+              <tr>
+                <th>Message</th>
+                <th>URL</th>
+                <th>Received At</th>
+              </tr>
+            </thead>
+            <tbody>
+              <g:each in="${user.notifications?.sort { it.dateCreated }}" var="notification">
+                <tr>
+                  <td>${notification.message}</td>
+                  <td>
+                    <g:if test="${notification.url}">
+                      <a href="${notification.url}">${notification.url}</a>
+                    </g:if>
+                    <g:else>
+                      None
+                    </g:else>
+                  </td>
+                  <td>${notification.formattedDateCreated}</td>
+                </tr>
+              </g:each>
+            </tbody>
+          </table>
+        </g:if>
+        <g:else>
+          <p class="info">You have not yet received any notifications.</p>
+        </g:else>
+      </div>
+      <div class="profile-section">
+        <h4>User Information</h4>
         <div class="row option">
           <div class="col-md-3">
             <h5 class="pull-right">Update Password</h5>
