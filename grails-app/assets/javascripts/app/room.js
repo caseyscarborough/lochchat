@@ -198,7 +198,9 @@ var Room = (function ($) {
             },
             function (isConfirm) {
                 if (_hasUserAccount) {
-                    window.location.href = "/" + config.application.name;
+                    if (isConfirm) {
+                        window.location.href = "/" + config.application.name;                        
+                    }
                 } else {
                     if (isConfirm) {
                         swal({
