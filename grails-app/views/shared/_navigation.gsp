@@ -30,8 +30,8 @@
             <input type="hidden" id="notification-count" value="${notifications?.size() ?: 0}">
             <div class="notification" id="no-notifications"<g:if test="${notifications?.size() > 0}"> style="display:none"</g:if>>You currently have no notifications.</div>
             <g:each in="${notifications}" var="notification">
-              <div class="notification ${notification.isViewed ? 'viewed' : ''}" data-id="${notification.id}" data-viewed="${notification.isViewed}">
-                <div class="notification-message"<g:if test="${notification.url}"> data-url="${notification.url}"</g:if>>${notification.message}</div>
+              <div class="notification ${notification.isViewed ? 'viewed' : ''}"<g:if test="${notification.url}"> data-url="${notification.url}"</g:if> data-id="${notification.id}" data-viewed="${notification.isViewed}">
+                <div class="notification-message">${notification.message}</div>
               </div>
             </g:each>
           </ul>

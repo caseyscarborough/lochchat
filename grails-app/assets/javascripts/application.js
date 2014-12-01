@@ -15,10 +15,12 @@
 //= require_self
 
 function bindNotificationClick() {
-    $('.notification-message').click(function () {
+    $('.notification').on('click', function () {
+        var url = $(this).attr("data-url"),
+            id = $(this).attr("data-id");
         $.ajax({
             type: "put",
-            data: JSON.stringify({ id: $(this).parent().attr("data-id") }),
+            data: JSON.stringify({ id: id }),
             dataType: "json",
             contentType: "application/json",
             url: "/" + config.application.name + "/notification/dismiss",
@@ -29,7 +31,6 @@ function bindNotificationClick() {
                     $("#no-notifications").show();
                 }
 
-                var url = $(this).attr("data-url");
                 if (url) {
                     window.location.href = url;
                 }
@@ -50,8 +51,8 @@ function subscribeToNotificationEndpoint(websocketUrl) {
         $("#no-notifications").hide();
         $(".navbar-unread").fadeIn(150).fadeOut(150).fadeIn(150).fadeOut(150).fadeIn(150);
         $("#notifications-dropdown").append(
-            '<div class="notification" data-id="' + data.notification.id + '" data-viewed="' + data.notification.isViewed + '">' +
-            '<div class="notification-message" data-url="' + data.notification.url + '">' + data.notification.message + '</div>' +
+            '<div class="notification" data-url="' + data.notification.url + '" data-id="' + data.notification.id + '" data-viewed="' + data.notification.isViewed + '">' +
+            '<div class="notification-message">' + data.notification.message + '</div>' +
             '</div>'
         );
         bindNotificationClick();
