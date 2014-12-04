@@ -38,6 +38,11 @@ var Room = (function ($) {
 
         connection.onstream = function (e) {
             _chatVideo.show();
+            _chatWorkspace.css({
+                height: _chatRoom.height() - 110,
+                width: _chatRoom.width() - 500,
+                "margin-left": 200
+            });
             _chatVideo.append(e.mediaElement);
         };
 
