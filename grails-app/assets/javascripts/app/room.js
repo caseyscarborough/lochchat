@@ -283,9 +283,10 @@ var Room = (function ($) {
             enterRoom = $("#enter-room-button");
 
         _chatLog.height(_chatRoom.height() - 70);
-        _chatWorkspace.css({height: _chatRoom.height() - 110, width: _chatRoom.width() - 300});
+        _chatWorkspace.css({height: _chatRoom.height() - 100, width: _chatRoom.width() - 300});
 
         $(window).resize(function () {
+
             _chatLog.height(_chatRoom.height() - 70);
             if (_chatVideo.is(":visible")) {
                 _chatWorkspace.css({
