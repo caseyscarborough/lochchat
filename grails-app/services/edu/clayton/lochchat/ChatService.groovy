@@ -128,7 +128,7 @@ class ChatService {
       to email
       from 'LochChat'
       subject "LochChat Invite"
-      body "You've been invited to join a chat at the following url: ${chat.url}"
+      body(view: "/email/invite", model: [url: chat.url])
     }
     if (session) {
       ClientHelper.sendMessage(session, "_serverMessage:Invited $email to the chatroom.")
