@@ -100,6 +100,12 @@ class RegisterController extends grails.plugin.springsecurity.ui.RegisterControl
     flash.message = message(code: 'spring.security.ui.register.complete')
     redirect uri: conf.ui.register.postRegisterUrl ?: defaultTargetUrl
   }
+
+  static final ignoreStrengthPasswordValidator = { String password, command ->
+    if (command.username && command.username.equals(password)) {
+      return 'command.password.error.username'
+    }
+  }
 }
 
 class RegisterCommand extends grails.plugin.springsecurity.ui.RegisterCommand {
@@ -125,7 +131,7 @@ class RegisterCommand extends grails.plugin.springsecurity.ui.RegisterCommand {
         }
       }
     }
-    password blank: false, validator: RegisterController.passwordValidator
+    password blank: false, validator: RegisterController.ignoreStrengthPasswordValidator
     password2 validator: RegisterController.password2Validator
   }
 }
